@@ -14,26 +14,26 @@ def conta_elementos_arquivo(file_txt: str) -> list:
 
 def mostra_elementos_arquivos(array: list) -> None:
     for item in array:
-        insert_into_db_formato_disciplina(item)
+        # insert_into_db_formato_disciplina(item)
         print(item)
     print('Já adicionados ao banco de dados')
 
 
-def insert_into_db_formato_disciplina(item: str) -> None:
-    with engine.connect() as con:
-        stmt = text("""INSERT INTO formato_disciplina
-        (
-            formato_disciplina
-        )
-        VALUES
-        (
-            :item
-        );""")
-        con.execute(stmt, {'item': item})
-        con.commit()
+# def insert_into_db_formato_disciplina(item: str) -> None:
+#    with engine.connect() as con:
+#        stmt = text("""INSERT INTO formato_disciplina
+#        (
+#            formato_disciplina
+#        )
+#        VALUES
+#        (
+#            :item
+#        );""")
+#        con.execute(stmt, {'item': item})
+#        con.commit()
 
 
-formatos_existentes = conta_elementos_arquivo(
-    'text_files/formato_disciplina_limpa.txt'
-)
-mostra_elementos_arquivos(formatos_existentes)
+# formatos_existentes = conta_elementos_arquivo(
+#   'text_files/formato_disciplina_limpa.txt'
+# )
+# mostra_elementos_arquivos(formatos_existentes)
