@@ -19,21 +19,34 @@ def mostra_elementos_arquivos(array: list) -> None:
     print('Já adicionados ao banco de dados')
 
 
-# def insert_into_db_formato_disciplina(item: str) -> None:
-#    with engine.connect() as con:
-#        stmt = text("""INSERT INTO formato_disciplina
-#        (
-#            formato_disciplina
-#        )
-#        VALUES
-#        (
-#            :item
-#        );""")
-#        con.execute(stmt, {'item': item})
-#        con.commit()
+def insert_into_db_formato_disciplina(item: str) -> None:
+    with engine.connect() as con:
+        stmt = text("""INSERT INTO formato_disciplina
+        (
+            formato_disciplina
+        )
+        VALUES
+        (
+            :item
+        );""")
+        con.execute(stmt, {'item': item})
+        con.commit()
+
+
+def select_formatos_from_bd() -> list[tuple]:
+    with engine.connect() as con:
+        stmt = text("SELECT * FROM formato_disciplina;")
+        return con.execute(stmt)
+
+
+def mostra_dados_da_tabela() -> None:
+    dados = select_formatos_from_bd()
+    for id, formato in dados:
+        print(f"{id} - {formato}")
 
 
 # formatos_existentes = conta_elementos_arquivo(
-#   'text_files/formato_disciplina_limpa.txt'
+#     'text_files/formato_disciplina_limpa.txt'
 # )
 # mostra_elementos_arquivos(formatos_existentes)
+mostra_dados_da_tabela()
