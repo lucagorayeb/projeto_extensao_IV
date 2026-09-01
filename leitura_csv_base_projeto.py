@@ -25,12 +25,12 @@ def show_array(array: list) -> None:
         print(item)
 
 
-disciplinas = read_file_and_generate_array('disciplinas_limpas.txt')
+disciplinas = read_file_and_generate_array('text_file/disciplinas_limpas.txt')
 disciplinas_tratadas = clean_array(disciplinas)
 # show_array(disciplinas_tratadas)
 
 formato_disciplinas = read_file_and_generate_array(
-    'formato_disciplina_limpa.txt'
+    'text_file/formato_disciplina_limpa.txt'
 )
 formato_disciplinas_tratadas = clean_array(formato_disciplinas)
 # show_array(formato_disciplinas_tratadas)
@@ -55,3 +55,35 @@ def clean_files(file: str, file_clean: str):
 
 # clean_files('disciplinas.txt', 'disciplinas_limpas.txt')
 # clean_files('formato_disciplina.txt', 'formato_disciplina_limpa.txt')
+
+# Criar função para criar um arquivo que misture as disciplinas e seus
+# respectivos formatos para armazenar no banco.
+
+def create_disciplina_and_formatos_file(disciplina_file: str,
+                                        formatos_file: str,
+                                        disciplina_formato_file: str):
+
+    first_file_array = []
+    with open(disciplina_file, 'r', encoding='utf-8') as first_file:
+        for row in first_file:
+            cleaned_row = row.strip()
+            if cleaned_row:
+                first_file_array.append(cleaned_row)
+
+    second_file_array = []
+    with open(formatos_file, 'r', encoding='utf-8') as second_file:
+        for row in second_file:
+            cleaned_row = row.strip()
+            if cleaned_row:
+                second_file_array.append(cleaned_row)
+
+    with open(disciplina_formato_file, 'w', encoding='utf-8') as new_file:
+        for i in range(len(first_file_array)):
+            new_file.write(f"{first_file_array[i]} - {second_file_array[i]}\n")
+
+
+# create_disciplina_and_formatos_file(
+#     'text_files/disciplinas_limpas.txt',
+#     'text_files/formato_disciplina_limpa.txt',
+#     'text_files/disciplina_seus_formatos.txt'
+# )
