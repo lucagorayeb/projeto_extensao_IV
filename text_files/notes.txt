@@ -1,6 +1,0 @@
-Regex
-- [^[A-Z][0-9][ç][Á-Í-À][.][:][-][ ][()][º][\n]]+ (Remove todas as vírgulas)
-- ^, (Remove as vírgulas das linhas que começam com vírgulas)
-
-Soluções 
-- Usar dicionários 
