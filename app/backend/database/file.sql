@@ -1,21 +1,24 @@
--- Active: 1788213744352@@127.0.0.1@3306
-PRAGMA foreign_keys = ON;
+# Tabela feita para o MySQL
 
 CREATE TABLE disciplinas(
-    id_disciplina INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome_disciplina TEXT NOT NULL,
+    id_disciplina INT PRIMARY KEY AUTOINCREMENT,
+    nome_disciplina VARCHAR(50) NOT NULL,
     fk_formato_disciplina INT NOT NULL,
-    carga_horaria_disciplina TEXT NOT NULL,
-    horario_inicio_disciplina TIME NOT NULL,
-    horario_termino_disciplina TIME NOT NULL,
-    pratica_disciplina INT NOT NULL, -- Simulando um bool com 0 ou 1.
-    especialidade_disciplina TEXT NOT NULL,
-    FOREIGN KEY (fk_formato_disciplina) REFERENCES formato(id_formato) 
+    carga_horaria_disciplina VARCHAR(50) NOT NULL,
+    horario_inicio_disciplina DATETIME NOT NULL,
+    horario_termino_disciplina DATETIME NOT NULL,
+    pratica_disciplina BOOL NOT NULL, 
+    especialidade_disciplina VARCHAR(50) NOT NULL,
+    CONSTRAINTS fk_formato_disciplina FOREIGN KEY (fk_formato_disciplina) REFERENCES formato(id_formato),
+	created_at DEFAULT CURRENT_TIMESTAMP,
+	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE formatos(
-    id_formato INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome_formato TEXT NOT NULL
+    id_formato INT PRIMARY KEY AUTOINCREMENT,
+    nome_formato VARCHAR(50) NOT NULL,
+	created_at DEFAULT CURRENT_TIMESTAMP,
+	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE professores(
