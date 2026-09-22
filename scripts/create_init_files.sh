@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -eou pipefail
+IFS=$'\n'
+set -o allexport
+
+source ../.env
+
+set +o allexport
+
+
+for DIRECTORY_NAME in "${@:-}"; do 
+	
+	[[ "$@" == "" ]] && echo "Necessário fornecer uma variável ou um array de variaveis" && exit 1
+
+	DIRECTORY="$MODULE_PATH""$DIRECTORY_NAME"
+	touch "$DIRECTORY"/__init__.py
+done
+
+exit 0
+
