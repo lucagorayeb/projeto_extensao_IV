@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from .base_repository import BaseRepository as BR
+from base_repository import BaseRepository as BR
 from typing import Any
 
 

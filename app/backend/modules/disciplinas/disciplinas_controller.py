@@ -1,4 +1,4 @@
-from app.backend.services.disciplinas_service import (
+from disciplinas_service import (
     DisciplinasService as ds
 )
 

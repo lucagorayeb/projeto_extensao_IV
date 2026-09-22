@@ -1,4 +1,4 @@
-from app.backend.services.formato_service import FormatoService as fs
+from formatos_service import FormatoService as fs
 
 
 class FormatoController:
