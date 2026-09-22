@@ -21,13 +21,18 @@ class BaseRepository(ABC):
     def delete(self):
         pass
 
-    def execute_db_query(self, stmt: str, data: dict = None) -> Any:
+    def execute_db_query(
+            self,
+            stmt: str,
+            data: dict = None,
+            id: int = None) -> Any:
         with engine.connect() as conn:
-            return conn.execute(stmt, data)
+            return conn.execute(stmt, data, id)
 
     def execute_and_commit_db_query(self,
                                     stmt: str,
-                                    data: dict = None) -> None:
+                                    data: dict = None,
+                                    id: int = None) -> None:
         with engine.connect() as conn:
-            conn.execute(stmt, data)
+            conn.execute(stmt, data, id)
             conn.commit()
