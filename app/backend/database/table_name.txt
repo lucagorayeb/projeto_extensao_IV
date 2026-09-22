@@ -1,0 +1,10 @@
+Tabelas do banco de dados:
+
+- disciplinas
+- formatos
+- professores
+- especialidades
+- salas
+- tipo_salas
+- dados_usuarios
+- usuarios 

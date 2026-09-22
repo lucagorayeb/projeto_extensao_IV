@@ -1,56 +1,74 @@
 # Tabela feita para o MySQL
 
-CREATE TABLE disciplinas(
-    id_disciplina INT PRIMARY KEY AUTOINCREMENT,
-    nome_disciplina VARCHAR(50) NOT NULL,
-    fk_formato_disciplina INT NOT NULL,
-    carga_horaria_disciplina VARCHAR(50) NOT NULL,
-    horario_inicio_disciplina DATETIME NOT NULL,
-    horario_termino_disciplina DATETIME NOT NULL,
-    pratica_disciplina BOOL NOT NULL, 
-    especialidade_disciplina VARCHAR(50) NOT NULL,
-    CONSTRAINTS fk_formato_disciplina FOREIGN KEY (fk_formato_disciplina) REFERENCES formato(id_formato),
+CREATE TABLE disciplinas (
+	id INT PRIMARY KEY AUTOINCREMENT,
+	nome VARCHAR(50) NOT NULL,
+	fk_formato INT NOT NULL,
+	carga_horaria VARCHAR(50) NOT NULL,
+	horario_inicio DATETIME NOT NULL,
+	horario_termino DATETIME NOT NULL,
+	pratica INT NOT NULL, 
+	especialidade VARCHAR(50) NOT NULL,
+	CONSTRAINTS fk_formato FOREIGN KEY (fk_formato) REFERENCES formato(id),
 	created_at DEFAULT CURRENT_TIMESTAMP,
 	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE formatos(
-    id_formato INT PRIMARY KEY AUTOINCREMENT,
-    nome_formato VARCHAR(50) NOT NULL,
+CREATE TABLE formatos (
+    	id INT PRIMARY KEY AUTOINCREMENT,
+    	nome VARCHAR(50) NOT NULL,
 	created_at DEFAULT CURRENT_TIMESTAMP,
 	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE professores(
-    id_professores INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome_professores TEXT NOT NULL,
-    especialidade_professores TEXT NOT NULL
+CREATE TABLE professores (
+    	id INT PRIMARY KEY AUTOINCREMENT,
+    	nome VARCHAR(100) NOT NULL,
+    	fk_especialidades INT NOT NULL,
+	CONSTRAINTS fk_especialidades FOREIGN KEY (fk_especialidades) REFERENCES epecialidades(id);
+	created_at DEFAULT CURRENT_TIMESTAMP,
+	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE salas(
-    id_salas INTEGER PRIMARY KEY AUTOINCREMENT,
-    numero_nome_sala TEXT NOT NULL,
-    limite_alunos_sala INT NOT NULL,
-    fk_tipo_sala INT NOT NULL,
-    FOREIGN KEY (fk_tipo_sala) REFERENCES tipo_salas(id_tipo_sala)
+CREATE TABLE especialidades (
+	id INT PRIMARY KEY AUTOINCREMENT,
+	nome VARCHAR(50) NOT NULL,
+	created_at DEFAULT CURRENT_TIMESTAMP,
+	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE tipo_salas(
-    id_tipo_sala INTEGER PRIMARY KEY AUTOINCREMENT,
-    tipo_sala TEXT NOT NULL
+CREATE TABLE salas (
+	id INT PRIMARY KEY AUTOINCREMENT,
+    	numero_nome VARCHAR(20) NOT NULL,
+    	limite_alunos INT NOT NULL,
+    	fk_tipo_salas INT NOT NULL,
+    	FOREIGN KEY (fk_tipo_salas) REFERENCES tipo_salas(id)
+	created_at DEFAULT CURRENT_TIMESTAMP,
+	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE dados_usuarios(
-    id_dados_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome_dados_usuario TEXT NOT NULL,
-    data_nascimento_dados_usuario DATE NOT NULL,
-    cpf_dados_usuario TEXT NOT NULL
+CREATE TABLE tipo_salas (
+    	id INT PRIMARY KEY AUTOINCREMENT,
+    	tipo_sala VARCHAR(20) NOT NULL,
+	created_at DEFAULT CURRENT_TIMESTAMP,
+	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE usuarios(
-    id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
-    email_usuario TEXT NOT NULL,
-    senha_usuario TEXT NOT NULL,
-    fk_dados_usuario INT NOT NULL,
-    FOREIGN KEY (fk_dados_usuario) REFERENCES dados_usuarios(id_dados_usuario)
+CREATE TABLE dados_usuarios (
+    	id INT PRIMARY KEY AUTOINCREMENT,
+    	nome VARCHAR(100) NOT NULL,
+    	data_nascimento DATETIME NOT NULL,
+    	cpf DATETIME NOT NULL,
+	created_at DEFAULT CURRENT_TIMESTAMP,
+	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE usuarios (
+    	id INT PRIMARY KEY AUTOINCREMENT,
+    	email VARCHAR(50) NOT NULL,
+    	senha VARCHAR(255) NOT NULL,
+    	fk_dados_usuario INT NOT NULL,
+    	FOREIGN KEY (fk_dados_usuario) REFERENCES dados_usuarios(id),
+	created_at DEFAULT CURRENT_TIMESTAMP,
+	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
