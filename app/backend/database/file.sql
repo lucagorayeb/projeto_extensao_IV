@@ -4,28 +4,27 @@ CREATE TABLE disciplinas (
 	id INT PRIMARY KEY AUTOINCREMENT,
 	nome VARCHAR(50) NOT NULL,
 	fk_formato INT NOT NULL,
+	CONSTRAINTS fk_formato FOREIGN KEY (fk_formato) REFERENCES formato(id),
 	carga_horaria VARCHAR(50) NOT NULL,
 	horario_inicio DATETIME NOT NULL,
 	horario_termino DATETIME NOT NULL,
 	pratica INT NOT NULL, 
-	especialidade VARCHAR(50) NOT NULL,
-	CONSTRAINTS fk_formato FOREIGN KEY (fk_formato) REFERENCES formato(id),
 	created_at DEFAULT CURRENT_TIMESTAMP,
 	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE formatos (
-    	id INT PRIMARY KEY AUTOINCREMENT,
-    	nome VARCHAR(50) NOT NULL,
+    id INT PRIMARY KEY AUTOINCREMENT,
+    nome VARCHAR(50) NOT NULL,
 	created_at DEFAULT CURRENT_TIMESTAMP,
 	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE professores (
-    	id INT PRIMARY KEY AUTOINCREMENT,
-    	nome VARCHAR(100) NOT NULL,
-    	fk_especialidades INT NOT NULL,
-	CONSTRAINTS fk_especialidades FOREIGN KEY (fk_especialidades) REFERENCES epecialidades(id);
+	id INT PRIMARY KEY AUTOINCREMENT,
+	nome VARCHAR(100) NOT NULL,
+	fk_especialidades INT NOT NULL,
+	CONSTRAINTS fk_especialidades FOREIGN KEY (fk_especialidades) REFERENCES especialidades(id),
 	created_at DEFAULT CURRENT_TIMESTAMP,
 	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -37,38 +36,48 @@ CREATE TABLE especialidades (
 	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE disciplinas_especialidades (
+	id INT PRIMARY KEY AUTOINCREMENT,
+	fk_disciplina INT NOT NULL,
+	CONSTRAINTS fk_disciplina FOREIGN KEY (fk_disciplina) REFERENCES disciplinas(id),
+	fk_especialidade INT NOT NULL,
+	CONSTRAINTS fk_especialidade FOREIGN KEY (fk_especialidade) REFERENCES especialidades(id),
+	create_at DEFAULT CURRENT_TIMESTAMP,
+	update_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 CREATE TABLE salas (
 	id INT PRIMARY KEY AUTOINCREMENT,
-    	numero_nome VARCHAR(20) NOT NULL,
-    	limite_alunos INT NOT NULL,
-    	fk_tipo_salas INT NOT NULL,
-    	FOREIGN KEY (fk_tipo_salas) REFERENCES tipo_salas(id)
+	numero_nome VARCHAR(20) NOT NULL,
+	limite_alunos INT NOT NULL,
+	fk_tipo_salas INT NOT NULL,
+	FOREIGN KEY (fk_tipo_salas) REFERENCES tipo_salas(id),
 	created_at DEFAULT CURRENT_TIMESTAMP,
 	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE tipo_salas (
-    	id INT PRIMARY KEY AUTOINCREMENT,
-    	tipo_sala VARCHAR(20) NOT NULL,
+	id INT PRIMARY KEY AUTOINCREMENT,
+	tipo_sala VARCHAR(20) NOT NULL,
 	created_at DEFAULT CURRENT_TIMESTAMP,
 	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE dados_usuarios (
-    	id INT PRIMARY KEY AUTOINCREMENT,
-    	nome VARCHAR(100) NOT NULL,
-    	data_nascimento DATETIME NOT NULL,
-    	cpf DATETIME NOT NULL,
+	id INT PRIMARY KEY AUTOINCREMENT,
+	nome VARCHAR(100) NOT NULL,
+	data_nascimento DATETIME NOT NULL,
+	cpf DATETIME NOT NULL,
 	created_at DEFAULT CURRENT_TIMESTAMP,
 	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE usuarios (
-    	id INT PRIMARY KEY AUTOINCREMENT,
-    	email VARCHAR(50) NOT NULL,
-    	senha VARCHAR(255) NOT NULL,
-    	fk_dados_usuario INT NOT NULL,
-    	FOREIGN KEY (fk_dados_usuario) REFERENCES dados_usuarios(id),
+	id INT PRIMARY KEY AUTOINCREMENT,
+	email VARCHAR(50) NOT NULL,
+	senha VARCHAR(255) NOT NULL,
+	fk_dados_usuario INT NOT NULL,
+	FOREIGN KEY (fk_dados_usuario) REFERENCES dados_usuarios(id),
 	created_at DEFAULT CURRENT_TIMESTAMP,
 	updated_at DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
