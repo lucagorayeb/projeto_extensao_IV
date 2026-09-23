@@ -1,5 +1,5 @@
 from disciplinas_service import (
-    DisciplinasService as ds
+    DisciplinasService as serv
 )
 
 
@@ -7,16 +7,16 @@ class DisciplinasController:
 
     @staticmethod
     def select_disciplinas_controller():
-        ds.select_disciplinas_service()
+        serv.select_disciplinas_service()
 
     @staticmethod
     def insert_disciplinas_controller():
-        ds.insert_disciplinas_service()
+        serv.insert_disciplinas_service()
 
     @staticmethod
     def update_disciplinas_controller():
-        ds.update_disciplinas_service()
+        serv.update_disciplinas_service()
 
     @staticmethod
     def delete_disciplinas_controller():
-        ds.delete_disciplinas_service()
+        serv.delete_disciplinas_service()

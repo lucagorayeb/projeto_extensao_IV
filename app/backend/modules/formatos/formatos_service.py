@@ -1,5 +1,5 @@
-from app.backend.repository.formato_repository import (
-    FormatoRepository as fr
+from formatos_repository import (
+    FormatoRepository as repo
 )
 
 
@@ -7,16 +7,16 @@ class FormatoService:
 
     @staticmethod
     def select_formato_service():
-        fr.select()
+        repo.select()
 
     @staticmethod
     def insert_formato_service():
-        fr.insert()
+        repo.insert()
 
     @staticmethod
     def update_formato_service():
-        fr.update()
+        repo.update()
 
     @staticmethod
     def delete_formato_service():
-        fr.delete()
+        repo.delete()

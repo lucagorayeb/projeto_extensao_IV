@@ -1,26 +1,30 @@
-# from sqlalchemy import text
-from .base_repository import BaseRepository as BR
+from sqlalchemy import text
+from base_repository import BaseRepository as BR
 
 
 class FormatoRepository(BR):
 
-    def insert(item: str) -> None:
-        # stmt = text("""INSERT INTO formato_disciplina
-        # (
-        #     formato_disciplina
-        # )
-        # VALUES
-        # (
-        #     :item
-        # );""")
-        print("Chegou até a função insert da tabela formato.")
+    def insert(self, data: list[tuple]) -> None:
+        stmt = text("""INSERT INTO formatos
+        (
+            nome
+        )
+        VALUES
+        (
+            :nome
+        );""")
+        self.execute_and_commit_db_query(stmt, data)
 
-    def select() -> list[tuple]:
-        # stmt = text("SELECT id, formato_disciplina FROM formato_disciplina;")
-        print("Chegou até a função select da tabela formato.")
+    def select(self) -> list[tuple]:
+        stmt = text("""
+            SELECT id, nome FROM formatos;
+        """)
+        return self.execute_db_query(stmt)
 
-    def update() -> None:
-        print("Chegou até a função update da tabela formato.")
+    def update(self, data: list[tuple], id: int) -> None:
+        stmt = text("""UPDATE formatos SET nome = :nome WHERE id = :id;""")
+        self.execute_and_commit_db_query(stmt, data, id)
 
-    def delete() -> None:
-        print("Chegou até a função delete da tabela formato.")
+    def delete(self, id: int) -> None:
+        stmt = text("""DELETE FROM formatos WHERE id = :id;""")
+        self.execute_and_commit_db_query(stmt, id)

@@ -4,14 +4,16 @@ set -eou pipefail
 IFS=$'\n'
 set -o allexport
 
-source ../.env
+# shellcheck source=/dev/null
+[ -f .env ] && source .env
 
 set +o allexport
 
+DIRECTORIES="${*:-}"
 
-for DIRECTORY_NAME in "${@:-}"; do 
+for DIRECTORY_NAME in "${DIRECTORIES[@]}"; do 
 	
-	[[ "$@" == "" ]] && echo "Necessário fornecer uma variável ou um array de variaveis" && exit 1
+	[[ "$DIRECTORY_NAME" == "" ]] && echo "Necessário fornecer uma variável ou um array de variaveis" && exit 1
 
 	DIRECTORY="$MODULE_PATH""$DIRECTORY_NAME"
 	touch "$DIRECTORY"/__init__.py
