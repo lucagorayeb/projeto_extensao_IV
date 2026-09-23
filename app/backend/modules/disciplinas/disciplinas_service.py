@@ -1,5 +1,5 @@
-from app.backend.repository.disciplinas_repository import (
-    DisciplinaRepository as dr
+from disciplinas_repository import (
+    DisciplinaRepository as repo
 )
 
 
@@ -7,16 +7,16 @@ class DisciplinasService:
 
     @staticmethod
     def select_disciplinas_service():
-        dr.select()
+        repo.select()
 
     @staticmethod
     def insert_disciplinas_service():
-        dr.insert()
+        repo.insert()
 
     @staticmethod
     def update_disciplinas_service():
-        dr.update()
+        repo.update()
 
     @staticmethod
     def delete_disciplinas_service():
-        dr.delete()
+        repo.delete()
