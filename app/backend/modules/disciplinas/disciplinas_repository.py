@@ -9,56 +9,53 @@ class DisciplinaRepository(BR):
         stmt = text("""
         INSERT INTO disciplinas
         (
-            nome_disciplina,
-            fk_formato_disciplina,
-            carga_horaria_disciplina,
-            horario_inicio_disciplina,
-            horario_termino_disciplina,
-            pratica_disciplina,
-            especialidade_necessaria_disciplina
+            nome,
+            fk_formato,
+            carga_horaria,
+            horario_inicio,
+            horario_termino,
+            pratica,
+            especialidade_necessaria
         )
         VALUES
         (
-            :nome_disciplina,
-            :fk_formato_disciplina,
-            :carga_horaria_disciplina,
-            :horario_inicio_disciplina,
-            :horario_termino_disciplina,
-            :pratica_disciplina,
-            :especialidade_necessaria_disciplina
+            :nome,
+            :fk_formato,
+            :carga_horaria,
+            :horario_inicio,
+            :horario_termino,
+            :pratica
         );""")
         self.execute_and_commit_db_query(stmt, data)
 
     def select(self) -> list[tuple]:
         stmt = text("""
         SELECT
-            d.id_disciplina,
-            d.nome_disciplina,
-            d.fk_formato_disciplina,
+            d.id,
+            d.nome,
+            d.fk_formato,
             f.nome_formato,
-            d.carga_horaria_disciplina,
-            d.horario_inicio_disciplina,
-            d.horario_termino_disciplina,
-            d.pratica_disciplina,
-            d.especialidade_necessaria_disciplina
+            d.carga_horaria,
+            d.horario_inicio,
+            d.horario_termino,
+            d.pratica
         FROM
             disciplinas AS d
-        LEFT JOIN formato AS f ON f.id_formato = d.fk_formato_disciplina;
+        LEFT JOIN formato AS f ON f.id_formato = d.fk_formato;
         """)
         return self.execute_db_query(stmt)
 
     def update(self, data: dict[Any], id: int) -> None:
         stmt = text("""
         UPDATE disciplinas
-            SET nome_disciplina = :nome,
-                fk_formato_disciplina = :formato,
-                carga_horaria_disciplina = :carga_horaria,
-                horario_inicio_disciplina = :horario_inicio,
-                horario_termino_disciplina = :horario_termino,
-                pratica_disciplina = :pratica,
-                especialidade_necessaria_disciplina = :especialidade
+            SET nome = :nome,
+                fk_formato = :formato,
+                carga_horaria = :carga_horaria,
+                horario_inicio = :horario_inicio,
+                horario_termino = :horario_termino,
+                pratica = :pratica
             WHERE
-                id_disciplina = :id,
+                id = :id
             """)
         self.execute_and_commit_db_query(stmt, data, id)
 
