@@ -1,10 +1,9 @@
 from typing import Any
-from app.backend.core.interface import engine
+from app.backend.core.interface import engine_mysql as eng
 from abc import ABC, abstractmethod
 
 
 class BaseRepository(ABC):
-
     @abstractmethod
     def insert(self):
         pass
@@ -26,13 +25,13 @@ class BaseRepository(ABC):
             stmt: str,
             data: dict = None,
             id: int = None) -> Any:
-        with engine.connect() as conn:
+        with eng.connect() as conn:
             return conn.execute(stmt, data, id)
 
     def execute_and_commit_db_query(self,
                                     stmt: str,
-                                    data: dict = None,
+                                    data: list[tuple] = None,
                                     id: int = None) -> None:
-        with engine.connect() as conn:
+        with eng.connect() as conn:
             conn.execute(stmt, data, id)
             conn.commit()
