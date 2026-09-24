@@ -5,7 +5,7 @@ from typing import Any
 
 class DisciplinaRepository(BR):
 
-    def insert(self, data: dict[Any]) -> None:
+    def insert(self, data: list[tuple]):
         stmt = text("""
         INSERT INTO disciplinas
         (
@@ -26,7 +26,7 @@ class DisciplinaRepository(BR):
             :horario_termino,
             :pratica
         );""")
-        self.execute_and_commit_db_query(stmt, data)
+        print(self.execute_and_commit_db_query(stmt, data))
 
     def select(self) -> list[tuple]:
         stmt = text("""

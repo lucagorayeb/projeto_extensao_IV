@@ -5,18 +5,14 @@ from disciplinas_service import (
 
 class DisciplinasController:
 
-    @staticmethod
-    def select_disciplinas_controller():
-        serv.select_disciplinas_service()
+    def slct_disciplinas_controller(self) -> list[tuple]:
+        return serv.slct_disciplinas_service()
 
-    @staticmethod
-    def insert_disciplinas_controller():
-        serv.insert_disciplinas_service()
+    def insrt_disciplinas_controller(self, data: list[tuple]) -> None:
+        serv.insrt_disciplinas_service(data)
 
-    @staticmethod
-    def update_disciplinas_controller():
-        serv.update_disciplinas_service()
+    def updt_disciplinas_controller(self, data: list[tuple], id: int) -> None:
+        serv.updt_disciplinas_service(data, id)
 
-    @staticmethod
-    def delete_disciplinas_controller():
-        serv.delete_disciplinas_service()
+    def del_disciplinas_controller(self, id: int) -> None:
+        serv.del_disciplinas_service()

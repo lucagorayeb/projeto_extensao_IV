@@ -5,18 +5,14 @@ from disciplinas_repository import (
 
 class DisciplinasService:
 
-    @staticmethod
-    def select_disciplinas_service():
-        repo.select()
+    def slct_disciplinas_service(self, data: list[tuple]) -> list[tuple]:
+        return repo.select(data)
 
-    @staticmethod
-    def insert_disciplinas_service():
-        repo.insert()
+    def insrt_disciplinas_service(self, data: list[tuple]) -> None:
+        repo.insert(data)
 
-    @staticmethod
-    def update_disciplinas_service():
-        repo.update()
+    def updt_disciplinas_service(self, data: list[tuple], id: int) -> None:
+        repo.update(data, id)
 
-    @staticmethod
-    def delete_disciplinas_service():
-        repo.delete()
+    def del_disciplinas_service(self, id: int) -> None:
+        repo.delete(id)
