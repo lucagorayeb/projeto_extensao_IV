@@ -1,22 +1,21 @@
-from formatos_repository import (
+from .formatos_repository import (
     FormatoRepository as repo
 )
 
 
 class FormatoService:
 
-    @staticmethod
-    def select_formato_service():
-        repo.select()
+    def slct_formato_service(self) -> list[tuple]:
+        return repo.select()
 
-    @staticmethod
-    def insert_formato_service():
-        repo.insert()
+    
+    def insrt_formato_service(self, data: list[tuple]):
+        repo.insert(data)
 
-    @staticmethod
-    def update_formato_service():
-        repo.update()
+    
+    def updt_formato_service(self, data: list[tuple], id: int):
+        repo.update(data, id)
 
-    @staticmethod
-    def delete_formato_service():
-        repo.delete()
+    
+    def del_formato_service(self, id: int):
+        repo.delete(id)
