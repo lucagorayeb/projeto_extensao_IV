@@ -1,17 +1,18 @@
-from app.backend.controllers.disciplinas_controller import (
+from app.backend.modules.disciplinas.disciplinas_controller import (
     DisciplinasController as dc
 )
-from app.backend.controllers.formato_controller import (
-    FormatoController as fc
+from app.backend.modules.formatos.formatos_controller import (
+    FormatosController as fc
 )
 
 
 try:
-    dc.get_from_disciplinas_controller()
+    dc.slct_disciplinas_controller()
 except Exception as e:
     print(f"Erro: {e}")
 
 try:
-    fc.get_from_formatos_controller()
+    data = {"nome": "TESTE"}
+    fc.insrt_formatos_controller(data)
 except Exception as e:
     print(f"Erro: {e}")
