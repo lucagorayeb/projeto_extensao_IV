@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from base_repository import BaseRepository as BR
+from ..base_repository import BaseRepository as BR
 
 
 class FormatoRepository(BR):
@@ -13,7 +13,7 @@ class FormatoRepository(BR):
         (
             :nome
         );""")
-        self.execute_and_commit_db_query(stmt, data)
+        print(self.execute_and_commit_db_query(stmt, data))
 
     def select(self) -> list[tuple]:
         stmt = text("""

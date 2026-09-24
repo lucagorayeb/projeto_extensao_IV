@@ -5,7 +5,7 @@ IFS=$'\n'
 set -o allexport
 
 # shellcheck source=/dev/null
-[ -f .env ] && source .env
+[ -f .env ] && source ../.env
 
 set +o allexport
 
@@ -14,9 +14,9 @@ DIRECTORIES="${*:-}"
 for DIRECTORY_NAME in "${DIRECTORIES[@]}"; do 
 	
 	[[ "$DIRECTORY_NAME" == "" ]] && echo "Necessário fornecer uma variável ou um array de variaveis" && exit 1
-
-	DIRECTORY="$MODULE_PATH""$DIRECTORY_NAME"
-	touch "$DIRECTORY"/__init__.py
+	DIRECTORY="../$DIRECTORY_NAME"
+	echo "$DIRECTORY"
+	# touch "$DIRECTORY"/__init__.py
 done
 
 exit 0

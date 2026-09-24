@@ -1,20 +1,20 @@
-from formatos_service import FormatoService as serv
+from .formatos_service import FormatoService as serv
 
 
 class FormatoController:
 
-    @staticmethod
-    def select_formato_controller():
-        serv.select_formato_service()
+    
+    def slct_formato_controller(self) -> list[tuple]:
+        return serv.select_formato_service()
 
-    @staticmethod
-    def insert_formato_controller():
-        serv.insert_formato_service()
+    
+    def insrt_formato_controller(self, data: list[tuple]):
+        serv.insert_formato_service(data)
 
-    @staticmethod
-    def update_formato_controller():
-        serv.update_formato_service()
+    
+    def update_formato_controller(self, data: list[tuple], id: int):
+        serv.update_formato_service(data, id)
 
-    @staticmethod
-    def delete_formato_controller():
-        serv.delete_formato_service()
+    
+    def delete_formato_controller(self, id: int):
+        serv.delete_formato_service(id)
