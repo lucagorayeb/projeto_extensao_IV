@@ -1,6 +1,6 @@
-from typing import Any
 from app.backend.core.interface import engine_mysql as eng
 from abc import ABC, abstractmethod
+from sqlalchemy import text
 
 
 class BaseRepository(ABC):
@@ -20,18 +20,13 @@ class BaseRepository(ABC):
     def delete(self):
         pass
 
-    def execute_db_query(
-            self,
-            stmt: str,
-            data: dict = None,
-            id: int = None) -> Any:
+    def execute_db_query(self, stmt: str, data: dict = None) -> list[dict] | None:
+        stmt = text(stmt)
         with eng.connect() as conn:
-            return conn.execute(stmt, data, id)
+            return conn.execute(stmt, data)
 
-    def execute_and_commit_db_query(self,
-                                    stmt: str,
-                                    data: list[tuple] = None,
-                                    id: int = None) -> None:
+    def execute_and_commit_db_query(self, stmt: str, data: dict = None) -> None: 
+        stmt = text(stmt)
         with eng.connect() as conn:
-            conn.execute(stmt, data, id)
+            conn.execute(stmt, data)
             conn.commit()
