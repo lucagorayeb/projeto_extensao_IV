@@ -1,4 +1,7 @@
-from sqlalchemy import create_engine
+from sqlalchemy import (
+    create_engine,
+    URL
+)
 import os
 from dotenv import load_dotenv
 
@@ -11,13 +14,13 @@ engine_sqlite = create_engine(
 )
 
 # Conexão com o MySQL
-usuario = os.getenv("MYSQL_USER")
-senha = os.getenv("MYSQL_PASSWORD")
-host = os.getenv("MYSQL_HOST")
-porta = os.getenv("MYSQL_PORT")
-banco = os.getenv("MYSQL_DATABASE")
+url_object = URL.create(
+    "mysql+pymysql",
+    username=os.getenv("MYSQL_ROOT_USER"),
+    password=os.getenv("MYSQL_ROOT_PASSWORD"),
+    host=os.getenv("MYSQL_HOST"),
+    port=os.getenv("MYSQL_PORT"),
+    database=os.getenv("MYSQL_DATABASE")
+)
 
-string_conexao_mysql = f"""
-    mysql+pymysql://{usuario}:{senha}@{host}:{porta}/{banco}"""
-
-engine_mysql = create_engine(string_conexao_mysql)
+engine_mysql = create_engine(url_object, echo=False)
