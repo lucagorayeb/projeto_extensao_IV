@@ -1,4 +1,4 @@
-from app.backend.modules.formatos.formatos_controller import (
+from app.backend.modules.formato.formato_controller import (
     FormatoController
 )
 from dotenv import load_dotenv
