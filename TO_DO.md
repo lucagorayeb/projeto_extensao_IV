@@ -15,6 +15,8 @@
     [] dados_usuarios
     [] usuarios 
 )
-- [] Criar os testes para as funcionalidades já criadas.
+- [] Criar os testes para as funcionalidades já criadas.(
+    [X] conexão com o banco de dados
+)
 - [] Criar a documentação.
 - [] Criar uma classe para formatar o retorno dos dados dos controllers (json).
