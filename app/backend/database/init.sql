@@ -16,7 +16,7 @@ CREATE TABLE especialidade (
 
 CREATE TABLE tipo_sala (
 	id int primary key auto_increment,
-	tipo_sala varchar(20) not null,
+	nome varchar(50) not null,
 	created_at datetime default current_timestamp,
 	updated_at datetime default current_timestamp on update current_timestamp
 );
