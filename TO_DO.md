@@ -19,4 +19,14 @@
     [X] conexão com o banco de dados
 )
 - [] Criar a documentação.
-- [] Criar uma classe para formatar o retorno dos dados dos controllers (json).
+- [X] Criar uma classe para formatar o retorno dos dados dos controllers (json).
+- [] Criar as entidades. (
+    [X] formato
+    [X] tipo_sala
+    [X] especialidade
+    [] sala
+    [] diciplina
+    [] professor
+    [] dados_usuarios
+    [] usuarios
+)
