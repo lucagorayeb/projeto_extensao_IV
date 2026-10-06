@@ -7,7 +7,7 @@ class FormatoRepository(BR):
         stmt = "insert into formato (nome) values (:nome);"
         self.execute_and_commit_db_query(stmt=stmt, data=data)
 
-    def select(self) -> list[dict] | None:
+    def select(self) -> object | None:
         stmt = "select id, nome from formato;"
         return self.execute_db_query(stmt=stmt)
 
@@ -19,6 +19,6 @@ class FormatoRepository(BR):
         stmt = "delete from formato where id = :id;"
         self.execute_and_commit_db_query(stmt=stmt, data=data)
 
-    def select_by_id(self, data: dict) -> list[dict] | None:
+    def select_by_id(self, data: dict) -> object | None:
         stmt = "select id, nome from formato where id = :id;"
         return self.execute_db_query(stmt=stmt, data=data)
