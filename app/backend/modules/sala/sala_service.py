@@ -1,15 +1,15 @@
 from .sala_repository import SalaRepository
-from ..base_json.retorno_json import RetornoJson
+from ..base_json.return_json import ReturnJson
 
 
 class SalaService:
 
     def __init__(self):
         self.serv = SalaRepository()
-        self.json = RetornoJson()
+        self.json = ReturnJson()
 
     def insrt_sala_service(self, data: dict) -> None:
-        self.serv.select(data=data)
+        self.serv.insert(data=data)
 
     def updt_sala_service(self, data: dict, id: int) -> None:
         data['id'] = id
@@ -21,14 +21,14 @@ class SalaService:
 
     def slct_sala_service(self) -> list[dict]:
         data = self.serv.select()
-        return self.__normalize_data(data)
+        return self.__data_treatment(data)
 
     def slct_by_id_sala_service(self, id: int) -> list[dict]:
         data = {'id': id}
         data = self.serv.select_by_id(data=data)
-        return self.__normalize_data(data)
+        return self.__data_treatment(data)
 
-    def __normalize_data(self, data: object) -> str | None:
+    def __data_treatment(self, data: object) -> str | None:
         normalized_data = []
 
         for d in data:
@@ -38,4 +38,6 @@ class SalaService:
                 "quantidade_alunos": d.limite_alunos,
                 "tipo_sala": d.tipo_sala
             })
-        return self.json.retorna_dados_formatados(normalized_data)
+        return self.json.return_format_data(normalized_data)
+
+    # def error_treatment(self, error_data: list) -> str:
