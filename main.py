@@ -1,16 +1,18 @@
 # from app.backend.modules.disciplinas.disciplinas_controller import (
 #     DisciplinasController as dc
 # )
-from app.backend.modules.formato.formato_controller import FormatoController
+# from app.backend.modules.formato.formato_controller import FormatoController
 # from tests.db_connection_test import teste_conexao_bd
 # from scripts.insertions.insert_formato import insert_formatos
 # from scripts.insertions.insert_especialidade import insrt_especialidade
 # from scripts.insertions.insert_tipo_sala import insert_tipo_sala
+from app.backend.modules.sala.sala_controller import SalaController
 
 # try:
-fc = FormatoController()
-dados = fc.slct_formato_controller()
-print(dados)
+# fc = FormatoController()
+# dados = fc.slct_formato_controller()
+# print(dados)
+
 # except Exception as e:
 #     print(f"Erro: {e}")
 
@@ -24,3 +26,7 @@ print(dados)
 # insert_formatos()
 # insrt_especialidade()
 # insert_tipo_sala()
+
+c = SalaController()
+dados = c.slct_sala_controller()
+print(dados)
