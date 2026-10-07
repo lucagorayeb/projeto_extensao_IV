@@ -7,6 +7,7 @@
 # from scripts.insertions.insert_especialidade import insrt_especialidade
 # from scripts.insertions.insert_tipo_sala import insert_tipo_sala
 from app.backend.modules.sala.sala_controller import SalaController
+from scripts.insertions.insert_sala import insert_sala
 
 # try:
 # fc = FormatoController()
@@ -26,7 +27,7 @@ from app.backend.modules.sala.sala_controller import SalaController
 # insert_formatos()
 # insrt_especialidade()
 # insert_tipo_sala()
-
-c = SalaController()
-dados = c.slct_sala_controller()
-print(dados)
+print(insert_sala())
+# c = SalaController()
+# dados = c.slct_sala_controller()
+# print(dados)

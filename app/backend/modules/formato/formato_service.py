@@ -1,5 +1,5 @@
 from .formato_repository import FormatoRepository
-from ..base_json.retorno_json import RetornoJson
+from ..base_json.return_json import RetornoJson
 
 class FormatoService:
 
