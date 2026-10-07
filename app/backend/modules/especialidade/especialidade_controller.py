@@ -19,4 +19,4 @@ class EspecialidadeController:
         self.serv.del_especialidade_service(id=id)
 
     def slct_by_id_especialidade_controller(self, id: int) -> list[dict] | None:
-        return self.serv.slct_especialidade_service(id)
+        return self.serv.slct_especialidade_service(id=id)
