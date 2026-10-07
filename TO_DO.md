@@ -12,7 +12,7 @@
     [X] especialidade
     [] sala
     [X] tipo_sala
-    [] dados_usuarios
+    [] dados_usuario
     [] usuarios 
 )
 - [] Criar os testes para as funcionalidades já criadas.(
@@ -24,9 +24,9 @@
     [X] formato
     [X] tipo_sala
     [X] especialidade
-    [] sala
-    [] diciplina
+    [X] sala
+    [] disciplina
     [] professor
-    [] dados_usuarios
-    [] usuarios
+    [] dados_usuario
+    [] usuario
 )
