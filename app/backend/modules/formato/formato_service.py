@@ -5,11 +5,11 @@ class FormatoService:
 
     def __init__(self):
         self.repo = FormatoRepository()
-        self.retorna_json = RetornoJson()
+        self.json = RetornoJson()
 
     def slct_formato_service(self) -> list[dict] | None:
-        dados = self.repo.select().fetchall()
-        return self.__normaliza_dados(dados)
+        data = self.repo.select()
+        return self.__normalize_data(data)
 
     def insrt_formato_service(self, data: dict) -> None:
         self.repo.insert(data)
@@ -24,16 +24,13 @@ class FormatoService:
 
     def slct_by_id_formato_service(self, id: int) -> list[dict] | None:
         data = {"id": id}
-        return self.repo.select_by_id(data=data)
+        return self.__normalize_data(data)
 
-    def __normaliza_dados(self, data: object) -> list[dict] | None:
-        dados_normalizados = []
-        for cont in range(len(data)):
-            for i in range(len(data[cont]) - 1):
-                dados_normalizados.append({
-                    "id": data[cont][i], 
-                    "nome": data[cont][i+1]
-                })
-        return self.retorna_json.retorna_dados_formatados(dados_normalizados)
-        # return dados_normalizados
-        # print(json.dumps(dados_normalizados, ensure_ascii=False, indent=4))
+    def __normalize_data(self, data: object) -> list[dict] | None:
+        normalized_data = []
+        for d in data:
+            normalized_data.append({
+                "id": d.id,
+                "nome_formato": d.nome
+            })
+        return self.json.retorna_dados_formatados(normalized_data)

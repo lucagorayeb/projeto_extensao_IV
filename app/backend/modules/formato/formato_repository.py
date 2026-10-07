@@ -20,5 +20,5 @@ class FormatoRepository(BR):
         self.execute_and_commit_db_query(stmt=stmt, data=data)
 
     def select_by_id(self, data: dict) -> object | None:
-        stmt = "select id, nome from formato where id = :id;"
+        stmt = "select id, nome as nome_formato from formato where id = :id;"
         return self.execute_db_query(stmt=stmt, data=data)
