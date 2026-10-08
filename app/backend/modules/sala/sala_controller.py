@@ -9,33 +9,48 @@ class SalaController:
         self.json = ReturnJson()
 
     def insrt_sala_controller(self, data: dict):
+        response = []
         try:
             self.ctrl.insrt_sala_service(data=data)
+            response.append({
+                "status": 201,
+                "description": "Object created"
+            });
         except Exception as e:
-            # print(e)
-            array_erro = []
-            # erro = 
-            print(e.)
-            array_erro.append({
-                "error": str(e),
-                "error_type": str(type(e)),
+            response.append({
                 "status": 400,
-                "description": "Bad Request"
+                "description": "Bad Request",
+                "error": str(e).split('\n')[0],
+                "error_type": str(type(e)),
             })
-            # print(array_erro)
-            # return erro
-            # teste = self.json.return_format_data(array_erro)
-            # print(teste)
-            # return teste
-
+        return self.json.return_format_data(response)
+    
     def updt_sala_controller(self, data: dict, id: int) -> None:
-        self.ctrl.updt_sala_service(data=data, id=id)
+        response = []
+        try:
+            self.ctrl.updt_sala_service(data=data, id=id)
+        except:
+            pass
 
     def del_sala_controller(self, id: int) -> None:
         self.ctrl.del_sala_service(id=id)
 
     def slct_sala_controller(self) -> str:
-        return self.ctrl.slct_sala_service()
+        response = []
+        try:
+            data = self.ctrl.slct_sala_service()
+            response.append({
+                "status": 200,
+                "description": "Success",
+                "data": data
+            })
+        except Exception:
+            response.append({
+                "status": 500,
+                "description": "Internal Error"
+            })
+        return self.json.return_format_data(response)
+
 
     def slct_by_id_sala_controller(self, id: int) -> str:
         return self.ctrl.slct_by_id_sala_service(id=id)
