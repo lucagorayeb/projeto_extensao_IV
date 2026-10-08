@@ -21,7 +21,7 @@ class SalaController:
                 "status": 400,
                 "description": "Bad Request",
                 "error": str(e).split('\n')[0],
-                "error_type": str(type(e)),
+                "error_type": str(type(e))
             })
         return self.json.return_format_data(response)
     
@@ -33,12 +33,10 @@ class SalaController:
             pass
 
     def del_sala_controller(self, id: int) -> None:
-        self.ctrl.del_sala_service(id=id)
-
-    def slct_sala_controller(self) -> str:
+        
         response = []
         try:
-            data = self.ctrl.slct_sala_service()
+            data = self.ctrl.del_sala_service(id=id)
             response.append({
                 "status": 200,
                 "description": "Success",
@@ -47,8 +45,25 @@ class SalaController:
         except Exception:
             response.append({
                 "status": 500,
-                "description": "Internal Error"
+                "description": "Internal Error",
             })
+        return self.json.return_format_data(response)
+
+    def slct_sala_controller(self) -> str:
+        response = self.ctrl.slct_sala_service()
+        # try:
+        #     data = self.ctrl.slct_sala_service()
+        #     response.append({
+        #         "status": 200,
+        #         "description": "Success",
+        #         "data": data
+        #     })
+        # except Exception as e:
+        #     response.append({
+        #         "status": 500,
+        #         "description": "Internal Error",
+        #         "error": str(e)
+        #     })
         return self.json.return_format_data(response)
 
 

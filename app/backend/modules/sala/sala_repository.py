@@ -1,16 +1,22 @@
 from ..base_repository import BaseRepository as Br
-
+from sqlalchemy import table, column, select
 
 class SalaRepository(Br):
 
     def select(self) -> object:
-        stmt = """select 
-                    s.id,
-                    s.numero_nome as nome_sala,
-                    s.limite_alunos,
-                    ts.nome as tipo_sala
-                from sala as s
-                join tipo_sala as ts on ts.id = s.fk_tipo_sala;"""
+        # stmt = """select 
+        #             s.id,
+        #             s.numero_nome as nome_sala,
+        #             s.limite_alunos,
+        #             ts.nome as tipo_sala
+        #         from sala as s
+        #         join tipo_sala as ts on ts.id = s.fk_tipo_sala;"""
+        sala = table(
+            "sala",
+            column("id"),
+            column("numero_nome"),
+        )
+        stmt = table("sala").select(sala.c.id, sala.c.numero_nome)
         return self.execute_db_query(stmt=stmt)
 
     def insert(self, data: dict) -> None:

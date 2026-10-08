@@ -30,6 +30,6 @@ from app.backend.modules.sala.sala_controller import SalaController
 # print(insert_sala())
 
 c = SalaController()
-# dados = c.slct_sala_controller()
-# print(dados)
+dados = c.slct_sala_controller()
+print(dados)
 

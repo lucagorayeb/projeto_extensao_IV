@@ -20,8 +20,8 @@ class BaseRepository(ABC):
     def delete(self):
         pass
 
-    def execute_db_query(self, stmt: str, data: dict = None) -> list[dict] | None:
-        stmt = text(stmt)
+    def execute_db_query(self, stmt, data: dict = None) -> list[dict] | None:
+        # stmt = text(stmt)
         with eng.connect() as conn:
             return conn.execute(stmt, data)
 

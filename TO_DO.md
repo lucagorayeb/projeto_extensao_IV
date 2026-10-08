@@ -30,3 +30,4 @@
     [] dados_usuario
     [] usuario
 )
+- [] Fazer o mapeamento das entidades para o sqlalchemy.
