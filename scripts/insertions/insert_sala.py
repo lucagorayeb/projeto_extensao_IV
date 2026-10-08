@@ -8,4 +8,4 @@ data = {
 }
 
 def insert_sala():
-    c.insrt_sala_controller(data)
+    return c.insrt_sala_controller(data)
