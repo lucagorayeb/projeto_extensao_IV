@@ -38,6 +38,7 @@ class SalaService:
                 "quantidade_alunos": d.limite_alunos,
                 "tipo_sala": d.tipo_sala
             })
+            # print(d)
         return self.json.return_format_data(normalized_data)
         #return normalized_data
 

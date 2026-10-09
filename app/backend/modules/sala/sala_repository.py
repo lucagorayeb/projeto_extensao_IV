@@ -1,30 +1,27 @@
-from ..base_repository import BaseRepository as Br
-from sqlalchemy import table, column, select
-from .sala_modal import SalaModal
+from ..base_repository import BaseRepository
+from sqlalchemy import table, column, select, text
+from .sala_model import Sala 
 
-class SalaRepository(Br):
+class SalaRepository(BaseRepository):
 
     def __init__(self):
-        self.sala = SalaModal()
-
-    def select(self) -> object:
-        # stmt = """select 
-        #             s.id,
-        #             s.numero_nome as nome_sala,
-        #             s.limite_alunos,
-        #             ts.nome as tipo_sala
-        #         from sala as s
-        #         join tipo_sala as ts on ts.id = s.fk_tipo_sala;"""
-        sala = table(
+        self.sala = table(
             "sala",
             column("id"),
             column("nome"),
             column("limite_alunos"),
-            column("fk_tipo_sala")
+            column("fk_tipo_sala"),
+            column("created_at"),
+            column("updated_at"),
+            column("tipo_sala")
         )
-    
+        # self.sala = Sala()
+
+    def select(self) -> object:
+
         stmt = (
-            select(sala.c.id, sala.c.nome, sala.c.limite_alunos, sala.c.fk_tipo_sala)
+            select(self.sala.c.id, self.sala.c.nome, self.sala.c.limite_alunos, text('tipo_sala.nome as tipo_sala') ).join_from(
+                self.sala, self.sala.c.tipo_sala, self.sala.c.fk_tipo_sala == self.sala.c.tipo_sala.c.id)
         )
         return self.execute_db_query(stmt=stmt)
 
