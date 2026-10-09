@@ -1,7 +1,11 @@
 from ..base_repository import BaseRepository as Br
 from sqlalchemy import table, column, select
+from .sala_modal import SalaModal
 
 class SalaRepository(Br):
+
+    def __init__(self):
+        self.sala = SalaModal()
 
     def select(self) -> object:
         # stmt = """select 
@@ -14,9 +18,14 @@ class SalaRepository(Br):
         sala = table(
             "sala",
             column("id"),
-            column("numero_nome"),
+            column("nome"),
+            column("limite_alunos"),
+            column("fk_tipo_sala")
         )
-        stmt = table("sala").select(sala.c.id, sala.c.numero_nome)
+    
+        stmt = (
+            select(sala.c.id, sala.c.nome, sala.c.limite_alunos, sala.c.fk_tipo_sala)
+        )
         return self.execute_db_query(stmt=stmt)
 
     def insert(self, data: dict) -> None:

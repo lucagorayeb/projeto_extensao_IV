@@ -1,5 +1,6 @@
 import datetime
-from sqlalchemy import INT, VARCHAR, String, TIMESTAMP, Numeric, func, ForeignKey
+from sqlalchemy import INT, VARCHAR, String, TIMESTAMP, Numeric
+from sqlalchemy import  ForeignKey, table, column
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, registry
 from decimal import Decimal
 from typing_extensions import Annotated
@@ -12,8 +13,7 @@ num_6_2 = Annotated[Decimal, 6]
 initpk = Annotated[int, mapped_column(primary_key=True)]
 timestamp = Annotated[datetime.datetime, mapped_column(nullable=False)]
 
-
-class BaseModal(DeclarativeBase):
+class BaseModel(DeclarativeBase):
 
     registry = registry(
         type_annotation_map = {
