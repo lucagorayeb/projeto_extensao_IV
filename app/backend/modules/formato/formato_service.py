@@ -28,6 +28,6 @@ class FormatoService:
         for d in data:
             normalized_data.append({
                 "id": d.id,
-                "nome_formato": d.nome
+                "nome_formato": d.nome_formato
             })
-        return self.json.retorna_dados_formatados(normalized_data)
+        return normalized_data
