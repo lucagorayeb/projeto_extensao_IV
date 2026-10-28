@@ -19,7 +19,7 @@ class SalaRepository(BaseRepository):
         ).order_by(
             Sala.id
         )
-        return self.execute_db_query(stmt=stmt, returnable=True).all()
+        return self.execute_db_query(stmt, True).all()
 
     def insert(self, data: SalaDTO) -> None:
         stmt = insert(Sala).values(
@@ -27,7 +27,7 @@ class SalaRepository(BaseRepository):
             limite_alunos=data.limite_alunos,
             fk_tipo_sala=data.fk_tipo_sala
         )
-        self.execute_db_query(stmt=stmt, returnable=False)
+        self.execute_db_query(stmt, False)
 
     def update(self, data: SalaDTO, id: int) -> None:
         stmt = update(Sala).where(Sala.id == id).values(
@@ -35,11 +35,11 @@ class SalaRepository(BaseRepository):
             limite_alunos=data.limite_alunos,
             fk_tipo_sala=data.fk_tipo_sala
         )
-        self.execute_db_query(stmt=stmt, returnable=False)
+        self.execute_db_query(stmt, False)
 
     def delete(self, id: int) -> None:
         stmt = delete(Sala).where(Sala.id == id)
-        self.execute_db_query(stmt=stmt, returnable=False)
+        self.execute_db_query(stmt, False)
 
     def select_by_id(self, id: int) -> list:
         stmt = select(
@@ -54,4 +54,4 @@ class SalaRepository(BaseRepository):
         ).order_by(
             Sala.id
         ).where(Sala.id == id)
-        return self.execute_db_query(stmt=stmt, returnable=True).all()
+        return self.execute_db_query(stmt, True).all()

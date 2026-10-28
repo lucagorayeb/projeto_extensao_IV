@@ -16,7 +16,7 @@ class FormatoRepository(BR):
             Formato.id,
             Formato.nome.label("nome_formato")
         )
-        return self.execute_db_query(stmt, True)
+        return self.execute_db_query(stmt, True).all()
 
     def update(self, data: FormatoDTO, id: int) -> None:
         stmt = update(Formato).where(
