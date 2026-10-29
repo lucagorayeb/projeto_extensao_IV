@@ -17,7 +17,7 @@ class FormatoController:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
             )
-        except data == []:
+        except Exception:
             return JSONResponse(
                 status_code=HTTPStatus.NOT_FOUND,
                 content="Not Found"
@@ -47,7 +47,7 @@ class FormatoController:
             )
         return JSONResponse(
                 status_code=HTTPStatus.CREATED,
-                content="Sala Object Created"
+                content="Formato Object Created"
             )
 
     def updt_formato_controller(self, data: FormatoDTO, id: int) -> JSONResponse:
@@ -70,7 +70,7 @@ class FormatoController:
             )
         return JSONResponse(
                 status_code=HTTPStatus.OK,
-                content="Sala Objected Updated"
+                content="Formato Objected Updated"
             )
     
     def del_formato_controller(self, id: int) -> JSONResponse:
@@ -93,7 +93,7 @@ class FormatoController:
             )
         return JSONResponse(
                 status_code=HTTPStatus.OK,
-                content="Sala Objected Deleted"
+                content="Formato Objected Deleted"
             )
     
     def slct_by_id_formato_controller(self, id: int) -> JSONResponse:
@@ -109,7 +109,7 @@ class FormatoController:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
             )
-        except data == []:
+        except Exception:
             return JSONResponse(
                 status_code=HTTPStatus.NOT_FOUND,
                 content="Not Found"

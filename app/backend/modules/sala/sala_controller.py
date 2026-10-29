@@ -81,6 +81,8 @@ class SalaController:
     def slct_sala_controller(self) -> JSONResponse:
         try:
             data = self.ctrl.slct_sala_service()
+            if len(data) == 0:
+                raise Exception
         except IntegrityError:
             return JSONResponse(
                 status_code=HTTPStatus.BAD_REQUEST,
@@ -96,7 +98,7 @@ class SalaController:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
             )
-        except data == []:
+        except Exception:
             return JSONResponse(
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
@@ -109,6 +111,8 @@ class SalaController:
     def slct_by_id_sala_controller(self, id: int) -> JSONResponse:
         try:
             data = self.ctrl.slct_by_id_sala_service(id)
+            if len(data) == 0:
+                raise Exception
         except IntegrityError:
             return JSONResponse(
                 status_code=HTTPStatus.BAD_REQUEST,
@@ -124,7 +128,7 @@ class SalaController:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
             )
-        except data == []:
+        except Exception:
             return JSONResponse(
                 status_code=HTTPStatus.NOT_FOUND,
                 content="Not Found"

@@ -11,6 +11,7 @@ class SalaRepository(BaseRepository):
             Sala.id,
             Sala.nome,
             Sala.limite_alunos,
+            Sala.fk_tipo_sala.label("tipo_sala_id"),
             TipoSala.nome.label("tipo_sala")
         ).join(
             TipoSala
@@ -46,6 +47,7 @@ class SalaRepository(BaseRepository):
             Sala.id,
             Sala.nome,
             Sala.limite_alunos,
+            Sala.fk_tipo_sala.label("tipo_sala_id"),
             TipoSala.nome.label("tipo_sala")
         ).join(
             TipoSala

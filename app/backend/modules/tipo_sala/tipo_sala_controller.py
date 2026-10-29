@@ -27,7 +27,7 @@ class TipoSalaController:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
             )
-        except data == []:
+        except Exception:
             return JSONResponse(
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
@@ -124,7 +124,7 @@ class TipoSalaController:
                 status_code=500,
                 content="Internal Error"
             )
-        except data == []:
+        except Exception:
             return JSONResponse(
                 status_code=HTTPStatus.NOT_FOUND,
                 content="Not Found"

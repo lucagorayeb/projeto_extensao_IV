@@ -20,7 +20,7 @@ class FormatoService:
         self.repo.delete(id)
 
     def slct_by_id_formato_service(self, id: int) -> list:
-        data = self.slct_by_id_formato_service(id)
+        data = self.repo.select_by_id(id)
         return self.__normalize_data(data)
 
     def __normalize_data(self, data: FormatoDTO) -> list:

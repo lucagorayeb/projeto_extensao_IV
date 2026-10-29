@@ -9,9 +9,11 @@ class EspecialidadeController:
     def __init__(self):
         self.serv = EspecialidadeService()
 
-    def slct_especialidade_controller(self) -> list[dict] | None:
+    def slct_especialidade_controller(self) -> JSONResponse:
         try:
             data = self.serv.slct_especialidade_service()
+            if len(data) == 0:
+                raise Exception
         except IntegrityError:
             return JSONResponse(
                 status_code=HTTPStatus.BAD_REQUEST,
@@ -27,7 +29,7 @@ class EspecialidadeController:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
             )
-        except data == []:
+        except Exception:
             return JSONResponse(
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
@@ -37,7 +39,7 @@ class EspecialidadeController:
                 content=data
             )
 
-    def insrt_especialidade_controller(self, data: dict) -> None:
+    def insrt_especialidade_controller(self, data: EspecialidadeDTO) -> JSONResponse:
         try:
             self.serv.insrt_especialidade_service(data)
         except IntegrityError:
@@ -57,10 +59,10 @@ class EspecialidadeController:
             )
         return JSONResponse(
                 status_code=HTTPStatus.CREATED,
-                content="Sala Object Created"
+                content="Especialidade Object Created"
             )
 
-    def updt_especialidade_controller(self, data: dict, id: int) -> None:
+    def updt_especialidade_controller(self, data: EspecialidadeDTO, id: int) -> JSONResponse:
         try:
             self.serv.updt_especialidade_service(data, id)
         except IntegrityError:
@@ -80,10 +82,10 @@ class EspecialidadeController:
             )
         return JSONResponse(
                 status_code=HTTPStatus.OK,
-                content="Sala Objected Updated"
+                content="Especialidade Objected Updated"
             )
 
-    def del_especialidade_controller(self, id: int) -> None:
+    def del_especialidade_controller(self, id: int) -> JSONResponse:
         try:
             self.serv.del_especialidade_service(id)
         except IntegrityError:
@@ -103,12 +105,14 @@ class EspecialidadeController:
             )
         return JSONResponse(
                 status_code=HTTPStatus.OK,
-                content="Sala Objected Deleted"
+                content="Especialidade Objected Deleted"
         )
     
-    def slct_by_id_especialidade_controller(self, id: int) -> list[dict] | None:
+    def slct_by_id_especialidade_controller(self, id: int) -> JSONResponse:
         try:
-            data = self.serv.slct_especialidade_service(id)
+            data = self.serv.slct_by_id_especialidade_service(id)
+            if len(data) == 0:
+                raise Exception
         except IntegrityError:
             return JSONResponse(
                 status_code=HTTPStatus.BAD_REQUEST,
@@ -124,7 +128,7 @@ class EspecialidadeController:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
             )
-        except data == []:
+        except Exception:
             return JSONResponse(
                 status_code=HTTPStatus.NOT_FOUND,
                 content="Not Found"

@@ -7,15 +7,19 @@ from .especialidade_model import Especialidade
 class EspecialidadeRepository(Br):
 
     def insert(self, data: EspecialidadeDTO) -> None:
-        stmt = insert(Especialidade).values(nome=data.nome)
-        self.execute_and_commit_db_query(stmt=stmt, returnable=False)
+        stmt = insert(
+            Especialidade
+        ).values(
+            nome=data.nome
+        )
+        self.execute_db_query(stmt, False)
 
     def select(self) -> list:
         stmt = select(
             Especialidade.id,
             Especialidade.nome
         )
-        return self.execute_db_query(stmt=stmt, returnable=True)
+        return self.execute_db_query(stmt, True)
 
     def update(self, data: EspecialidadeDTO, id: int) -> None:
         stmt = update(Especialidade).where(
@@ -23,11 +27,15 @@ class EspecialidadeRepository(Br):
             ).values(
                 nome=data.nome
             )
-        self.execute_and_commit_db_query(stmt=stmt, returnable=False)
+        self.execute_db_query(stmt, False)
 
     def delete(self, id: int) -> None:
-        stmt = delete(Especialidade).where(Especialidade.id  == id)
-        self.execute_and_commit_db_query(stmt=stmt, returnable=False)
+        stmt = delete(
+            Especialidade
+        ).where(
+            Especialidade.id  == id
+        )
+        self.execute_db_query(stmt, False)
 
     def select_by_id(self, id: int) -> list:
         stmt = select(
@@ -36,4 +44,4 @@ class EspecialidadeRepository(Br):
         ).where(
             Especialidade.id == id
         )
-        return self.execute_db_query(stmt=stmt, returnable=True)
+        return self.execute_db_query(stmt, True)
