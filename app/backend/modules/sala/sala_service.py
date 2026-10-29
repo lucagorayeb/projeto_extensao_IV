@@ -30,6 +30,7 @@ class SalaService:
                 "id": d.id,
                 "nome_sala": d.nome,
                 "quantidade_alunos": d.limite_alunos,
+                "tipo_sala_id": d.tipo_sala_id,
                 "tipo_sala": d.tipo_sala
             })
         return normalized_data

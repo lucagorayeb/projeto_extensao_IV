@@ -24,11 +24,11 @@ class FormatoRepository(BR):
         ).values(
             nome=data.nome
         )
-        self.execute__db_query(stmt, False)
+        self.execute_db_query(stmt, False)
 
     def delete(self, id: int) -> None:
         stmt = delete(Formato).where(Formato.id == id)
-        self.execute_and_commit_db_query(stmt, False)
+        self.execute_db_query(stmt, False)
 
     def select_by_id(self, id: int) -> list:
         stmt = select(
