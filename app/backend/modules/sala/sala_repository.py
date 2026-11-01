@@ -23,7 +23,9 @@ class SalaRepository(BaseRepository):
         return self.execute_db_query(stmt, True).all()
 
     def insert(self, data: SalaDTO) -> None:
-        stmt = insert(Sala).values(
+        stmt = insert(
+            Sala
+        ).values(
             nome=data.nome,
             limite_alunos=data.limite_alunos,
             fk_tipo_sala=data.fk_tipo_sala
@@ -39,7 +41,11 @@ class SalaRepository(BaseRepository):
         self.execute_db_query(stmt, False)
 
     def delete(self, id: int) -> None:
-        stmt = delete(Sala).where(Sala.id == id)
+        stmt = delete(
+            Sala
+        ).where(
+            Sala.id == id
+        )
         self.execute_db_query(stmt, False)
 
     def select_by_id(self, id: int) -> list:

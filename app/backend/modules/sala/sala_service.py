@@ -23,7 +23,7 @@ class SalaService:
         data = self.serv.select_by_id(id)
         return self.__data_treatment(data)
 
-    def __data_treatment(self, data: SalaDTO) -> list | None:
+    def __data_treatment(self, data: SalaDTO) -> list:
         normalized_data = []
         for d in data:
             normalized_data.append({
