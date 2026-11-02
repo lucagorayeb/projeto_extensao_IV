@@ -6,7 +6,7 @@ import { TIPOS_SALA } from "@/lib/constants"
 import { salaIcon } from "@/lib/icons"
 import { predioStyle } from "@/lib/predio-style"
 import { cn } from "@/lib/utils"
-import type { Sala } from "@/lib/types"
+import type { Sala } from "@/types"
 
 interface SalaItemProps {
   sala: Sala

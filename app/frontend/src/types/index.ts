@@ -34,5 +34,3 @@ export type SalaInput = Omit<Sala, "id">
 export type ProfessorInput = Omit<Professor, "id">
 export type TurmaInput = Omit<Turma, "id">
 
-export type TabId = "painel" | "semana" | "hoje" | "cadastro"
-export type CadastroTab = "salas" | "professores" | "turmas"

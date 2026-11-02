@@ -3,7 +3,7 @@ import { AlertTriangle } from "lucide-react"
 import { useSchedule } from "@/context/schedule-context"
 import { predioStyle } from "@/lib/predio-style"
 import { cn } from "@/lib/utils"
-import type { Turma } from "@/lib/types"
+import type { Turma } from "@/types"
 
 interface CalendarBlockProps {
   turma: Turma

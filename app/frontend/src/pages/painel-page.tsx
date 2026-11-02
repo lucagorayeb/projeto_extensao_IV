@@ -27,7 +27,7 @@ import {
   timeToMin,
   todayDia,
 } from "@/lib/schedule"
-import type { CadastroTab, TabId } from "@/lib/types"
+import type { CadastroTab, TabId } from "@/types"
 
 interface PainelPageProps {
   onNavigate: (tab: TabId, cadastroTab?: CadastroTab) => void

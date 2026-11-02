@@ -1,12 +1,6 @@
-import {
-  DIAS,
-  HOUR_END,
-  HOUR_H,
-  HOUR_START,
-  type Dia,
-  type FaixaId,
-} from "@/lib/constants"
-import type { Sala, Turma } from "@/lib/types"
+import { DIAS, type Dia, type FaixaId } from "@/lib/constants"
+import { HOUR_END, HOUR_H, HOUR_START } from "@/lib/calendar"
+import type { Sala, Turma } from "@/types"
 
 type TimedTurma = Turma & { inicio: string; fim: string }
 

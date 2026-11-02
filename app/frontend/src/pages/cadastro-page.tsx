@@ -12,7 +12,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { useSchedule } from "@/context/schedule-context"
-import type { CadastroTab } from "@/lib/types"
+import type { CadastroTab } from "@/types"
 
 interface CadastroPageProps {
   tab: CadastroTab

@@ -1,9 +1,9 @@
 import { useMemo } from "react"
 import { CalendarBlock } from "@/components/schedule/calendar-block"
 import { OverflowBlock } from "@/components/schedule/overflow-block"
-import { HOUR_H } from "@/lib/constants"
+import { HOUR_H } from "@/lib/calendar"
 import { minutesToTop, packForDisplay } from "@/lib/schedule"
-import type { Turma } from "@/lib/types"
+import type { Turma } from "@/types"
 
 interface EventLayerProps {
   turmas: Turma[]

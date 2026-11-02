@@ -10,7 +10,7 @@ import { ProfessorItem } from "@/components/cadastro/professor-item"
 import { EmptyState } from "@/components/shared/empty-state"
 import { Panel } from "@/components/shared/panel"
 import { useSchedule } from "@/context/schedule-context"
-import type { Professor } from "@/lib/types"
+import type { Professor } from "@/types"
 
 export function ProfessoresTab() {
   const { professores, addProfessor, updateProfessor, removeProfessor } = useSchedule()

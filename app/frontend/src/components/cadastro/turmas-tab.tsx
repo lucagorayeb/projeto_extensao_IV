@@ -8,7 +8,7 @@ import { Panel } from "@/components/shared/panel"
 import { useSchedule } from "@/context/schedule-context"
 import { DIAS } from "@/lib/constants"
 import { sortByStart } from "@/lib/schedule"
-import type { Turma } from "@/lib/types"
+import type { Turma } from "@/types"
 
 export function TurmasTab() {
   const { turmas, addTurma, updateTurma, removeTurma } = useSchedule()

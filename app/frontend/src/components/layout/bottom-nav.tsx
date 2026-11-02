@@ -1,6 +1,6 @@
-import { NAV_ITEMS } from "@/lib/nav"
+import { NAV_ITEMS } from "@/config/nav"
 import { cn } from "@/lib/utils"
-import type { TabId } from "@/lib/types"
+import type { TabId } from "@/types"
 
 interface BottomNavProps {
   tab: TabId

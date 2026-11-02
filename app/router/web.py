@@ -13,6 +13,7 @@ from ..backend.modules.disciplina.disciplina_controller import DisciplinaControl
 from ..backend.modules.disciplina.disciplina_dto import DisciplinaDTO
 from ..backend.modules.disciplina_especialidade.disciplina_especialidade_controller import DisciplinaEspecialidadeController
 from ..backend.modules.disciplina_especialidade.disciplina_especialidade_dto import DisciplinaEspecialidadeDTO
+from fastapi.middleware.cors import CORSMiddleware
 
 sala = SalaController()
 tipo_sala = TipoSalaController()
@@ -22,6 +23,12 @@ disciplina = DisciplinaController()
 disciplina_especialidade = DisciplinaEspecialidadeController()
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # endereço do Vite
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Rota Principal
 @app.get("/")

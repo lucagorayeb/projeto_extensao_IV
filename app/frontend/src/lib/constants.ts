@@ -41,8 +41,6 @@ export const FAIXAS = [
 ] as const
 export type FaixaId = (typeof FAIXAS)[number]["id"]
 
-/** Grade do calendário (eixo de horas) */
-export const HOUR_START = 7
-export const HOUR_END = 22
-export const HOUR_H = 52 // px por hora
-export const GRID_HEIGHT = (HOUR_END - HOUR_START) * HOUR_H
+// Constantes de grade e API_URL foram movidas:
+// → src/lib/calendar.ts (HOUR_START, HOUR_END, HOUR_H, GRID_HEIGHT)
+// → src/config/api.ts   (API_URL)

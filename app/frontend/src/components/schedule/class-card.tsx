@@ -4,7 +4,7 @@ import { useSchedule } from "@/context/schedule-context"
 import { formatoIcon } from "@/lib/icons"
 import { predioStyle } from "@/lib/predio-style"
 import { cn } from "@/lib/utils"
-import type { Turma } from "@/lib/types"
+import type { Turma } from "@/types"
 
 interface ClassCardProps {
   turma: Turma

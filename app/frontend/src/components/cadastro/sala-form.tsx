@@ -13,7 +13,7 @@ import {
   type Predio,
   type TipoSala,
 } from "@/lib/constants"
-import type { Sala, SalaInput } from "@/lib/types"
+import type { Sala, SalaInput } from "@/types"
 
 export interface SalaFormValues {
   nome: string

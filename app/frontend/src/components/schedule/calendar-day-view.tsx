@@ -5,9 +5,10 @@ import { EventLayer } from "@/components/schedule/event-layer"
 import { HourLines } from "@/components/schedule/hour-lines"
 import { NowLine } from "@/components/schedule/now-line"
 import { TimeAxis } from "@/components/schedule/time-axis"
-import { GRID_HEIGHT, HOUR_H, HOUR_START, type Dia } from "@/lib/constants"
+import { type Dia } from "@/lib/constants"
+import { GRID_HEIGHT, HOUR_H, HOUR_START } from "@/lib/calendar"
 import { nowOffset, sameDate } from "@/lib/schedule"
-import type { Turma } from "@/lib/types"
+import type { Turma } from "@/types"
 
 interface CalendarDayViewProps {
   dia: Dia

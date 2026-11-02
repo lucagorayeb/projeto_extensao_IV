@@ -1,7 +1,7 @@
 import { Laptop } from "lucide-react"
 import { useSchedule } from "@/context/schedule-context"
 import { cn } from "@/lib/utils"
-import type { Turma } from "@/lib/types"
+import type { Turma } from "@/types"
 
 /** Aula assíncrona (sem horário fixo) — fica numa faixa acima da grade de horas. */
 export function AsyncChip({ turma }: { turma: Turma }) {
