@@ -6,10 +6,10 @@
 # from scripts.insertions.insert_formato import insert_formatos
 # from scripts.insertions.insert_especialidade import insrt_especialidade
 # from scripts.insertions.insert_tipo_sala import insert_tipo_sala
-from app.backend.modules.sala.sala_controller import SalaController
-from app.backend.modules.tipo_sala.tipo_sala_controller import TipoSalaController
+from backend.modules.sala.sala_controller import SalaController
+from backend.modules.tipo_sala.tipo_sala_controller import TipoSalaController
 # from scripts.insertions.insert_sala import insert_sala
-from app.router.web import app
+from router.web import app
 from sqlalchemy.exc import SQLAlchemyError, OperationalError, IntegrityError
 
 

@@ -1,0 +1,35 @@
+from backend.modules.base_repository import BaseRepository as Br
+from sqlalchemy import select, insert, update, delete
+from backend.modules.tipo_sala.tipo_sala_model import TipoSala
+from backend.modules.tipo_sala.tipo_sala_dto import TipoSalaDTO
+
+class TipoSalaRepository(Br):
+
+    def insert(self, data: TipoSalaDTO) -> None:
+        stmt = insert(TipoSala).values(
+            nome=data.nome
+        )
+        self.execute_db_query(stmt, False)
+
+    def select(self) -> list | None:
+        stmt = select(TipoSala.id, TipoSala.nome)
+        return self.execute_db_query(stmt, True)
+
+    def update(self, data: TipoSalaDTO, id: int) -> None:
+        stmt = update(TipoSala).where(TipoSala.id == id).values(
+            nome=data.nome
+        )
+        self.execute_db_query(stmt, False)
+
+    def delete(self, id: int) -> None:
+        stmt = delete(TipoSala).where(TipoSala.id == id)
+        self.execute_db_query(stmt, False)
+
+    def select_by_id(self, id: int) -> list | None:
+        stmt = select(
+            TipoSala.id,
+            TipoSala.nome
+        ).where(
+            TipoSala.id == id
+        )
+        return self.execute_db_query(stmt, True)
