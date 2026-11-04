@@ -9,6 +9,14 @@ import {
   type ReactNode,
 } from "react"
 import { detectConflicts } from "@/lib/schedule"
+import {
+  fetchSalasFromBackend,
+  fetchTiposSala,
+  createSalaInBackend,
+  updateSalaInBackend,
+  deleteSalaInBackend,
+  type BackendTipoSala,
+} from "@/services/sala"
 import type {
   Professor,
   ProfessorInput,
@@ -25,10 +33,11 @@ interface ScheduleContextValue {
   professores: Professor[]
   turmas: Turma[]
   conflitos: Set<string>
+  isBackendConnected: boolean
   getSala: (id?: string | null) => Sala | undefined
   getProfessor: (id?: string | null) => Professor | undefined
-  addSala: (input: SalaInput) => void
-  updateSala: (id: string, input: SalaInput) => void
+  addSala: (input: SalaInput) => Promise<void> | void
+  updateSala: (id: string, input: SalaInput) => Promise<void> | void
   removeSala: (id: string) => ActionResult
   addProfessor: (input: ProfessorInput) => void
   updateProfessor: (id: string, input: ProfessorInput) => void
@@ -36,6 +45,7 @@ interface ScheduleContextValue {
   addTurma: (input: TurmaInput) => void
   updateTurma: (id: string, input: TurmaInput) => void
   removeTurma: (id: string) => void
+  refreshSalas: () => Promise<void>
 }
 
 const ScheduleContext = createContext<ScheduleContextValue | null>(null)
@@ -109,6 +119,53 @@ export function ScheduleProvider({
     initialData.professores,
   )
   const [turmas, setTurmas] = useState<Turma[]>(initialData.turmas)
+  const [tiposSala, setTiposSala] = useState<BackendTipoSala[]>([])
+  const [isBackendConnected, setIsBackendConnected] = useState<boolean>(false)
+
+  const refreshSalas = useCallback(async () => {
+    const backendSalas = await fetchSalasFromBackend()
+    if (backendSalas !== null) {
+      setIsBackendConnected(true)
+      if (backendSalas.length > 0) {
+        setSalas(backendSalas)
+      }
+    } else {
+      setIsBackendConnected(false)
+    }
+  }, [])
+
+  // Sincronização inicial com o backend FastAPI
+  useEffect(() => {
+    let isMounted = true
+
+    async function sync() {
+      const [backendTipos, backendSalas] = await Promise.all([
+        fetchTiposSala(),
+        fetchSalasFromBackend(),
+      ])
+
+      if (!isMounted) return
+
+      if (backendTipos && backendTipos.length > 0) {
+        setTiposSala(backendTipos)
+      }
+
+      if (backendSalas !== null) {
+        setIsBackendConnected(true)
+        if (backendSalas.length > 0) {
+          setSalas(backendSalas)
+        }
+      } else {
+        setIsBackendConnected(false)
+      }
+    }
+
+    sync()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   useEffect(() => {
     try {
@@ -134,15 +191,31 @@ export function ScheduleProvider({
     [professores],
   )
 
-  const addSala = useCallback((input: SalaInput) => {
-    setSalas((prev) => [{ id: newId("s"), ...input }, ...prev])
-  }, [])
+  const addSala = useCallback(
+    async (input: SalaInput) => {
+      // 1. Atualização otimista imediata na UI
+      const tempId = newId("s")
+      setSalas((prev) => [{ id: tempId, ...input }, ...prev])
 
-  const updateSala = useCallback((id: string, input: SalaInput) => {
-    setSalas((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, ...input } : s)),
-    )
-  }, [])
+      // 2. Envia para o backend FastAPI
+      const res = await createSalaInBackend(input, tiposSala)
+      if (res.ok) {
+        // Recarrega do backend para sincronizar os IDs reais do banco de dados
+        await refreshSalas()
+      }
+    },
+    [tiposSala, refreshSalas],
+  )
+
+  const updateSala = useCallback(
+    async (id: string, input: SalaInput) => {
+      setSalas((prev) =>
+        prev.map((s) => (s.id === id ? { ...s, ...input } : s)),
+      )
+      await updateSalaInBackend(id, input, tiposSala)
+    },
+    [tiposSala],
+  )
 
   const removeSala = useCallback(
     (id: string): ActionResult => {
@@ -156,6 +229,9 @@ export function ScheduleProvider({
       }
 
       setSalas((prev) => prev.filter((s) => s.id !== id))
+      deleteSalaInBackend(id).catch((err) =>
+        console.warn("Erro ao excluir sala no backend:", err),
+      )
       return { ok: true }
     },
     [salas, turmas],
@@ -211,6 +287,7 @@ export function ScheduleProvider({
       professores,
       turmas,
       conflitos,
+      isBackendConnected,
       getSala,
       getProfessor,
       addSala,
@@ -222,12 +299,14 @@ export function ScheduleProvider({
       addTurma,
       updateTurma,
       removeTurma,
+      refreshSalas,
     }),
     [
       salas,
       professores,
       turmas,
       conflitos,
+      isBackendConnected,
       getSala,
       getProfessor,
       addSala,
@@ -239,6 +318,7 @@ export function ScheduleProvider({
       addTurma,
       updateTurma,
       removeTurma,
+      refreshSalas,
     ],
   )
 
