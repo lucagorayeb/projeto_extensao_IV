@@ -1,4 +1,4 @@
-from app.backend.core.interface import engine_mysql
+from backend.core.interface import engine_mysql
 from sqlalchemy import text
 from dotenv import load_dotenv
 import os
