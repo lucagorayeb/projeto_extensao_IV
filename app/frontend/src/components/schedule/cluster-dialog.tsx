@@ -9,7 +9,7 @@ import {
 import { useSchedule } from "@/context/schedule-context"
 import { hasTime, sortByStart, timeToMin } from "@/lib/schedule"
 import type { Dia } from "@/lib/constants"
-import type { Turma } from "@/lib/types"
+import type { Turma } from "@/types"
 
 export interface ClusterData {
   dia: Dia

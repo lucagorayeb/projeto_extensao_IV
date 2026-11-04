@@ -1,5 +1,5 @@
 import type { Dia, Formato } from "@/lib/constants"
-import type { Professor, Sala, Turma } from "@/lib/types"
+import type { Professor, Sala, Turma } from "@/types"
 
 export const SEED_SALAS: Sala[] = [
   { id: "s1", nome: "Sala 03", tipo: "sala", predio: "Central", andar: "1º Piso", capacidade: 45 },

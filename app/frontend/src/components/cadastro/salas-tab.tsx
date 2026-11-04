@@ -6,7 +6,7 @@ import { SalaItem } from "@/components/cadastro/sala-item"
 import { EmptyState } from "@/components/shared/empty-state"
 import { Panel } from "@/components/shared/panel"
 import { useSchedule } from "@/context/schedule-context"
-import type { Sala } from "@/lib/types"
+import type { Sala } from "@/types"
 
 export function SalasTab() {
   const { salas, addSala, updateSala, removeSala } = useSchedule()

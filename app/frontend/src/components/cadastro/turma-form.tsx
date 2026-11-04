@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useSchedule } from "@/context/schedule-context"
 import { DIAS, FORMATOS, type Dia, type Formato } from "@/lib/constants"
 import { salasOcupadas, timeToMin } from "@/lib/schedule"
-import type { Turma, TurmaInput } from "@/lib/types"
+import type { Turma, TurmaInput } from "@/types"
 
 export interface TurmaFormValues {
   curso: string

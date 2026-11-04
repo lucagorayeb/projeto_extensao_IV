@@ -4,7 +4,7 @@ import { toast } from "sonner"
 import { FormField } from "@/components/shared/form-field"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import type { Professor, ProfessorInput } from "@/lib/types"
+import type { Professor, ProfessorInput } from "@/types"
 
 export interface ProfessorFormValues {
   nome: string

@@ -3,7 +3,7 @@ import { ClassCard } from "@/components/schedule/class-card"
 import { ConfirmDelete } from "@/components/shared/confirm-delete"
 import { Button } from "@/components/ui/button"
 import { useSchedule } from "@/context/schedule-context"
-import type { Turma } from "@/lib/types"
+import type { Turma } from "@/types"
 
 interface TurmaItemProps {
   turma: Turma

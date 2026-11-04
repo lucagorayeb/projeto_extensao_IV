@@ -11,7 +11,7 @@ import { HojePage } from "@/pages/hoje-page"
 import { SemanaPage } from "@/pages/semana-page"
 import { CadastroPage } from "@/pages/cadastro-page"
 
-import type { CadastroTab, TabId } from "@/lib/types"
+import type { CadastroTab, TabId } from "@/types"
 
 function AppContent() {
   const [tab, setTab] = useState<TabId>("painel")

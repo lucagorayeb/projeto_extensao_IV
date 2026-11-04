@@ -16,7 +16,7 @@ import type {
   SalaInput,
   Turma,
   TurmaInput,
-} from "@/lib/types"
+} from "@/types"
 
 export type ActionResult = { ok: true } | { ok: false; message: string }
 

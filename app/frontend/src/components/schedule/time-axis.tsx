@@ -1,4 +1,4 @@
-import { HOUR_END, HOUR_H, HOUR_START } from "@/lib/constants"
+import { HOUR_END, HOUR_H, HOUR_START } from "@/lib/calendar"
 
 /** Coluna de horas (fixa à esquerda ao rolar na horizontal). */
 export function TimeAxis() {

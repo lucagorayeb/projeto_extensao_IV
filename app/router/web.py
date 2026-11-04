@@ -11,14 +11,24 @@ from ..backend.modules.formato.formato_controller import FormatoController
 from ..backend.modules.formato.formato_dto import FormatoDTO
 from ..backend.modules.disciplina.disciplina_controller import DisciplinaController
 from ..backend.modules.disciplina.disciplina_dto import DisciplinaDTO
+from ..backend.modules.disciplina_especialidade.disciplina_especialidade_controller import DisciplinaEspecialidadeController
+from ..backend.modules.disciplina_especialidade.disciplina_especialidade_dto import DisciplinaEspecialidadeDTO
+from fastapi.middleware.cors import CORSMiddleware
 
 sala = SalaController()
 tipo_sala = TipoSalaController()
 especialidade = EspecialidadeController()
 formato = FormatoController()
 disciplina = DisciplinaController()
+disciplina_especialidade = DisciplinaEspecialidadeController()
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # endereço do Vite
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Rota Principal
 @app.get("/")
@@ -137,4 +147,28 @@ def updt_disciplina(data: DisciplinaDTO, id: int) -> JSONResponse:
 @app.delete("/disciplina/{id}")
 def del_disciplina(id: int) -> JSONResponse:
     return disciplina.del_disciplina_controller(id)
+#--------------------------------------------------------------------------
+
+#------------------------ROTAS DISCIPLINA ESPECIALIDADE--------------------
+@app.get("/disciplina-especialidade/")
+def select_disciplina_especialidade() -> JSONResponse:
+    return disciplina_especialidade.slct_disciplina_especialidade_controller()
+    
+
+@app.get("/disciplina-especialidade/{id}")
+def select_by_id_disciplina(id: int) -> JSONResponse:
+    return disciplina_especialidade.slct_by_id_disciplina_especialidade_controller(id)
+
+@app.post("/disciplina-especialidade/")
+def insrt_disciplina(data: DisciplinaEspecialidadeDTO) -> JSONResponse:
+    return disciplina_especialidade.insrt_disciplina_especialidade_controller(data)
+
+@app.put("/disciplina-especialidade/{id}")
+def updt_disciplina(data: DisciplinaEspecialidadeDTO, id: int) -> JSONResponse:
+    # return disciplina_especialidade.updt_disciplina_especialidade_controller(data, id)
+    pass
+
+@app.delete("/disciplina-especialidade/{id}")
+def del_disciplina(id: int) -> JSONResponse:
+    return disciplina_especialidade.del_disciplina_especialidade_controller(id)
 #--------------------------------------------------------------------------

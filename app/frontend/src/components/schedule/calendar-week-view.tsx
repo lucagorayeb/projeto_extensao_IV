@@ -4,10 +4,11 @@ import { EventLayer } from "@/components/schedule/event-layer"
 import { HourLines } from "@/components/schedule/hour-lines"
 import { NowLine } from "@/components/schedule/now-line"
 import { TimeAxis } from "@/components/schedule/time-axis"
-import { DIAS, DIAS_CURTO, GRID_HEIGHT, HOUR_H, HOUR_START } from "@/lib/constants"
+import { DIAS, DIAS_CURTO } from "@/lib/constants"
+import { GRID_HEIGHT, HOUR_H, HOUR_START } from "@/lib/calendar"
 import { nowOffset, sameDate } from "@/lib/schedule"
 import { cn } from "@/lib/utils"
-import type { Turma } from "@/lib/types"
+import type { Turma } from "@/types"
 
 interface CalendarWeekViewProps {
   turmas: Turma[]

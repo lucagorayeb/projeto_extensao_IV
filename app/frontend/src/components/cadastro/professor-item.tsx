@@ -4,7 +4,7 @@ import { Panel } from "@/components/shared/panel"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import type { Professor } from "@/lib/types"
+import type { Professor } from "@/types"
 
 interface ProfessorItemProps {
   professor: Professor
