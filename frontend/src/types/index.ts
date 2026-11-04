@@ -1,5 +1,7 @@
 import type { Andar, Dia, Formato, Predio, TipoSala } from "@/lib/constants"
 
+export type { Andar, Dia, Formato, Predio, TipoSala }
+
 export interface Sala {
   id: string
   nome: string
