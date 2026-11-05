@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react"
 import { detectConflicts } from "@/lib/schedule"
+
 import {
   fetchSalasFromBackend,
   fetchTiposSala,
@@ -17,6 +18,7 @@ import {
   deleteSalaInBackend,
   type BackendTipoSala,
 } from "@/services/sala"
+
 import type {
   Professor,
   ProfessorInput,
@@ -33,7 +35,6 @@ interface ScheduleContextValue {
   professores: Professor[]
   turmas: Turma[]
   conflitos: Set<string>
-  isBackendConnected: boolean
   getSala: (id?: string | null) => Sala | undefined
   getProfessor: (id?: string | null) => Professor | undefined
   addSala: (input: SalaInput) => Promise<void> | void
@@ -50,42 +51,8 @@ interface ScheduleContextValue {
 
 const ScheduleContext = createContext<ScheduleContextValue | null>(null)
 
-const STORAGE_KEY = "engetec-schedule-v1"
-
 const newId = (prefix: string) =>
   `${prefix}_${crypto.randomUUID().slice(0, 8)}`
-
-interface SavedData {
-  salas: Sala[]
-  professores: Professor[]
-  turmas: Turma[]
-}
-
-const EMPTY_DATA: SavedData = {
-  salas: [],
-  professores: [],
-  turmas: [],
-}
-
-function loadData(): SavedData {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY)
-
-    if (!saved) return EMPTY_DATA
-
-    const data = JSON.parse(saved) as Partial<SavedData>
-
-    return {
-      salas: Array.isArray(data.salas) ? data.salas : [],
-      professores: Array.isArray(data.professores)
-        ? data.professores
-        : [],
-      turmas: Array.isArray(data.turmas) ? data.turmas : [],
-    }
-  } catch {
-    return EMPTY_DATA
-  }
-}
 
 interface ProviderProps {
   children: ReactNode
@@ -100,35 +67,20 @@ export function ScheduleProvider({
   initialProfessores,
   initialTurmas,
 }: ProviderProps) {
-  const [initialData] = useState<SavedData>(() => {
-    const saved = loadData()
-
-    const hasSavedData = localStorage.getItem(STORAGE_KEY) !== null
-
-    if (hasSavedData) return saved
-
-    return {
-      salas: initialSalas ?? [],
-      professores: initialProfessores ?? [],
-      turmas: initialTurmas ?? [],
-    }
-  })
-
-  const [salas, setSalas] = useState<Sala[]>(initialData.salas)
+  const [salas, setSalas] = useState<Sala[]>(initialSalas ?? [])
   const [professores, setProfessores] = useState<Professor[]>(
-    initialData.professores,
+    initialProfessores ?? [],
   )
-  const [turmas, setTurmas] = useState<Turma[]>(initialData.turmas)
+  const [turmas, setTurmas] = useState<Turma[]>(initialTurmas ?? [])
   const [tiposSala, setTiposSala] = useState<BackendTipoSala[]>([])
   const [isBackendConnected, setIsBackendConnected] = useState<boolean>(false)
+
 
   const refreshSalas = useCallback(async () => {
     const backendSalas = await fetchSalasFromBackend()
     if (backendSalas !== null) {
       setIsBackendConnected(true)
-      if (backendSalas.length > 0) {
-        setSalas(backendSalas)
-      }
+      setSalas(backendSalas)
     } else {
       setIsBackendConnected(false)
     }
@@ -152,9 +104,7 @@ export function ScheduleProvider({
 
       if (backendSalas !== null) {
         setIsBackendConnected(true)
-        if (backendSalas.length > 0) {
-          setSalas(backendSalas)
-        }
+        setSalas(backendSalas)
       } else {
         setIsBackendConnected(false)
       }
@@ -166,15 +116,6 @@ export function ScheduleProvider({
       isMounted = false
     }
   }, [])
-
-  useEffect(() => {
-    try {
-      const data: SavedData = { salas, professores, turmas }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-    } catch (error) {
-      console.error("Não foi possível salvar os dados do Painel Engetec:", error)
-    }
-  }, [salas, professores, turmas])
 
   const conflitos = useMemo(
     () => detectConflicts(turmas, salas),
@@ -193,15 +134,13 @@ export function ScheduleProvider({
 
   const addSala = useCallback(
     async (input: SalaInput) => {
-      // 1. Atualização otimista imediata na UI
-      const tempId = newId("s")
-      setSalas((prev) => [{ id: tempId, ...input }, ...prev])
-
-      // 2. Envia para o backend FastAPI
       const res = await createSalaInBackend(input, tiposSala)
       if (res.ok) {
-        // Recarrega do backend para sincronizar os IDs reais do banco de dados
         await refreshSalas()
+      } else {
+        // Fallback para estado em memória caso a API falhe
+        const tempId = newId("s")
+        setSalas((prev) => [{ id: tempId, ...input }, ...prev])
       }
     },
     [tiposSala, refreshSalas],
@@ -212,9 +151,12 @@ export function ScheduleProvider({
       setSalas((prev) =>
         prev.map((s) => (s.id === id ? { ...s, ...input } : s)),
       )
-      await updateSalaInBackend(id, input, tiposSala)
+      const res = await updateSalaInBackend(id, input, tiposSala)
+      if (res.ok) {
+        await refreshSalas()
+      }
     },
-    [tiposSala],
+    [tiposSala, refreshSalas],
   )
 
   const removeSala = useCallback(
@@ -229,12 +171,12 @@ export function ScheduleProvider({
       }
 
       setSalas((prev) => prev.filter((s) => s.id !== id))
-      deleteSalaInBackend(id).catch((err) =>
-        console.warn("Erro ao excluir sala no backend:", err),
-      )
+      deleteSalaInBackend(id)
+        .then(() => refreshSalas())
+        .catch((err) => console.warn("Erro ao excluir sala no backend:", err))
       return { ok: true }
     },
-    [salas, turmas],
+    [salas, turmas, refreshSalas],
   )
 
   const addProfessor = useCallback((input: ProfessorInput) => {

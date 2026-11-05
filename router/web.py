@@ -50,7 +50,7 @@ async def sala_by_id(id: int) -> JSONResponse:
 
 
 @app.post("/sala/")
-async def insrt_sala(data: SalaDTO) -> JSONResponse:
+def insrt_sala(data: SalaDTO) -> JSONResponse:
     return sala.insrt_sala_controller(data)
 
 @app.put("/sala/{id}", )
@@ -176,28 +176,28 @@ def del_disciplina(id: int) -> JSONResponse:
     return disciplina_especialidade.del_disciplina_especialidade_controller(id)
 #--------------------------------------------------------------------------
 
-# -------------------------FRONTEND REACT (SPA)----------------------------
-DIST_DIR = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+# # -------------------------FRONTEND REACT (SPA)----------------------------
+# DIST_DIR = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 
-if (DIST_DIR / "assets").exists():
-    app.mount("/assets", StaticFiles(directory=DIST_DIR / "assets"), name="assets")
+# if (DIST_DIR / "assets").exists():
+#     app.mount("/assets", StaticFiles(directory=DIST_DIR / "assets"), name="assets")
 
 
-@app.get("/{full_path:path}")
-async def serve_react_app(full_path: str):
-    file_path = DIST_DIR / full_path
+# @app.get("/{full_path:path}")
+# async def serve_react_app(full_path: str):
+#     file_path = DIST_DIR / full_path
 
-    # Se o arquivo solicitado existir em frontend/dist (ex: favicon.svg, icons.svg)
-    if full_path and file_path.is_file():
-        return FileResponse(file_path)
+#     # Se o arquivo solicitado existir em frontend/dist (ex: favicon.svg, icons.svg)
+#     if full_path and file_path.is_file():
+#         return FileResponse(file_path)
 
-    # Fallback para index.html (SPA)
-    index_file = DIST_DIR / "index.html"
-    if index_file.exists():
-        return FileResponse(index_file)
+#     # Fallback para index.html (SPA)
+#     index_file = DIST_DIR / "index.html"
+#     if index_file.exists():
+#         return FileResponse(index_file)
 
-    return JSONResponse(
-        status_code=404,
-        content={"detail": "Build do frontend não encontrado. Execute 'npm run build' primeiro."},
-    )
-# --------------------------------------------------------------------------
+#     return JSONResponse(
+#         status_code=404,
+#         content={"detail": "Build do frontend não encontrado. Execute 'npm run build' primeiro."},
+#     )
+# # --------------------------------------------------------------------------

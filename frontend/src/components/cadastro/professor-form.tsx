@@ -41,6 +41,7 @@ export function ProfessorForm({ initial, editing, onSubmit, onCancel }: Professo
     }
     onSubmit({
       nome: v.nome.trim(),
+            }
       email: v.email.trim(),
       disciplinas: v.disciplinas.split(",").map((d) => d.trim()).filter(Boolean),
     })
