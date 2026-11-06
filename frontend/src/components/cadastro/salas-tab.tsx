@@ -9,7 +9,7 @@ import { useSchedule } from "@/context/schedule-context"
 import type { Sala } from "@/types"
 
 export function SalasTab() {
-  const { salas, addSala, updateSala, removeSala, isBackendConnected } = useSchedule()
+  const { salas, addSala, updateSala, removeSala} = useSchedule()
   const [editing, setEditing] = useState<Sala | null>(null)
   const [formKey, setFormKey] = useState(0) // remonta o formulário ao salvar/cancelar/editar
 
@@ -21,25 +21,9 @@ export function SalasTab() {
   return (
     <div className="grid gap-5 lg:grid-cols-5">
       <Panel className="h-fit lg:sticky lg:top-5 lg:col-span-2">
-        <div className="mb-4 flex items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold">
-            {editing ? "Editar sala" : "Nova sala ou laboratório"}
-          </h2>
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium ${
-              isBackendConnected
-                ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300"
-                : "bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300"
-            }`}
-          >
-            <span
-              className={`size-1.5 rounded-full ${
-                isBackendConnected ? "bg-emerald-500 animate-pulse" : "bg-amber-500"
-              }`}
-            />
-            {isBackendConnected ? "API Conectada" : "Modo Local"}
-          </span>
-        </div>
+        <h2 className="mb-4 text-sm font-semibold">
+          {editing ? "Editar sala" : "Nova sala ou laboratório"}
+        </h2>
         <SalaForm
           key={formKey}
           initial={editing ? salaToForm(editing) : EMPTY_SALA_FORM}

@@ -12,8 +12,6 @@ class DisciplinaController:
     def slct_disciplina_controller(self) -> JSONResponse:
         try:
             data = self.serv.slct_disciplina_service()
-            if len(data) == 0:
-                raise Exception
         except IntegrityError:
             return JSONResponse(
                 status_code=HTTPStatus.BAD_REQUEST,
@@ -28,11 +26,6 @@ class DisciplinaController:
             return JSONResponse(
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
-            )
-        except Exception:
-            return JSONResponse(
-                status_code=HTTPStatus.NOT_FOUND,
-                content="Not Found"
             )
         return JSONResponse(
             status_code=HTTPStatus.OK,

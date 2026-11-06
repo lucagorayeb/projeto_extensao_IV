@@ -67,7 +67,8 @@ export function SalaForm({ initial, editing, onSubmit, onCancel }: SalaFormProps
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3.5" action="">
+      
       <FormField label="Nome / número" htmlFor="sala-nome">
         <Input
           id="sala-nome"
@@ -107,6 +108,7 @@ export function SalaForm({ initial, editing, onSubmit, onCancel }: SalaFormProps
             </SelectContent>
           </Select>
         </FormField>
+
         <FormField label="Andar" htmlFor="sala-andar">
           <Select value={v.andar} onValueChange={(x) => set("andar", x as Andar)}>
             <SelectTrigger id="sala-andar" className="w-full">

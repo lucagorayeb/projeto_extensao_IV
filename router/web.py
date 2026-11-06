@@ -1,8 +1,9 @@
-from pathlib import Path
-from http import HTTPStatus
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+# from pathlib import Path
+# from http import HTTPStatus
+from fastapi import FastAPI, Request
+# from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from backend.modules.sala.sala_dto import SalaDTO
 from backend.modules.sala.sala_controller import SalaController
@@ -16,7 +17,7 @@ from backend.modules.disciplina.disciplina_controller import DisciplinaControlle
 from backend.modules.disciplina.disciplina_dto import DisciplinaDTO
 from backend.modules.disciplina_especialidade.disciplina_especialidade_controller import DisciplinaEspecialidadeController
 from backend.modules.disciplina_especialidade.disciplina_especialidade_dto import DisciplinaEspecialidadeDTO
-from fastapi.middleware.cors import CORSMiddleware
+
 
 sala = SalaController()
 tipo_sala = TipoSalaController()
@@ -24,19 +25,30 @@ especialidade = EspecialidadeController()
 formato = FormatoController()
 disciplina = DisciplinaController()
 disciplina_especialidade = DisciplinaEspecialidadeController()
+
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # endereço do Vite
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
+
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["http://localhost:5173"],  # endereço do Vite
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 # Rota de Status da API
 @app.get("/api/health")
 async def health_check() -> JSONResponse:
     return JSONResponse(content={"status": "ok", "message": "API operacional."})
+
+@app.get("/")
+async def index(request: Request):
+    return templates.TemplateResponse(
+        request, name="index.html"
+    )
 
 
 # -------------------------------ROTAS DE SALA-----------------------------
@@ -50,7 +62,7 @@ async def sala_by_id(id: int) -> JSONResponse:
 
 
 @app.post("/sala/")
-async def insrt_sala(data: SalaDTO) -> JSONResponse:
+def insrt_sala(data: SalaDTO) -> JSONResponse:
     return sala.insrt_sala_controller(data)
 
 @app.put("/sala/{id}", )
@@ -176,28 +188,28 @@ def del_disciplina(id: int) -> JSONResponse:
     return disciplina_especialidade.del_disciplina_especialidade_controller(id)
 #--------------------------------------------------------------------------
 
-# -------------------------FRONTEND REACT (SPA)----------------------------
-DIST_DIR = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+# # -------------------------FRONTEND REACT (SPA)----------------------------
+# DIST_DIR = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 
-if (DIST_DIR / "assets").exists():
-    app.mount("/assets", StaticFiles(directory=DIST_DIR / "assets"), name="assets")
+# if (DIST_DIR / "assets").exists():
+#     app.mount("/assets", StaticFiles(directory=DIST_DIR / "assets"), name="assets")
 
 
-@app.get("/{full_path:path}")
-async def serve_react_app(full_path: str):
-    file_path = DIST_DIR / full_path
+# @app.get("/{full_path:path}")
+# async def serve_react_app(full_path: str):
+#     file_path = DIST_DIR / full_path
 
-    # Se o arquivo solicitado existir em frontend/dist (ex: favicon.svg, icons.svg)
-    if full_path and file_path.is_file():
-        return FileResponse(file_path)
+#     # Se o arquivo solicitado existir em frontend/dist (ex: favicon.svg, icons.svg)
+#     if full_path and file_path.is_file():
+#         return FileResponse(file_path)
 
-    # Fallback para index.html (SPA)
-    index_file = DIST_DIR / "index.html"
-    if index_file.exists():
-        return FileResponse(index_file)
+#     # Fallback para index.html (SPA)
+#     index_file = DIST_DIR / "index.html"
+#     if index_file.exists():
+#         return FileResponse(index_file)
 
-    return JSONResponse(
-        status_code=404,
-        content={"detail": "Build do frontend não encontrado. Execute 'npm run build' primeiro."},
-    )
-# --------------------------------------------------------------------------
+#     return JSONResponse(
+#         status_code=404,
+#         content={"detail": "Build do frontend não encontrado. Execute 'npm run build' primeiro."},
+#     )
+# # --------------------------------------------------------------------------
