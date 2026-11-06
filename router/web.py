@@ -1,8 +1,9 @@
-from pathlib import Path
-from http import HTTPStatus
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+# from pathlib import Path
+# from http import HTTPStatus
+from fastapi import FastAPI, Request
+# from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from backend.modules.sala.sala_dto import SalaDTO
 from backend.modules.sala.sala_controller import SalaController
@@ -16,7 +17,7 @@ from backend.modules.disciplina.disciplina_controller import DisciplinaControlle
 from backend.modules.disciplina.disciplina_dto import DisciplinaDTO
 from backend.modules.disciplina_especialidade.disciplina_especialidade_controller import DisciplinaEspecialidadeController
 from backend.modules.disciplina_especialidade.disciplina_especialidade_dto import DisciplinaEspecialidadeDTO
-from fastapi.middleware.cors import CORSMiddleware
+
 
 sala = SalaController()
 tipo_sala = TipoSalaController()
@@ -24,19 +25,30 @@ especialidade = EspecialidadeController()
 formato = FormatoController()
 disciplina = DisciplinaController()
 disciplina_especialidade = DisciplinaEspecialidadeController()
+
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # endereço do Vite
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
+
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["http://localhost:5173"],  # endereço do Vite
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 # Rota de Status da API
 @app.get("/api/health")
 async def health_check() -> JSONResponse:
     return JSONResponse(content={"status": "ok", "message": "API operacional."})
+
+@app.get("/")
+async def index(request: Request):
+    return templates.TemplateResponse(
+        request, name="index.html"
+    )
 
 
 # -------------------------------ROTAS DE SALA-----------------------------

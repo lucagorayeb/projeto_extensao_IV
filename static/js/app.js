@@ -316,7 +316,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     Inicialização
+    Inicialização
      ------------------------------------------------------------------------ */
   document.addEventListener("DOMContentLoaded", function () {
     initTheme();

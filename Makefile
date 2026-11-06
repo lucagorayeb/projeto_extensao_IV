@@ -11,7 +11,7 @@ start_container:
 .PHONY: fastapi_run
 fastapi_run:
 	docker start backend_proj_ext_quatro
-	docker exec backend_proj_ext_quatro npm run dev 
+	docker exec backend_proj_ext_quatro uv run fastapi dev --host 0.0.0.0 --port 5000 --entrypoint router.web:app 
 
 .PHONY: stop_backend_container
 stop_backend_container:
