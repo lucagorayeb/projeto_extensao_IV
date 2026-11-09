@@ -9,7 +9,7 @@ class EspecialidadeController:
     def __init__(self):
         self.serv = EspecialidadeService()
 
-    def slct_especialidade_controller(self) -> JSONResponse:
+    def slct_especialidade_controller(self) -> dict:
         try:
             data = self.serv.slct_especialidade_service()
             if len(data) == 0:
@@ -34,10 +34,10 @@ class EspecialidadeController:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
                 content="Internal Error"
             )
-        return JSONResponse(
-                status_code=HTTPStatus.OK,
-                content=data
-            )
+        return {
+            "status_code": HTTPStatus.OK,
+            "content": data
+        }
 
     def insrt_especialidade_controller(self, data: EspecialidadeDTO) -> JSONResponse:
         try:

@@ -1,7 +1,6 @@
-# from pathlib import Path
-# from http import HTTPStatus
+# from abc import ABC, abstractmethod
+
 from fastapi import FastAPI, Request
-# from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -39,6 +38,8 @@ templates = Jinja2Templates(directory="templates")
 #     allow_headers=["*"],
 # )
 
+# class BaseAPI(ABC):
+    
 # Rota de Status da API
 @app.get("/api/health")
 async def health_check() -> JSONResponse:
@@ -49,6 +50,37 @@ async def index(request: Request):
     return templates.TemplateResponse(
         request, name="index.html"
     )
+
+#----------------------ROTAS CADASTRO----------------------------
+@app.get("/cadastro")
+async def cadastro(request: Request):
+    return templates.TemplateResponse(
+        request, name="cadastro.html"
+    )
+
+@app.get("/cadastro/professor")
+async def cadastro_professor(request: Request):
+    data = especialidade.slct_especialidade_controller()
+    return templates.TemplateResponse(
+        request,
+        name="components/professores.html",
+        context={"status_code": data['status_code'],
+                "especialidades": data['content']
+        }
+    )
+
+@app.get("/semana")
+async def semana(request: Request):
+    return templates.TemplateResponse(
+        request, name="semana.html"
+    )
+
+@app.get("/hoje")
+async def hoje(request: Request):
+    return templates.TemplateResponse(
+        request, name="hoje.html"
+    )
+    
 
 
 # -------------------------------ROTAS DE SALA-----------------------------
@@ -188,28 +220,4 @@ def del_disciplina(id: int) -> JSONResponse:
     return disciplina_especialidade.del_disciplina_especialidade_controller(id)
 #--------------------------------------------------------------------------
 
-# # -------------------------FRONTEND REACT (SPA)----------------------------
-# DIST_DIR = Path(__file__).resolve().parent.parent / "frontend" / "dist"
-
-# if (DIST_DIR / "assets").exists():
-#     app.mount("/assets", StaticFiles(directory=DIST_DIR / "assets"), name="assets")
-
-
-# @app.get("/{full_path:path}")
-# async def serve_react_app(full_path: str):
-#     file_path = DIST_DIR / full_path
-
-#     # Se o arquivo solicitado existir em frontend/dist (ex: favicon.svg, icons.svg)
-#     if full_path and file_path.is_file():
-#         return FileResponse(file_path)
-
-#     # Fallback para index.html (SPA)
-#     index_file = DIST_DIR / "index.html"
-#     if index_file.exists():
-#         return FileResponse(index_file)
-
-#     return JSONResponse(
-#         status_code=404,
-#         content={"detail": "Build do frontend não encontrado. Execute 'npm run build' primeiro."},
-#     )
-# # --------------------------------------------------------------------------
+#------------------------ROTAS PROFESSOR--------------------

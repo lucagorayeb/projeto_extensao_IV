@@ -1,0 +1,27 @@
+<aside class="sidebar"><a class="brand mb-4 px-2" href="{{ url_for('index') }}"><span class="brand-mark"><i
+                class="bi bi-mortarboard"></i></span><span class="min-w-0">
+            <p class="brand-name">Engetec</p>
+            <p class="brand-sub">Painel de horários</p>
+        </span></a>
+    <nav class="side-nav" aria-label="Navegação principal">
+        <a class="nav-link active" href="{{ url_for('index') }}" aria-current="page">
+            <i class="bi bi-grid-1x2"></i>Painel
+        </a>
+        <a class="nav-link" href="{{ url_for('semana') }}">
+            <i class="bi bi-calendar3"></i>Semana
+        </a>
+        <a class="nav-link" href="{{ url_for('hoje') }}">
+            <i class="bi bi-clock"></i>Hoje
+        </a>
+        <a class="nav-link" href="{{ url_for('cadastro') }}">
+            <i class="bi bi-clipboard-data"></i>Cadastro
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="px-2">
+            <p>Coordenação de Curso</p>
+            <p>Unisapiens · Engetec</p>
+        </div><button type="button" class="theme-toggle" aria-label="Alternar tema"><i
+                class="bi bi-moon-stars"></i></button>
+    </div>
+</aside>

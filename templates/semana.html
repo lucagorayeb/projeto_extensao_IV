@@ -1,48 +1,166 @@
-<!doctype html>
-<html lang="pt-BR" data-bs-theme="light">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Engetec — painel de horários, conversão estática do layout React para Bootstrap 5.">
-  <title>Grade semanal · Engetec</title>
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
-  <link href="assets/vendor/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <script>
-    (function () {
-      try {
-        var t = localStorage.getItem("engetec-theme");
-        if (!t) {
-          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        }
-        document.documentElement.setAttribute("data-bs-theme", t);
-      } catch (e) {}
-    })();
-  </script>
-</head>
-<body data-page="semana">
-  <div class="app-shell">
-    <aside class="sidebar"><a class="brand mb-4 px-2" href="index.html"><span class="brand-mark"><i class="bi bi-mortarboard"></i></span><span class="min-w-0"><p class="brand-name">Engetec</p><p class="brand-sub">Painel de horários</p></span></a><nav class="side-nav" aria-label="Navegação principal"><a class="nav-link" href="index.html"><i class="bi bi-grid-1x2"></i>Painel</a><a class="nav-link active" href="semana.html" aria-current="page"><i class="bi bi-calendar3"></i>Semana</a><a class="nav-link" href="hoje.html"><i class="bi bi-clock"></i>Hoje</a><a class="nav-link" href="cadastro.html"><i class="bi bi-clipboard-data"></i>Cadastro</a></nav><div class="sidebar-footer"><div class="px-2"><p>Coordenação de Curso</p><p>Unisapiens · Engetec</p></div><button type="button" class="theme-toggle" aria-label="Alternar tema"><i class="bi bi-moon-stars"></i></button></div></aside>
-    <div class="app-main">
-      <header class="mobile-header"><a class="brand brand-sm" href="index.html"><span class="brand-mark brand-mark-sm"><i class="bi bi-mortarboard"></i></span><span class="min-w-0"><p class="brand-name">Engetec</p><p class="brand-sub">Painel de horários</p></span></a><button type="button" class="theme-toggle" aria-label="Alternar tema"><i class="bi bi-moon-stars"></i></button></header>
-      <main class="app-content">
+{% extends "components/layout.html" %}
+
+{% block content %}
 
 <div>
-  <div class="page-header"><div><h1 class="page-title">Grade semanal</h1><p class="page-desc">Todas as turmas organizadas por dia e faixa de horário</p></div></div>
-  <div class="d-md-none"><ul class="nav day-tabs" role="tablist"><li class="nav-item" role="presentation"><button class="nav-link" id="tab-dia-0" data-bs-toggle="pill" data-bs-target="#pane-dia-0" type="button" role="tab" aria-controls="pane-dia-0" aria-selected="false" aria-label="Segunda-feira">Seg</button></li><li class="nav-item" role="presentation"><button class="nav-link" id="tab-dia-1" data-bs-toggle="pill" data-bs-target="#pane-dia-1" type="button" role="tab" aria-controls="pane-dia-1" aria-selected="false" aria-label="Terça-feira">Ter</button></li><li class="nav-item" role="presentation"><button class="nav-link" id="tab-dia-2" data-bs-toggle="pill" data-bs-target="#pane-dia-2" type="button" role="tab" aria-controls="pane-dia-2" aria-selected="false" aria-label="Quarta-feira">Qua</button></li><li class="nav-item" role="presentation"><button class="nav-link active" id="tab-dia-3" data-bs-toggle="pill" data-bs-target="#pane-dia-3" type="button" role="tab" aria-controls="pane-dia-3" aria-selected="true" aria-label="Quinta-feira">Qui</button></li><li class="nav-item" role="presentation"><button class="nav-link" id="tab-dia-4" data-bs-toggle="pill" data-bs-target="#pane-dia-4" type="button" role="tab" aria-controls="pane-dia-4" aria-selected="false" aria-label="Sexta-feira">Sex</button></li><li class="nav-item" role="presentation"><button class="nav-link" id="tab-dia-5" data-bs-toggle="pill" data-bs-target="#pane-dia-5" type="button" role="tab" aria-controls="pane-dia-5" aria-selected="false" aria-label="Sábado">Sáb</button></li></ul><div class="tab-content"><div class="tab-pane fade" id="pane-dia-0" role="tabpanel" aria-labelledby="tab-dia-0" tabindex="0"><div class="d-flex flex-column gap-2"><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">15:00</span><span class="end">17:45</span></div><div class="class-body"><p class="class-title">Português e Redação</p><p class="class-meta">Sist. de Informação · 1º Vesp.</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Ana Beatriz Lima</span><span class="chip predio-virtual"><i class="bi bi-laptop"></i>AVA — Ambiente Virtual</span><span class="chip ">Assíncrona</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Fundamentos da Engenharia e Arquitetura</p><p class="class-meta">Eng. Computação · 1º A</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Leonardo Micheletti</span><span class="chip predio-central"><i class="bi bi-door-open"></i>Sala 13</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Hidráulica</p><p class="class-meta">Eng. Civil · 6º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Cláudio Roberto</span><span class="chip predio-central"><i class="bi bi-door-open"></i>Sala 03</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Banco de Dados I</p><p class="class-meta">Eng. Computação · 6º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Pedro Gomes (PG)</span><span class="chip predio-central"><i class="bi bi-door-open"></i>LAB 01</span><span class="chip ">Presencial</span></div></div></div></div></div></div><div class="tab-pane fade" id="pane-dia-1" role="tabpanel" aria-labelledby="tab-dia-1" tabindex="0"><div class="d-flex flex-column gap-2"><div class="mt-0"><div class="class-card is-conflict"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Cálculo II</p><p class="class-meta">Eng. Computação · 2º A</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Benito Silva Franco</span><span class="chip predio-central"><i class="bi bi-door-open"></i>Sala 13</span><span class="chip ">Presencial</span><span class="chip chip-danger"><i class="bi bi-exclamation-triangle"></i>Conflito de horário</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Programação Web</p><p class="class-meta">Eng. Computação · 7º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Márcio Bueno</span><span class="chip predio-central"><i class="bi bi-door-open"></i>LAB 01</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Algoritmos e Estruturas de Dados I</p><p class="class-meta">Eng. Software · 1º A</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Ives Lima Batista</span><span class="chip predio-central"><i class="bi bi-door-open"></i>LAB 05</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Algoritmos e Estrutura de Dados II</p><p class="class-meta">Sist. de Informação · 2º A</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Rosangela Cunha</span><span class="chip predio-central"><i class="bi bi-door-open"></i>Sala 20</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card is-conflict"><div class="class-time"><span class="start">20:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Física Geral e Experimental I</p><p class="class-meta">Eng. Elétrica · 2ª</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Cláudio Roberto</span><span class="chip predio-central"><i class="bi bi-door-open"></i>Sala 13</span><span class="chip ">Presencial</span><span class="chip chip-danger"><i class="bi bi-exclamation-triangle"></i>Conflito de horário</span></div></div></div></div></div></div><div class="tab-pane fade" id="pane-dia-2" role="tabpanel" aria-labelledby="tab-dia-2" tabindex="0"><div class="d-flex flex-column gap-2"><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Inteligência Artificial</p><p class="class-meta">Eng. Computação · 8º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Márcio Bueno</span><span class="chip predio-central"><i class="bi bi-door-open"></i>LAB 05</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Matemática Computacional</p><p class="class-meta">Eng. Software · 1º A</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Valney Passos</span><span class="chip predio-central"><i class="bi bi-layers"></i>Sala 13</span><span class="chip ">Híbrida</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Empreendedorismo e Inovação</p><p class="class-meta">Sist. de Informação · 2ª</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Allan K. Gurgel do Amaral</span><span class="chip predio-central"><i class="bi bi-laptop"></i>Sala 20</span><span class="chip ">Síncrona</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Redes Avançadas</p><p class="class-meta">Eng. Computação · 6º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Márcio Bueno</span><span class="chip predio-central"><i class="bi bi-door-open"></i>LAB 01</span><span class="chip ">Presencial</span></div></div></div></div></div></div><div class="tab-pane fade show active" id="pane-dia-3" role="tabpanel" aria-labelledby="tab-dia-3" tabindex="0"><div class="d-flex flex-column gap-2"><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Materiais de Construção</p><p class="class-meta">Eng. Civil · 4º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Cláudio Roberto</span><span class="chip predio-central"><i class="bi bi-door-open"></i>Sala 03</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Cálculo I</p><p class="class-meta">Eng. Computação / Eng. Elétrica · 1º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Valney Passos</span><span class="chip predio-central"><i class="bi bi-door-open"></i>Sala 13</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Geometria Analítica e Álgebra Linear</p><p class="class-meta">Eng. Computação · 2º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Georgeano Dantas Maciel</span><span class="chip predio-anexo"><i class="bi bi-door-open"></i>Nova York</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Algoritmos e Estrutura de Dados II</p><p class="class-meta">Eng. Computação · 4º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Rosangela Cunha</span><span class="chip predio-central"><i class="bi bi-door-open"></i>LAB 01</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Introdução à Eletrônica</p><p class="class-meta">Eng. Computação · 6º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Messias Pimentel Cantanhede</span><span class="chip predio-anexo2"><i class="bi bi-door-open"></i>Sala 31</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Probabilidade e Estatística</p><p class="class-meta">Sist. de Informação · 2º B</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Carlos Jesus</span><span class="chip predio-central"><i class="bi bi-door-open"></i>Sala 08</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Programação Orientada a Objetos</p><p class="class-meta">Sist. de Informação · 4º A</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Moisés Santos</span><span class="chip predio-anexo"><i class="bi bi-door-open"></i>LAB 04</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Banco de Dados II</p><p class="class-meta">Sist. de Informação · 5º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Pedro Gomes (PG)</span><span class="chip predio-central"><i class="bi bi-door-open"></i>LAB 02</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Governança em TI</p><p class="class-meta">Sist. de Informação · 6º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Paulo Alexandre Fonseca (Bacalhau)</span><span class="chip predio-central"><i class="bi bi-door-open"></i>Sala 20</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Segurança e Auditoria de Sistemas</p><p class="class-meta">Sist. de Informação · 7º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Rebson Yuko</span><span class="chip predio-anexo"><i class="bi bi-door-open"></i>Washington</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><i class="bi bi-laptop"></i></div><div class="class-body"><p class="class-title">Algoritmos e Estrutura de Dados II</p><p class="class-meta">Eng. Software · 2º B</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Ives Lima Batista</span><span class="chip predio-virtual"><i class="bi bi-laptop"></i>AVA — Ambiente Virtual</span><span class="chip ">Assíncrona</span></div></div></div></div></div></div><div class="tab-pane fade" id="pane-dia-4" role="tabpanel" aria-labelledby="tab-dia-4" tabindex="0"><div class="d-flex flex-column gap-2"><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Sistemas Distribuídos</p><p class="class-meta">Eng. Computação · 8º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Rebson Yuko</span><span class="chip predio-central"><i class="bi bi-door-open"></i>Sala 08</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">20:15</span></div><div class="class-body"><p class="class-title">Ciências do Meio Ambiente</p><p class="class-meta">Eng. Civil · 4º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Cláudio Roberto</span><span class="chip predio-anexo2"><i class="bi bi-laptop"></i>Sala 31</span><span class="chip ">Síncrona</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Sistemas Operacionais</p><p class="class-meta">Sist. de Informação · 6º A</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Rebson Yuko</span><span class="chip predio-central"><i class="bi bi-door-open"></i>LAB 02</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div><div class="class-body"><p class="class-title">Game Design: Regras e Mecânicas</p><p class="class-meta">Jogos Digitais · 1º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Moisés Santos</span><span class="chip predio-virtual"><i class="bi bi-laptop"></i>AVA — Ambiente Virtual</span><span class="chip ">Assíncrona</span></div></div></div></div></div></div><div class="tab-pane fade" id="pane-dia-5" role="tabpanel" aria-labelledby="tab-dia-5" tabindex="0"><div class="d-flex flex-column gap-2"><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">08:00</span><span class="end">09:00</span></div><div class="class-body"><p class="class-title">Projeto de Extensão V — Machine Learning</p><p class="class-meta">Eng. Computação · 9º</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Allan K. Gurgel do Amaral</span><span class="chip predio-anexo"><i class="bi bi-door-open"></i>Nova York</span><span class="chip ">Presencial</span></div></div></div></div><div class="mt-0"><div class="class-card"><div class="class-time"><span class="start">08:00</span><span class="end">10:45</span></div><div class="class-body"><p class="class-title">Desenho Técnico</p><p class="class-meta">Eng. Computação · 1º A</p><div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Leonardo Micheletti</span><span class="chip predio-central"><i class="bi bi-door-open"></i>Sala 13</span><span class="chip ">Presencial</span></div></div></div></div></div></div></div></div>
-  <div class="d-none d-md-block"><div class="panel"><div class="week-table-wrap"><table class="week-table"><thead><tr><th>Faixa</th><th>Segunda-feira</th><th>Terça-feira</th><th>Quarta-feira</th><th>Quinta-feira</th><th>Sexta-feira</th><th>Sábado</th></tr></thead><tbody><tr><td class="faixa-cell"><p>Matutino</p><small>até 11:59</small></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"><div class="matrix-event predio-anexo"><p class="m-title">Projeto de Extensão V — Machine Learning</p><p class="m-prof">Allan K. Gurgel do Amaral</p><p class="m-room">Nova York · 08:00–09:00</p></div><div class="matrix-event predio-central"><p class="m-title">Desenho Técnico</p><p class="m-prof">Leonardo Micheletti</p><p class="m-room">Sala 13 · 08:00–10:45</p></div></div></td></tr><tr><td class="faixa-cell"><p>Vespertino</p><small>12:00 – 17:59</small></td><td class="day-cell"><div class="cell-stack"><div class="matrix-event predio-virtual"><p class="m-title">Português e Redação</p><p class="m-prof">Ana Beatriz Lima</p><p class="m-room">AVA — Ambiente Virtual · 15:00–17:45</p></div></div></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"></div></td></tr><tr><td class="faixa-cell"><p>Noturno</p><small>a partir das 18:00</small></td><td class="day-cell"><div class="cell-stack"><div class="matrix-event predio-central"><p class="m-title">Fundamentos da Engenharia e Arquitetura</p><p class="m-prof">Leonardo Micheletti</p><p class="m-room">Sala 13 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Hidráulica</p><p class="m-prof">Cláudio Roberto</p><p class="m-room">Sala 03 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Banco de Dados I</p><p class="m-prof">Pedro Gomes (PG)</p><p class="m-room">LAB 01 · 19:00–21:45</p></div></div></td><td class="day-cell"><div class="cell-stack"><div class="matrix-event is-conflict"><p class="m-title">Cálculo II</p><p class="m-prof">Benito Silva Franco</p><p class="m-room">Sala 13 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Programação Web</p><p class="m-prof">Márcio Bueno</p><p class="m-room">LAB 01 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Algoritmos e Estruturas de Dados I</p><p class="m-prof">Ives Lima Batista</p><p class="m-room">LAB 05 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Algoritmos e Estrutura de Dados II</p><p class="m-prof">Rosangela Cunha</p><p class="m-room">Sala 20 · 19:00–21:45</p></div><div class="matrix-event is-conflict"><p class="m-title">Física Geral e Experimental I</p><p class="m-prof">Cláudio Roberto</p><p class="m-room">Sala 13 · 20:00–21:45</p></div></div></td><td class="day-cell"><div class="cell-stack"><div class="matrix-event predio-central"><p class="m-title">Inteligência Artificial</p><p class="m-prof">Márcio Bueno</p><p class="m-room">LAB 05 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Matemática Computacional</p><p class="m-prof">Valney Passos</p><p class="m-room">Sala 13 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Empreendedorismo e Inovação</p><p class="m-prof">Allan K. Gurgel do Amaral</p><p class="m-room">Sala 20 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Redes Avançadas</p><p class="m-prof">Márcio Bueno</p><p class="m-room">LAB 01 · 19:00–21:45</p></div></div></td><td class="day-cell"><div class="cell-stack"><div class="matrix-event predio-central"><p class="m-title">Materiais de Construção</p><p class="m-prof">Cláudio Roberto</p><p class="m-room">Sala 03 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Cálculo I</p><p class="m-prof">Valney Passos</p><p class="m-room">Sala 13 · 19:00–21:45</p></div><div class="matrix-event predio-anexo"><p class="m-title">Geometria Analítica e Álgebra Linear</p><p class="m-prof">Georgeano Dantas Maciel</p><p class="m-room">Nova York · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Algoritmos e Estrutura de Dados II</p><p class="m-prof">Rosangela Cunha</p><p class="m-room">LAB 01 · 19:00–21:45</p></div><div class="matrix-event predio-anexo2"><p class="m-title">Introdução à Eletrônica</p><p class="m-prof">Messias Pimentel Cantanhede</p><p class="m-room">Sala 31 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Probabilidade e Estatística</p><p class="m-prof">Carlos Jesus</p><p class="m-room">Sala 08 · 19:00–21:45</p></div><div class="matrix-event predio-anexo"><p class="m-title">Programação Orientada a Objetos</p><p class="m-prof">Moisés Santos</p><p class="m-room">LAB 04 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Banco de Dados II</p><p class="m-prof">Pedro Gomes (PG)</p><p class="m-room">LAB 02 · 19:00–21:45</p></div><div class="matrix-event predio-central"><p class="m-title">Governança em TI</p><p class="m-prof">Paulo Alexandre Fonseca (Bacalhau)</p><p class="m-room">Sala 20 · 19:00–21:45</p></div><div class="matrix-event predio-anexo"><p class="m-title">Segurança e Auditoria de Sistemas</p><p class="m-prof">Rebson Yuko</p><p class="m-room">Washington · 19:00–21:45</p></div></div></td><td class="day-cell"><div class="cell-stack"><div class="matrix-event predio-central"><p class="m-title">Sistemas Distribuídos</p><p class="m-prof">Rebson Yuko</p><p class="m-room">Sala 08 · 19:00–21:45</p></div><div class="matrix-event predio-anexo2"><p class="m-title">Ciências do Meio Ambiente</p><p class="m-prof">Cláudio Roberto</p><p class="m-room">Sala 31 · 19:00–20:15</p></div><div class="matrix-event predio-central"><p class="m-title">Sistemas Operacionais</p><p class="m-prof">Rebson Yuko</p><p class="m-room">LAB 02 · 19:00–21:45</p></div><div class="matrix-event predio-virtual"><p class="m-title">Game Design: Regras e Mecânicas</p><p class="m-prof">Moisés Santos</p><p class="m-room">AVA — Ambiente Virtual · 19:00–21:45</p></div></div></td><td class="day-cell"><div class="cell-stack"></div></td></tr><tr><td class="faixa-cell"><p>Sem horário fixo</p><small>aulas assíncronas</small></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"><div class="matrix-event predio-virtual"><p class="m-title">Algoritmos e Estrutura de Dados II</p><p class="m-prof">Ives Lima Batista</p><p class="m-room">AVA — Ambiente Virtual · assíncrona</p></div></div></td><td class="day-cell"><div class="cell-stack"></div></td><td class="day-cell"><div class="cell-stack"></div></td></tr></tbody></table></div></div></div>
-</div>
-
-      </main>
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Grade semanal</h1>
+      <p class="page-desc">Todas as turmas organizadas por dia e faixa de horário</p>
     </div>
   </div>
-  <nav class="bottom-nav" aria-label="Navegação principal"><div class="nav-grid"><a class="nav-item" href="index.html"><i class="bi bi-grid-1x2"></i>Painel</a><a class="nav-item active" href="semana.html" aria-current="page"><i class="bi bi-calendar3"></i>Semana</a><a class="nav-item" href="hoje.html"><i class="bi bi-clock"></i>Hoje</a><a class="nav-item" href="cadastro.html"><i class="bi bi-clipboard-data"></i>Cadastro</a></div></nav>
-  <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-title" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="delete-modal-title">Excluir?</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button></div><div class="modal-body"><p class="mb-0 text-muted-foreground" data-delete-description></p></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-danger" data-confirm-delete>Excluir</button></div></div></div></div>
-  <script src="assets/vendor/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/app.js"></script>
-</body>
-</html>
+
+  <!-- Mobile: Seletor de dia + lista de cards -->
+  <div class="d-md-none">
+    <ul class="nav day-tabs mb-3" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="tab-dia-0" data-bs-toggle="pill" data-bs-target="#pane-dia-0" type="button" role="tab" aria-controls="pane-dia-0" aria-selected="true" aria-label="Segunda-feira">Seg</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-dia-1" data-bs-toggle="pill" data-bs-target="#pane-dia-1" type="button" role="tab" aria-controls="pane-dia-1" aria-selected="false" aria-label="Terça-feira">Ter</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-dia-2" data-bs-toggle="pill" data-bs-target="#pane-dia-2" type="button" role="tab" aria-controls="pane-dia-2" aria-selected="false" aria-label="Quarta-feira">Qua</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-dia-3" data-bs-toggle="pill" data-bs-target="#pane-dia-3" type="button" role="tab" aria-controls="pane-dia-3" aria-selected="false" aria-label="Quinta-feira">Qui</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-dia-4" data-bs-toggle="pill" data-bs-target="#pane-dia-4" type="button" role="tab" aria-controls="pane-dia-4" aria-selected="false" aria-label="Sexta-feira">Sex</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-dia-5" data-bs-toggle="pill" data-bs-target="#pane-dia-5" type="button" role="tab" aria-controls="pane-dia-5" aria-selected="false" aria-label="Sábado">Sáb</button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="pane-dia-0" role="tabpanel" aria-labelledby="tab-dia-0" tabindex="0">
+        <div class="panel">
+          <div class="panel-body empty-state">
+            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
+            <p class="empty-title">Nenhuma turma em Segunda-feira</p>
+            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="pane-dia-1" role="tabpanel" aria-labelledby="tab-dia-1" tabindex="0">
+        <div class="panel">
+          <div class="panel-body empty-state">
+            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
+            <p class="empty-title">Nenhuma turma em Terça-feira</p>
+            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="pane-dia-2" role="tabpanel" aria-labelledby="tab-dia-2" tabindex="0">
+        <div class="panel">
+          <div class="panel-body empty-state">
+            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
+            <p class="empty-title">Nenhuma turma em Quarta-feira</p>
+            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="pane-dia-3" role="tabpanel" aria-labelledby="tab-dia-3" tabindex="0">
+        <div class="panel">
+          <div class="panel-body empty-state">
+            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
+            <p class="empty-title">Nenhuma turma em Quinta-feira</p>
+            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="pane-dia-4" role="tabpanel" aria-labelledby="tab-dia-4" tabindex="0">
+        <div class="panel">
+          <div class="panel-body empty-state">
+            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
+            <p class="empty-title">Nenhuma turma em Sexta-feira</p>
+            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="pane-dia-5" role="tabpanel" aria-labelledby="tab-dia-5" tabindex="0">
+        <div class="panel">
+          <div class="panel-body empty-state">
+            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
+            <p class="empty-title">Nenhuma turma em Sábado</p>
+            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop: Matriz de grade semanal por faixa de horário -->
+  <div class="d-none d-md-block">
+    <div class="panel">
+      <div class="week-table-wrap">
+        <table class="week-table">
+          <thead>
+            <tr>
+              <th>Faixa</th>
+              <th>Segunda-feira</th>
+              <th>Terça-feira</th>
+              <th>Quarta-feira</th>
+              <th>Quinta-feira</th>
+              <th>Sexta-feira</th>
+              <th>Sábado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="faixa-cell">
+                <p>Matutino</p>
+                <small>até 11:59</small>
+              </td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+            </tr>
+            <tr>
+              <td class="faixa-cell">
+                <p>Vespertino</p>
+                <small>12:00 – 17:59</small>
+              </td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+            </tr>
+            <tr>
+              <td class="faixa-cell">
+                <p>Noturno</p>
+                <small>a partir das 18:00</small>
+              </td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+            </tr>
+            <tr>
+              <td class="faixa-cell">
+                <p>Sem horário fixo</p>
+                <small>aulas assíncronas</small>
+              </td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+              <td class="day-cell"><div class="cell-stack"></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
