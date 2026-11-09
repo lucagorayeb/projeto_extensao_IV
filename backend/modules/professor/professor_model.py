@@ -8,6 +8,6 @@ class Professor(DefaultModel):
 
     id: Mapped[initpk]
     nome: Mapped[str_30]
-    fk_disciplina_especialidade: Mapped[int] = mapped_column(ForeignKey("disciplina_especialidade.id"))
+    cpf: Mapped[str_30]
     created_at: Mapped[timestamp]
     updated_at: Mapped[timestamp]

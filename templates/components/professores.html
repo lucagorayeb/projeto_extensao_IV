@@ -22,7 +22,7 @@
                     {% call macro.render_form(
                             id="cadastrar-professor-form",
                             method="POST",
-                            action="",
+                            action=url_for('get_especialidades'),
                             class="form-stack"
                         )
                     %}
@@ -38,25 +38,20 @@
                             )
                         }}
                     </div>
-                    <div class="form-field">
-                        {% call macro.select_field(
-                                id="professor-especialidade",
-                                labelClass="",
-                                label="Especialidades",
-                                name="fk_especialidade",
-                                selectClass="form-select"
-                            )
-                        %}
 
-                        {% for item in especialidades %}
-                        {{ macro.option_select(
-                                value=item.id,
-                                content=item.nome
+                    <div class="form-field">
+                        {{ macro.input_field(
+                                id="professor-cpf",
+                                labelClass="",
+                                label="CPF",
+                                type="text",
+                                name="cpf",
+                                inputClass="form-control",
+                                placeholder="Somente Números"
                             )
                         }}
-                        {% endfor %}
-                        {% endcall %}
                     </div>
+                    
                     <div class="form-actions">
                         {{ macro.render_button(
                                 id="btnCadastrarProfessor",

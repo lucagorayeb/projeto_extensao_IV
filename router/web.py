@@ -17,6 +17,7 @@ from backend.modules.disciplina.disciplina_dto import DisciplinaDTO
 from backend.modules.disciplina_especialidade.disciplina_especialidade_controller import DisciplinaEspecialidadeController
 from backend.modules.disciplina_especialidade.disciplina_especialidade_dto import DisciplinaEspecialidadeDTO
 
+from router import cadastro
 
 sala = SalaController()
 tipo_sala = TipoSalaController()
@@ -52,22 +53,8 @@ async def index(request: Request):
     )
 
 #----------------------ROTAS CADASTRO----------------------------
-@app.get("/cadastro")
-async def cadastro(request: Request):
-    return templates.TemplateResponse(
-        request, name="cadastro.html"
-    )
 
-@app.get("/cadastro/professor")
-async def cadastro_professor(request: Request):
-    data = especialidade.slct_especialidade_controller()
-    return templates.TemplateResponse(
-        request,
-        name="components/professores.html",
-        context={"status_code": data['status_code'],
-                "especialidades": data['content']
-        }
-    )
+app.include_router(cadastro.router)
 
 @app.get("/semana")
 async def semana(request: Request):
