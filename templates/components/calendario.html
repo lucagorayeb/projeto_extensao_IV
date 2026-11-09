@@ -1,0 +1,28 @@
+<div class="mb-3">
+    <div class="panel">
+        <div class="calendar-head">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <div class="segmented" role="group" aria-label="Modo de visualização">
+                    <button type="button" class="btn cal-view-btn active" data-view="timeGridWeek" aria-pressed="true">Semana</button>
+                    <button type="button" class="btn cal-view-btn" data-view="timeGridDay" aria-pressed="false">Dia</button>
+                </div>
+                <div class="calendar-day-nav">
+                    <button type="button" class="btn btn-outline-secondary cal-prev-btn" aria-label="Anterior">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary cal-today-btn" aria-label="Hoje" style="font-size: 0.75rem; font-weight: 500; padding: 0 0.5rem; width: auto;">
+                        Hoje
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary cal-next-btn" aria-label="Próximo">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <p class="calendar-label" id="cal-title-label"></p>
+        </div>
+
+        <div class="calendar-card p-3 pt-0">
+            <div id="calendar"></div>
+        </div>
+    </div>
+</div>

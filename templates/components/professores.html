@@ -1,0 +1,91 @@
+{% extends "components/layout.html" %}
+{% import "components/_macro.html" as macro %}
+
+{% block content %}
+
+<header class="page-header">
+    <div>
+        <h1 class="page-title">Professores</h1>
+        <p class="page-desc">Cadastre e gerencie os professores e suas especialidades</p>
+    </div>
+</header>
+
+
+<div class="row g-3 g-lg-4">
+    <!-- Coluna do formulário -->
+    <div class="col-12 col-lg-5">
+        <div class="h-100 border border-2 rounded-4 bg-primary-soft p-3 p-md-4">
+            <div class="panel">
+                <div class="panel-body">
+                    <h2 class="panel-title">Novo professor</h2>
+
+                    {% call macro.render_form(
+                            id="cadastrar-professor-form",
+                            method="POST",
+                            action="",
+                            class="form-stack"
+                        )
+                    %}
+                    <div class="form-field">
+                        {{ macro.input_field(
+                                id="professor-nome",
+                                labelClass="",
+                                label="Nome Completo",
+                                type="text",
+                                name="nome",
+                                inputClass="form-control",
+                                placeholder="Ex: Allan Gurgel"
+                            )
+                        }}
+                    </div>
+                    <div class="form-field">
+                        {% call macro.select_field(
+                                id="professor-especialidade",
+                                labelClass="",
+                                label="Especialidades",
+                                name="fk_especialidade",
+                                selectClass="form-select"
+                            )
+                        %}
+
+                        {% for item in especialidades %}
+                        {{ macro.option_select(
+                                value=item.id,
+                                content=item.nome
+                            )
+                        }}
+                        {% endfor %}
+                        {% endcall %}
+                    </div>
+                    <div class="form-actions">
+                        {{ macro.render_button(
+                                id="btnCadastrarProfessor",
+                                class="btn btn-primary",
+                                type="submit",
+                                label="Cadastrar Professor"
+                            )
+                        }}
+                    </div>
+                    {% endcall %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coluna da lista -->
+    <div class="col-12 col-lg-7">
+        <div class="h-100 border border-2 rounded-4 bg-primary-soft p-3 p-md-4">
+            <div class="list-stack">
+                <div class="panel">
+                    <div class="panel-body empty-state">
+                        <div class="empty-icon"><i class="bi bi-person"></i></div>
+                        <p class="empty-title">Nenhum professor cadastrado</p>
+                        <p class="empty-desc">Cadastre o primeiro professor no formulário ao lado.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

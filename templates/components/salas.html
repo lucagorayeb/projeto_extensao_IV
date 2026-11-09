@@ -1,0 +1,63 @@
+
+    <div class="cadastro-form-col">
+        <div class="panel">
+        <div class="panel-body">
+            <h2 class="panel-title">Nova sala ou laboratório</h2>
+            <form class="form-stack" data-demo-form data-success="Sala cadastrada.">
+            <div class="form-field">
+                <label for="sala-nome">Nome / número</label>
+                <input id="sala-nome" class="form-control" type="text" placeholder="Ex.: Sala 03, LAB 02, Nova York"
+                required>
+            </div>
+            <div class="form-field">
+                <label for="sala-tipo">Tipo de ambiente</label>
+                <select id="sala-tipo" class="form-select">
+                <option value="sala">Sala de aula</option>
+                <option value="laboratorio">Laboratório</option>
+                <option value="online">Ambiente virtual</option>
+                </select>
+            </div>
+            <div class="form-grid-2">
+                <div class="form-field">
+                <label for="sala-predio">Prédio</label>
+                <select id="sala-predio" class="form-select">
+                    <option>Central</option>
+                    <option>Anexo</option>
+                    <option>Anexo 02</option>
+                    <option>Virtual</option>
+                </select>
+                </div>
+                <div class="form-field">
+                <label for="sala-andar">Andar</label>
+                <select id="sala-andar" class="form-select">
+                    <option>Térreo</option>
+                    <option selected>1º Piso</option>
+                    <option>2º Piso</option>
+                    <option>—</option>
+                </select>
+                </div>
+            </div>
+            <div class="form-field">
+                <label for="sala-capacidade">Capacidade de alunos</label>
+                <input id="sala-capacidade" class="form-control" type="number" min="0" inputmode="numeric"
+                placeholder="Ex.: 45">
+                <p class="form-hint">Deixe em branco para ambientes virtuais</p>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit"><i class="bi bi-plus-lg"></i>Cadastrar sala</button>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    <div class="cadastro-list-col">
+        <div class="list-stack">
+        <div class="panel">
+            <div class="panel-body empty-state">
+            <div class="empty-icon"><i class="bi bi-building"></i></div>
+            <p class="empty-title">Nenhuma sala cadastrada</p>
+            <p class="empty-desc">Cadastre a primeira sala no formulário ao lado.</p>
+            </div>
+        </div>
+        </div>
+    </div>

@@ -1660,3 +1660,153 @@ a {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ==========================================================================
+  FullCalendar — Estilização personalizada para o tema Engetec
+   ========================================================================== */
+.fc {
+  --fc-border-color: var(--border);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: var(--muted);
+  --fc-today-bg-color: color-mix(in srgb, var(--primary) 5%, transparent);
+  --fc-now-indicator-color: var(--gold);
+  font-family: inherit;
+  font-size: 0.8125rem;
+}
+
+.fc-theme-standard td,
+.fc-theme-standard th,
+.fc-theme-standard .fc-scrollgrid {
+  border-color: var(--border);
+}
+
+.fc .fc-col-header-cell {
+  background: var(--card);
+  padding: 0.5rem 0;
+  color: var(--muted-foreground);
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.fc .fc-col-header-cell.fc-day-today {
+  color: var(--primary);
+}
+
+.fc .fc-col-header-cell-cushion {
+  color: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.fc .fc-timegrid-slot {
+  height: 52px;
+}
+
+.fc .fc-timegrid-slot-label-cushion {
+  color: var(--muted-foreground);
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+/* Container do evento */
+.fc-timegrid-event-harness > .fc-timegrid-event {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 1px 2px;
+}
+
+.cal-fc-card {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid transparent;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fc-event:hover .cal-fc-card {
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(16, 24, 40, 0.16);
+  z-index: 20;
+}
+
+.cal-fc-card .cal-fc-title {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cal-fc-card .cal-fc-sub {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--muted-foreground);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cal-fc-card .cal-fc-time {
+  display: block;
+  font-size: 0.625rem;
+  color: var(--muted-foreground);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.cal-fc-card .cal-fc-conflict {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--destructive);
+  margin-top: 0.125rem;
+}
+
+/* Cores por Prédio */
+.cal-fc-event.predio-central .cal-fc-card {
+  background: var(--predio-central-soft);
+  border-left-color: var(--predio-central);
+}
+
+.cal-fc-event.predio-anexo .cal-fc-card {
+  background: var(--predio-anexo-soft);
+  border-left-color: var(--predio-anexo);
+}
+
+.cal-fc-event.predio-anexo2 .cal-fc-card {
+  background: var(--predio-anexo2-soft);
+  border-left-color: var(--predio-anexo2);
+}
+
+.cal-fc-event.predio-virtual .cal-fc-card {
+  background: var(--predio-virtual-soft);
+  border-left-color: var(--predio-virtual);
+}
+
+.cal-fc-event.is-conflict .cal-fc-card {
+  background: var(--destructive-soft);
+  border-left-color: var(--destructive);
+  border-color: color-mix(in srgb, var(--destructive) 40%, transparent);
+}
+
+.cal-fc-event.is-conflict .cal-fc-title {
+  color: var(--destructive);
+}
+

@@ -1,0 +1,52 @@
+<!-- Macro de Formulário -->
+{% macro render_form(id, method, action, class) %}
+    <form id="{{ id }}" method="{{ method }}" action="{{ action }}" class="{{ class }}">
+        
+        {% if method == "PUT" %}
+            <input type="hidden" name="_method" value="PUT">
+        {% elif method == "DELETE" %}
+            <input type="hidden" name="_method" value="DELETE">
+        {% endif %}
+        
+        {{ caller() }}
+    </form>
+{% endmacro %}
+
+
+<!-- Macro de Input -->
+{% macro input_field(id, label, type, name, value, labelClass, inputClass, placeholder )%}
+    <label class="{{ labelClass }}">{{ label }}</label>
+    <input id="{{ id }}" type="{{ type }}" name="{{ name }}" value="{{ value }}" class="{{ inputClass }}"
+    placeholder="{{ placeholder }}">
+{% endmacro %}
+
+<!-- Macro de Select -->
+{% macro select_field(id, labelClass, label, name, selectClass) %}
+    <label class="{{ labelClass }}">{{ label }}</label>
+    <select id="{{ id }}" name="{{ name }}" class="{{ selectClass }}" required>
+        <option value="0" selected>Selecione a opção</option>
+        {{ caller() }}
+    </select>
+{% endmacro %}
+
+<!-- Macro Option -->
+{% macro option_select(value, content) %}
+    <option value="{{ value }}">{{ content }}</option>
+{% endmacro %}
+
+<!-- Macro de Botão -->
+{% macro render_button(id, class, type, label, dataEntity) %}
+    <button id="{{ id }}" class="{{ class }}" type="{{ type }}">
+        <i class="bi bi-plus-lg"></i>{{ label }}
+    </button>
+{% endmacro %}
+
+<!-- Macro Card Nav Menu Cadastro -->
+{% macro card_nav_menu( divClass, link, linkClass, spanClass, label, labelClass, description, descriptionClass) %}
+<a href="{{ link }}" class="{{ linkClass }}">
+    <span class="{{ spanClass }}">
+        <span class="{{ labelClass }}">{{ label }}</span>
+        <span class="{{ descriptionClass }}">{{ description }}</span>
+    </span>
+</a>
+{% endmacro %}
