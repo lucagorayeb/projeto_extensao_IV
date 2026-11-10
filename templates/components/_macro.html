@@ -1,44 +1,43 @@
 <!-- Macro de Formulário -->
 {% macro render_form(id, method, action, class) %}
-    <form id="{{ id }}" method="{{ method }}" action="{{ action }}" class="{{ class }}">
-        
-        {% if method == "PUT" %}
-            <input type="hidden" name="_method" value="PUT">
-        {% elif method == "DELETE" %}
-            <input type="hidden" name="_method" value="DELETE">
-        {% endif %}
-        
-        {{ caller() }}
-    </form>
-{% endmacro %}
+<form id="{{ id }}" method="{{ method }}" action="{{ action }}" class="{{ class }}">
 
+    {% if method == "PUT" %}
+    <input type="hidden" name="_method" value="PUT">
+    {% elif method == "DELETE" %}
+    <input type="hidden" name="_method" value="DELETE">
+    {% endif %}
+
+    {{ caller() }}
+</form>
+{% endmacro %}
 
 <!-- Macro de Input -->
 {% macro input_field(id, label, type, name, value, labelClass, inputClass, placeholder )%}
-    <label class="{{ labelClass }}">{{ label }}</label>
-    <input id="{{ id }}" type="{{ type }}" name="{{ name }}" value="{{ value }}" class="{{ inputClass }}"
+<label class="{{ labelClass }}">{{ label }}</label>
+<input id="{{ id }}" type="{{ type }}" name="{{ name }}" value="{{ value }}" class="{{ inputClass }}"
     placeholder="{{ placeholder }}">
 {% endmacro %}
 
 <!-- Macro de Select -->
 {% macro select_field(id, labelClass, label, name, selectClass) %}
-    <label class="{{ labelClass }}">{{ label }}</label>
-    <select id="{{ id }}" name="{{ name }}" class="{{ selectClass }}" required>
-        <option value="0" selected>Selecione a opção</option>
-        {{ caller() }}
-    </select>
+<label class="{{ labelClass }}">{{ label }}</label>
+<select id="{{ id }}" name="{{ name }}" class="{{ selectClass }}" required>
+    <option value="0" selected>Selecione a opção</option>
+    {{ caller() }}
+</select>
 {% endmacro %}
 
 <!-- Macro Option -->
 {% macro option_select(value, content) %}
-    <option value="{{ value }}">{{ content }}</option>
+<option value="{{ value }}">{{ content }}</option>
 {% endmacro %}
 
 <!-- Macro de Botão -->
 {% macro render_button(id, class, type, label, dataEntity) %}
-    <button id="{{ id }}" class="{{ class }}" type="{{ type }}">
-        <i class="bi bi-plus-lg"></i>{{ label }}
-    </button>
+<button id="{{ id }}" class="{{ class }}" type="{{ type }}">
+    <i class="bi bi-plus-lg"></i>{{ label }}
+</button>
 {% endmacro %}
 
 <!-- Macro Card Nav Menu Cadastro -->
@@ -49,4 +48,82 @@
         <span class="{{ descriptionClass }}">{{ description }}</span>
     </span>
 </a>
+{% endmacro %}
+
+<!-- Macro Card Padrão -->
+{% macro card_default(cardHead, cardBody) %}
+<div class="flex-grow-1 d-flex align-items-center justify-content-center pb-4">
+    <div class="row w-100 justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <!-- Card: retângulo na proporção 2:1 do esboço -->
+            <div class="ratio" style="--bs-aspect-ratio: 50%;">
+                <div
+                    class="border border-2 border-primary rounded-4 bg-primary-soft d-flex flex-column align-items-center justify-content-center text-center p-3">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar card"></button>
+                    <h2 class="fs-5 fw-semibold text-primary-ink font-serif mb-1">{{ cardHead }}</h2>
+                    <p class="page-desc mb-0">{{ cardBody }}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+<!-- Macro Listagem de dados -->
+{# fields recebe pares (nome do campo, rótulo). As ações expõem data-action e
+data-id para integração no frontend, sem depender de rotas específicas. #}
+
+{% macro data_list(items=none, fields=(), entity='registro', icon='bi-person',
+    title_field='nome', id_field='id', empty_title='Nenhum registro cadastrado',
+    empty_description='Cadastre o primeiro registro no formulário ao lado.', delete_url=none) %}
+<div class="list-stack" data-entity="{{ entity }}">
+    {% for item in items or [] %}
+    <div class="panel" data-id="{{ item[id_field] }}">
+        <div class="panel-body list-item flex-wrap">
+            <div class="list-item-icon bg-primary-soft text-primary">
+                <i class="bi {{ icon }}" aria-hidden="true"></i>
+            </div>
+            <div class="list-item-body">
+                <h3 class="list-item-title">{{ item[title_field] }}</h3>
+                {% for field, label in fields %}
+                <p class="list-item-sub">{{ label }}: {{ item[field] | default('Não informado', true) }}</p>
+                {% endfor %}
+            </div>
+            <div class="list-item-actions flex-wrap" role="group" aria-label="Ações de {{ item[title_field] }}">
+                <button type="button" class="btn btn-outline-primary btn-icon btn-sm" title="Visualizar dados"
+                    data-action="view" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
+                    aria-label="Visualizar dados de {{ item[title_field] }}">
+                    <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-icon btn-sm" title="Editar"
+                    data-action="edit" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
+                    aria-label="Editar {{ item[title_field] }}">
+                    <i class="bi bi-pencil" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btn btn-outline-success btn-icon btn-sm" title="Adicionar especialidade"
+                    data-action="add-specialty" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
+                    aria-label="Adicionar especialidade a {{ item[title_field] }}">
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-icon btn-sm delete-professor" title="Deletar"
+                    {% if delete_url %}data-delete-url="{{ delete_url }}"{% else %}disabled{% endif %}
+                    data-action="delete" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
+                    aria-label="Deletar {{ item[title_field] }}">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="panel">
+        <div class="panel-body empty-state">
+            <div class="empty-icon"><i class="bi {{ icon }}" aria-hidden="true"></i></div>
+            <p class="empty-title">{{ empty_title }}</p>
+            <p class="empty-desc">{{ empty_description }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endmacro %}

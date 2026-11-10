@@ -2,9 +2,11 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from backend.modules.especialidade.especialidade_controller  import EspecialidadeController
-from backend.modules.especialidade.especialidade_dto import EspecialidadeDTO
+# from backend.modules.especialidade.especialidade_dto import EspecialidadeDTO
 from backend.modules.professor.professor_controller import ProfessorController
-from backend.modules.professor.professor_dto import ProfessorDTO
+# from backend.modules.professor.professor_dto import ProfessorDTO
+from fastapi.responses import RedirectResponse
+from http import HTTPStatus
 
 router = APIRouter()
 router.mount("/static", StaticFiles(directory="static"), name="static")
@@ -22,30 +24,38 @@ async def cadastro(request: Request):
 
 @router.get("/cadastro/professor")
 async def get_especialidades(request: Request):
-    data = especialidade.slct_especialidade_controller()
+    especialidades = especialidade.slct_especialidade_controller()
+    professores = professor.slct_professor_controller()
+
     return templates.TemplateResponse(
         request,
         name="components/professores.html",
         context={
-            "status_code": data['status_code'],
-            "especialidades": data['content']
+            "status": "Sucesso",
+            "especialidades": especialidades['content'],
+            "professores": professores['content']
         }
     )
 
 @router.post("/cadastro/professor")
-async def insert_professor(request: Request):
+async def insert_professor(request: Request) -> RedirectResponse:
     data = await request.form()
     format_data = {}
     for key, value in data.items():
         format_data.update({key: value})
 
-    response = professor.insrt_professor_controller(format_data)
-    
-    return templates.TemplateResponse(
-        request,
-        name="components/professores.html",
-        context={
-            "status_code": response['status_code'],
-            "description": response['content']
-        }
+    professor.insrt_professor_controller(format_data)
+    return RedirectResponse(
+        url="/cadastro/professor", 
+        status_code=HTTPStatus.SEE_OTHER
     )
+
+@router.delete("/cadastro/professor/")
+async def delete_professor(request: Request):
+    data = await request.form()
+    format_data = {}
+    print(data)
+    for key, value in data.items():
+            format_data.update({key: value})
+    print(format_data)
+    # professor.insrt_professor_controller(format_data)
