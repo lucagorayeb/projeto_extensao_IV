@@ -13,24 +13,24 @@ class ProfessorController:
         try:
             self.serv.insrt_professor_service(data)
         except IntegrityError:
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST,
-                content="Bad Request"
-            )
-        except NoResultFound:
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST,
-                content="Bad Request"
-            )
-        except SQLAlchemyError:
-            return JSONResponse(
-                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-                content="Internal Error"
-            )
-        return {
-                "status_code": HTTPStatus.CREATED,
-                "content": "Formato Object Created"
+            {
+                "status_code":HTTPStatus.BAD_REQUEST,
+                "content":"Bad Request"
             }
+        except NoResultFound:
+            {
+                "status_code":HTTPStatus.BAD_REQUEST,
+                "content":"Bad Request"
+            }
+        except SQLAlchemyError:
+            {
+                "status_code": HTTPStatus.INTERNAL_SERVER_ERROR,
+                "content": "Internal Error"
+            }
+        # return {
+        #         "status_code": HTTPStatus.CREATED,
+        #         "content": "Professor Object Created"
+        #     }
 
     def updt_professor_controller(self, data: ProfessorDTO, id: int):
         try:
@@ -54,3 +54,21 @@ class ProfessorController:
                 status_code=HTTPStatus.OK,
                 content="Formato Objected Updated"
             )
+
+    def slct_professor_controller(self) -> dict:
+        try:
+            data = self.serv.slct_professor_service()
+        except SQLAlchemyError:
+            return JSONResponse(
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+                content="Internal Error"
+            )
+        except Exception:
+            return {
+                "status_code":HTTPStatus.NOT_FOUND,
+                "content":"Not Found"
+            }
+        return {
+            "status_code": HTTPStatus.OK,
+            "content": data
+        }

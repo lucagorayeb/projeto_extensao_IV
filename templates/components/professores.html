@@ -61,6 +61,7 @@
                             )
                         }}
                     </div>
+                    
                     {% endcall %}
                 </div>
             </div>
@@ -70,14 +71,15 @@
     <!-- Coluna da lista -->
     <div class="col-12 col-lg-7">
         <div class="h-100 border border-2 rounded-4 bg-primary-soft p-3 p-md-4">
-            <div class="list-stack">
-                <div class="panel">
-                    <div class="panel-body empty-state">
-                        <div class="empty-icon"><i class="bi bi-person"></i></div>
-                        <p class="empty-title">Nenhum professor cadastrado</p>
-                        <p class="empty-desc">Cadastre o primeiro professor no formulário ao lado.</p>
-                    </div>
-                </div>
+            <div class="overflow-auto pe-2" style="max-height: 65vh;" tabindex="0" role="region" aria-label="Lista de professores">
+            {{ macro.data_list(
+                items=professores,
+                fields=[('cpf', 'CPF'), ('especialidade', 'Especialidade')],
+                entity='professor',
+                delete_url=url_for('delete_professor'),
+                empty_title='Nenhum professor cadastrado',
+                empty_description='Cadastre o primeiro professor no formulário ao lado.'
+            ) }}
             </div>
         </div>
     </div>
