@@ -27,10 +27,10 @@ class ProfessorController:
                 "status_code": HTTPStatus.INTERNAL_SERVER_ERROR,
                 "content": "Internal Error"
             }
-        # return {
-        #         "status_code": HTTPStatus.CREATED,
-        #         "content": "Professor Object Created"
-        #     }
+        return {
+                "status_code": HTTPStatus.CREATED,
+                "content": "Professor Object Created"
+            }
 
     def updt_professor_controller(self, data: ProfessorDTO, id: int):
         try:
@@ -71,4 +71,27 @@ class ProfessorController:
         return {
             "status_code": HTTPStatus.OK,
             "content": data
+        }
+    
+    def del_professor_controller(self, data: dict):
+        try:
+            self.serv.del_professor_service(data)
+        except IntegrityError:
+            return JSONResponse(
+                status_code=HTTPStatus.BAD_REQUEST,
+                content="Bad Request"
+            )
+        except NoResultFound:
+            return JSONResponse(
+                status_code=HTTPStatus.BAD_REQUEST,
+                content="Bad Request"
+            )
+        except SQLAlchemyError:
+            return JSONResponse(
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+                content="Internal Error"
+            )
+        return {
+            "status_code": HTTPStatus.OK,
+            "content": "Especialidade Objected Deleted"
         }

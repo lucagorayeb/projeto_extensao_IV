@@ -18,17 +18,18 @@ class ProfessorService:
     def updt_professor_service(self, data: ProfessorDTO, id: int) -> None:
         self.repo.update(data, id)
 
-    def del_professor_service(self, id: int) -> None:
+    def del_professor_service(self, data: dict) -> None:
+        id = int(data['id'])
         self.repo.delete(id)
 
-    def __data_treatment(self, data: ProfessorDTO) -> list:
+    def __data_treatment(self, data: list) -> list:
         normalized_data = []
         for d in data:
             normalized_data.append({
-                "id": d.professor_id,
-                "nome": d.professor_nome,
-                "cpf": d.professor_cpf,
+                "id": d.id,
+                "nome": d.nome,
+                "cpf": d.cpf,
                 "especialidade_id": d.especialidade_id,
-                "especialidade": d.especialidade_nome
+                "especialidade": d.especialidade
             })
         return normalized_data

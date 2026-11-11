@@ -32,13 +32,6 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["http://localhost:5173"],  # endereço do Vite
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
 # class BaseAPI(ABC):
     
 # Rota de Status da API
@@ -53,8 +46,8 @@ async def index(request: Request):
     )
 
 #----------------------ROTAS CADASTRO----------------------------
-
 app.include_router(cadastro.router)
+#----------------------------------------------------------------
 
 @app.get("/semana")
 async def semana(request: Request):
@@ -67,8 +60,6 @@ async def hoje(request: Request):
     return templates.TemplateResponse(
         request, name="hoje.html"
     )
-    
-
 
 # -------------------------------ROTAS DE SALA-----------------------------
 @app.get("/sala/")
@@ -206,5 +197,3 @@ def updt_disciplina(data: DisciplinaEspecialidadeDTO, id: int) -> JSONResponse:
 def del_disciplina(id: int) -> JSONResponse:
     return disciplina_especialidade.del_disciplina_especialidade_controller(id)
 #--------------------------------------------------------------------------
-
-#------------------------ROTAS PROFESSOR--------------------

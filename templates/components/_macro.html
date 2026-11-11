@@ -13,10 +13,10 @@
 {% endmacro %}
 
 <!-- Macro de Input -->
-{% macro input_field(id, label, type, name, value, labelClass, inputClass, placeholder )%}
-<label class="{{ labelClass }}">{{ label }}</label>
+{% macro input_field(id, label, type, name, value, labelClass, inputClass, placeholder, required=false, min=none, step=none)%}
+<label class="{{ labelClass }}" for="{{ id }}">{{ label }}</label>
 <input id="{{ id }}" type="{{ type }}" name="{{ name }}" value="{{ value }}" class="{{ inputClass }}"
-    placeholder="{{ placeholder }}">
+    placeholder="{{ placeholder }}" {% if required %}required{% endif %}{% if min is not none %} min="{{ min }}"{% endif %}{% if step is not none %} step="{{ step }}"{% endif %}>
 {% endmacro %}
 
 <!-- Macro de Select -->
@@ -78,37 +78,53 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
 {% macro data_list(items=none, fields=(), entity='registro', icon='bi-person',
     title_field='nome', id_field='id', empty_title='Nenhum registro cadastrado',
     empty_description='Cadastre o primeiro registro no formulário ao lado.', delete_url=none) %}
-<div class="list-stack" data-entity="{{ entity }}">
+<div class="list-stack" data-entity="{{ entity }}" {% if entity == 'sala' %}data-sala-list{% endif %}>
     {% for item in items or [] %}
-    <div class="panel" data-id="{{ item[id_field] }}">
+    <div class="panel" data-id="{{ item[id_field] }}"
+        {% if entity == 'sala' %}
+        data-sala-card data-nome="{{ item[title_field] | default('') }}"
+        data-tipo="{{ item['tipo_sala'] | default('', true) }}"
+        data-capacidade="{{ item['quantidade_alunos'] | default('') }}"
+        {% endif %}>
         <div class="panel-body list-item flex-wrap">
             <div class="list-item-icon bg-primary-soft text-primary">
                 <i class="bi {{ icon }}" aria-hidden="true"></i>
             </div>
             <div class="list-item-body">
-                <h3 class="list-item-title">{{ item[title_field] }}</h3>
+                <h3 class="list-item-title" {% if entity == 'sala' %}data-sala-nome{% endif %}>{{ item[title_field] }}</h3>
                 {% for field, label in fields %}
-                <p class="list-item-sub">{{ label }}: {{ item[field] | default('Não informado', true) }}</p>
+                <p class="list-item-sub">{{ label }}: {% if entity == 'sala' %}<span data-sala-{{ 'tipo' if field == 'tipo_sala' else 'capacidade' }}>{{ item[field] if item[field] is defined and item[field] is not none and item[field] != '' else 'Não informada' }}</span>{% else %}{{ item[field] | default('Não informado', true) }}{% endif %}</p>
                 {% endfor %}
             </div>
             <div class="list-item-actions flex-wrap" role="group" aria-label="Ações de {{ item[title_field] }}">
                 <button type="button" class="btn btn-outline-primary btn-icon btn-sm" title="Visualizar dados"
                     data-action="view" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
+                    {% if entity == 'professor' %}
+                    data-view-name="{{ item[title_field] | default('Não informado', true) }}"
+                    data-view-cpf="{{ item['cpf'] | default('Não informado', true) }}"
+                    data-view-specialty="{{ item['especialidade'] | default('Nenhuma especialidade vinculada', true) }}"
+                    {% endif %}
                     aria-label="Visualizar dados de {{ item[title_field] }}">
                     <i class="bi bi-eye" aria-hidden="true"></i>
                 </button>
                 <button type="button" class="btn btn-outline-secondary btn-icon btn-sm" title="Editar"
                     data-action="edit" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
+                    {% if entity == 'professor' %}
+                    data-edit-name="{{ item[title_field] }}"
+                    data-edit-cpf="{{ item['cpf'] | default('', true) }}"
+                    {% endif %}
                     aria-label="Editar {{ item[title_field] }}">
                     <i class="bi bi-pencil" aria-hidden="true"></i>
                 </button>
+                {% if entity != 'sala' %}
                 <button type="button" class="btn btn-outline-success btn-icon btn-sm" title="Adicionar especialidade"
                     data-action="add-specialty" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
                     aria-label="Adicionar especialidade a {{ item[title_field] }}">
                     <i class="bi bi-plus-lg" aria-hidden="true"></i>
                 </button>
-                <button type="button" class="btn btn-outline-danger btn-icon btn-sm delete-professor" title="Deletar"
-                    {% if delete_url %}data-delete-url="{{ delete_url }}"{% else %}disabled{% endif %}
+                {% endif %}
+                <button type="button" class="btn btn-outline-danger btn-icon btn-sm delete-{{ entity }}" title="Deletar"
+                    {% if delete_url %}data-delete-url="{{ delete_url }}"{% elif entity != 'sala' %}disabled{% endif %}
                     data-action="delete" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
                     aria-label="Deletar {{ item[title_field] }}">
                     <i class="bi bi-trash" aria-hidden="true"></i>
@@ -116,14 +132,15 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
             </div>
         </div>
     </div>
-    {% else %}
-    <div class="panel">
+    {% endfor %}
+    {% if not items or entity == 'sala' %}
+    <div class="panel" {% if entity == 'sala' %}data-sala-empty {% if items %}hidden{% endif %}{% endif %}>
         <div class="panel-body empty-state">
             <div class="empty-icon"><i class="bi {{ icon }}" aria-hidden="true"></i></div>
             <p class="empty-title">{{ empty_title }}</p>
             <p class="empty-desc">{{ empty_description }}</p>
         </div>
     </div>
-    {% endfor %}
+    {% endif %}
 </div>
 {% endmacro %}

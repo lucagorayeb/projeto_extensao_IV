@@ -36,15 +36,38 @@ class ProfessorRepository(BaseRepository):
         self.execute_db_query(stmt, False)
 
     def select(self) -> list:
-        stmt = select(
-            Professor.id.label('professor_id'),
-            Professor.nome.label('professor_nome'),
-            Professor.cpf.label('professor_cpf'),
-            Especialidade.id.label('especialidade_id'),
-            Especialidade.nome.label('especialidade_nome')
-        ).join(
-            ProfessorEspecialidade, ProfessorEspecialidade.fk_professor == Professor.id, isouter=True
-        ).join(
-            Especialidade,  ProfessorEspecialidade.fk_especialidade == Especialidade.id, isouter=True
-        )
+        # stmt = select(
+        #     Professor.id.label('professor_id'),
+        #     Professor.nome.label('professor_nome'),
+        #     Professor.cpf.label('professor_cpf'),
+        #     select(
+        #         Especialidade.id.label('especialidade_id'),
+        #         Especialidade.nome.label('especialidade_nome')
+        #     ).join(
+        #         ProfessorEspecialidade, ProfessorEspecialidade.fk_especialidade == Especialidade.id, isouter=True
+        #     ).join(
+        #         Professor,  ProfessorEspecialidade.fk_professor == Professor.id, isouter=True
+        #     ).first()
+        # )
+        stmt = text("""SELECT 
+            p.id, 
+            p.nome, 
+            p.cpf, 
+        (
+            SELECT e.id
+            FROM professor_especialidade as pe 
+            JOIN especialidade as e on pe.fk_especialidade = e.id
+            WHERE pe.fk_professor = p.id 
+            ORDER BY pe.id DESC 
+            LIMIT 1
+        ) AS especialidade_id,
+        (
+            SELECT e.nome
+            FROM professor_especialidade as pe 
+            JOIN especialidade as e on pe.fk_especialidade = e.id
+            WHERE pe.fk_professor = p.id 
+            ORDER BY pe.id DESC 
+            LIMIT 1
+        ) AS especialidade
+        FROM professor AS p;""")
         return self.execute_db_query(stmt, True)

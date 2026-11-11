@@ -1,63 +1,144 @@
+{% extends "components/layout.html" %}
+{% import "components/_macro.html" as macro %}
 
-    <div class="cadastro-form-col">
-        <div class="panel">
-        <div class="panel-body">
-            <h2 class="panel-title">Nova sala ou laboratório</h2>
-            <form class="form-stack" data-demo-form data-success="Sala cadastrada.">
-            <div class="form-field">
-                <label for="sala-nome">Nome / número</label>
-                <input id="sala-nome" class="form-control" type="text" placeholder="Ex.: Sala 03, LAB 02, Nova York"
-                required>
-            </div>
-            <div class="form-field">
-                <label for="sala-tipo">Tipo de ambiente</label>
-                <select id="sala-tipo" class="form-select">
-                <option value="sala">Sala de aula</option>
-                <option value="laboratorio">Laboratório</option>
-                <option value="online">Ambiente virtual</option>
-                </select>
-            </div>
-            <div class="form-grid-2">
-                <div class="form-field">
-                <label for="sala-predio">Prédio</label>
-                <select id="sala-predio" class="form-select">
-                    <option>Central</option>
-                    <option>Anexo</option>
-                    <option>Anexo 02</option>
-                    <option>Virtual</option>
-                </select>
+{% macro sala_fields(prefix) %}
+<div class="form-field">
+    {{ macro.input_field(
+        id=prefix ~ '-nome', label='Nome / número', type='text', name='nome',
+        labelClass='form-label', inputClass='form-control',
+        placeholder='Ex.: Sala 03, LAB 02', required=true
+    ) }}
+</div>
+<div class="form-field">
+    <label class="form-label" for="{{ prefix }}-tipo">Tipo de ambiente</label>
+    <select id="{{ prefix }}-tipo" name="tipo" class="form-select" required>
+        {% for tipo in tipos_sala | default([]) %}
+        <option value="{{ tipo.tipo_sala }}" data-id="{{ tipo.id }}">{{ tipo.tipo_sala }}</option>
+        {% else %}
+        <option value="" disabled selected>Nenhum tipo de ambiente cadastrado</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="form-field">
+    {{ macro.input_field(
+        id=prefix ~ '-capacidade', label='Capacidade de alunos', type='number', name='capacidade',
+        labelClass='form-label', inputClass='form-control', placeholder='Ex.: 45', min=0, step=1
+    ) }}
+    <p class="form-hint" id="{{ prefix }}-capacidade-hint">Deixe em branco para ambientes virtuais.</p>
+</div>
+{% endmacro %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">Salas</h1>
+        <p class="page-desc">Cadastre e gerencie as salas e os laboratórios</p>
+    </div>
+</header>
+<div class="row g-3 g-lg-4">
+    <!-- Coluna do formulário -->
+    <div class="col-12 col-lg-5">
+        <div class="h-100 border border-2 rounded-4 bg-primary-soft p-3 p-md-4">
+            <div class="panel">
+                <div class="panel-body">
+                    <h2 class="panel-title">Nova sala</h2>
+                    {% call macro.render_form(
+                        id='cadastrar-sala-form', method='POST',
+                        action=url_for('index_cadastro_sala'), class='form-stack'
+                    ) %}
+                        {{ sala_fields('sala') }}
+                        <p class="form-hint" role="note">As alterações são apenas uma prévia e não serão salvas no banco.</p>
+                        <div class="form-actions">
+                            {{ macro.render_button(
+                                id='btnCadastrarSala', class='btn btn-primary',
+                                type='submit', label='Cadastrar Sala'
+                            ) }}
+                        </div>
+                    {% endcall %}
                 </div>
-                <div class="form-field">
-                <label for="sala-andar">Andar</label>
-                <select id="sala-andar" class="form-select">
-                    <option>Térreo</option>
-                    <option selected>1º Piso</option>
-                    <option>2º Piso</option>
-                    <option>—</option>
-                </select>
-                </div>
             </div>
-            <div class="form-field">
-                <label for="sala-capacidade">Capacidade de alunos</label>
-                <input id="sala-capacidade" class="form-control" type="number" min="0" inputmode="numeric"
-                placeholder="Ex.: 45">
-                <p class="form-hint">Deixe em branco para ambientes virtuais</p>
-            </div>
-            <div class="form-actions">
-                <button class="btn btn-primary" type="submit"><i class="bi bi-plus-lg"></i>Cadastrar sala</button>
-            </div>
-            </form>
-        </div>
         </div>
     </div>
-    <div class="cadastro-list-col">
-        <div class="list-stack">
-        <div class="panel">
-            <div class="panel-body empty-state">
-            <div class="empty-icon"><i class="bi bi-building"></i></div>
-            <p class="empty-title">Nenhuma sala cadastrada</p>
-            <p class="empty-desc">Cadastre a primeira sala no formulário ao lado.</p>
+    <!-- Coluna da lista -->
+    <div class="col-12 col-lg-7">
+        <div class="h-100 border border-2 rounded-4 bg-primary-soft p-3 p-md-4">
+            <div class="overflow-auto pe-2" style="max-height: 65vh;" tabindex="0" role="region" aria-label="Lista de salas">
+                {{ macro.data_list(
+                    items=salas | default([]),
+                    fields=[('tipo_sala', 'Tipo de ambiente'), ('quantidade_alunos', 'Capacidade de alunos')],
+                    entity='sala', icon='bi-building', title_field='nome_sala',
+                    empty_title='Nenhuma sala cadastrada',
+                    empty_description='Cadastre a primeira sala no formulário ao lado.'
+                ) }}
             </div>
         </div>
+    </div>
+</div>
+<template id="sala-card-template">
+    {{ macro.data_list(
+        items=[{'id': '', 'nome_sala': '', 'tipo_sala': '', 'quantidade_alunos': ''}],
+        fields=[('tipo_sala', 'Tipo de ambiente'), ('quantidade_alunos', 'Capacidade de alunos')],
+        entity='sala', icon='bi-building', title_field='nome_sala'
+    ) }}
+</template>
+{% endblock %}
+
+{% block modals %}
+<div class="modal fade" id="view-sala-modal" tabindex="-1" aria-labelledby="view-sala-title" aria-describedby="view-sala-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4" id="view-sala-title">Dados da sala</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted-foreground" id="view-sala-description">Confira os dados cadastrados da sala.</p>
+                <dl class="mb-0">
+                    <dt class="text-muted-foreground small mb-1">Nome / número</dt><dd class="text-break mb-3" data-sala-nome></dd>
+                    <dt class="text-muted-foreground small mb-1">Tipo de ambiente</dt><dd class="text-break mb-3" data-sala-tipo></dd>
+                    <dt class="text-muted-foreground small mb-1">Capacidade de alunos</dt><dd class="text-break mb-0" data-sala-capacidade></dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-view-close>Fechar</button>
+            </div>
         </div>
     </div>
+</div>
+<div class="modal fade" id="edit-sala-modal" tabindex="-1" aria-labelledby="edit-sala-title" aria-describedby="edit-sala-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form class="modal-content" id="edit-sala-form">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4" id="edit-sala-title">Editar sala</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted-foreground" id="edit-sala-description">Atualize os dados da sala nesta prévia, sem salvar no banco.</p>
+                <div class="form-stack">{{ sala_fields('edit-sala') }}</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal fade delete-modal" id="delete-sala-modal" tabindex="-1" aria-labelledby="delete-sala-title" aria-describedby="delete-sala-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header align-items-start border-0 pb-0">
+                <span class="delete-modal-icon" aria-hidden="true"><i class="bi bi-trash"></i></span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title fs-4 mb-2" id="delete-sala-title">Excluir sala?</h2>
+                <p class="text-muted-foreground mb-0" id="delete-sala-description">Deseja remover <strong class="delete-modal-record" data-delete-name></strong> desta prévia? Nenhum dado será excluído do banco.</p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-delete-cancel>Cancelar</button>
+                <button type="button" class="btn btn-danger" data-confirm-delete><i class="bi bi-trash" aria-hidden="true"></i> Excluir sala</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

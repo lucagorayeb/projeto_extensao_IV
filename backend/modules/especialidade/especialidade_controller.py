@@ -104,8 +104,8 @@ class EspecialidadeController:
                 content="Internal Error"
             )
         return JSONResponse(
-                status_code=HTTPStatus.OK,
-                content="Especialidade Objected Deleted"
+            status_code=HTTPStatus.OK,
+            content="Especialidade Objected Deleted"
         )
     
     def slct_by_id_especialidade_controller(self, id: int) -> JSONResponse:

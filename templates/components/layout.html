@@ -44,14 +44,30 @@
             </div>
         </div>
         <nav class="bottom-nav" aria-label="Navegação principal"><div class="nav-grid"><a class="nav-item active" href="/" aria-current="page"><i class="bi bi-grid-1x2"></i>Painel</a><a class="nav-item" href="semana.html"><i class="bi bi-calendar3"></i>Semana</a><a class="nav-item" href="hoje.html"><i class="bi bi-clock"></i>Hoje</a><a class="nav-item" href="cadastro.html"><i class="bi bi-clipboard-data"></i>Cadastro</a></div></nav>
-        <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-title" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="delete-modal-title">Excluir?</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button></div><div class="modal-body"><p class="mb-0 text-muted-foreground" data-delete-description></p></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-danger" data-confirm-delete>Excluir</button></div></div></div></div>
+        <div class="modal fade delete-modal" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-title" aria-describedby="delete-modal-description" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header align-items-start border-0 pb-0">
+                        <span class="delete-modal-icon" aria-hidden="true"><i class="bi bi-trash"></i></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h2 class="modal-title fs-4 mb-2" id="delete-modal-title">Solicitar exclusão?</h2>
+                        <p class="text-muted-foreground mb-0" id="delete-modal-description">Deseja enviar uma solicitação de exclusão para <strong class="delete-modal-record" data-delete-name></strong>?</p>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-delete-cancel>Cancelar</button>
+                        <button type="button" class="btn btn-danger" data-confirm-delete><i class="bi bi-trash" aria-hidden="true"></i> Solicitar exclusão</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block modals %}{% endblock %}
         <script src="{{ url_for('static', path='vendor/bootstrap.bundle.min.js') }}"></script>
         <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
         <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales/pt-br.global.min.js'></script>
-        <script src="{{ url_for('static', path='js/app.js') }}"></script>
+        <script type="module" src="{{ url_for('static', path='js/app.js') }}?v=20261111-sala-modules"></script>
         <script src="{{ url_for('static', path='js/calendar.js') }}"></script>
-        <script src="{{ url_for('static', path='js/cadastro.js') }}"></script>
 
     </body>
 </html>
-

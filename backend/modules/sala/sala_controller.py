@@ -81,8 +81,6 @@ class SalaController:
     def slct_sala_controller(self) -> JSONResponse:
         try:
             data = self.ctrl.slct_sala_service()
-            if len(data) == 0:
-                raise Exception
         except IntegrityError:
             return JSONResponse(
                 status_code=HTTPStatus.BAD_REQUEST,
