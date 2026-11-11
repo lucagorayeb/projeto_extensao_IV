@@ -26,17 +26,17 @@ class SalaRepository(BaseRepository):
         stmt = insert(
             Sala
         ).values(
-            nome=data.nome,
-            limite_alunos=data.limite_alunos,
-            fk_tipo_sala=data.fk_tipo_sala
+            nome=data['nome'],
+            limite_alunos=data['limite_alunos'],
+            fk_tipo_sala=data['fk_tipo_sala']
         )
         self.execute_db_query(stmt, False)
 
     def update(self, data: SalaDTO, id: int) -> None:
         stmt = update(Sala).where(Sala.id == id).values(
-            nome=data.nome,
-            limite_alunos=data.limite_alunos,
-            fk_tipo_sala=data.fk_tipo_sala
+            nome=data['nome'],
+            limite_alunos=data['limite_alunos'],
+            fk_tipo_sala=data['fk_tipo_sala']
         )
         self.execute_db_query(stmt, False)
 

@@ -1,5 +1,3 @@
-import { salaFields, readSalaForm, updateSalaCard } from "./dados.js";
-
 export function initEditSala(showToast) {
     var modalEl = document.getElementById("edit-sala-modal");
     var list = document.querySelector("[data-sala-list]");
@@ -7,6 +5,9 @@ export function initEditSala(showToast) {
 
     var modal = window.bootstrap.Modal.getOrCreateInstance(modalEl);
     var form = modalEl.querySelector("form");
+    var submitBtn = form.querySelector('[type="submit"]');
+    var errorEl = form.querySelector("[data-edit-error]");
+    var pending = false;
     var trigger = null;
     var card = null;
 
@@ -16,14 +17,12 @@ export function initEditSala(showToast) {
         trigger = btn;
         card = btn.closest("[data-sala-card]");
         form.reset();
-        salaFields.forEach(function (field) {
-            var input = form.elements.namedItem(field);
-            var value = card.dataset[field] || "";
-            if (input.tagName === "SELECT" && !Array.from(input.options).some(function (option) { return option.value === value; })) {
-                input.add(new Option(value, value));
-            }
-            input.value = value;
-        });
+        errorEl.hidden = true;
+        errorEl.textContent = "";
+        form.elements.namedItem("id").value = card.dataset.id;
+        form.elements.namedItem("nome").value = card.dataset.nome;
+        form.elements.namedItem("fk_tipo_sala").value = card.dataset.tipoId;
+        form.elements.namedItem("limite_alunos").value = card.dataset.capacidade;
         modal.show();
     });
 
@@ -35,13 +34,34 @@ export function initEditSala(showToast) {
         trigger = null;
         card = null;
     });
+    modalEl.addEventListener("hide.bs.modal", function (event) {
+        if (pending) event.preventDefault();
+    });
 
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", async function (event) {
         event.preventDefault();
         form.elements.namedItem("nome").value = form.elements.namedItem("nome").value.trim();
-        if (!card || !form.reportValidity()) return;
-        updateSalaCard(card, readSalaForm(form));
-        modal.hide();
-        showToast("Sala atualizada na prévia. Os dados não foram salvos no banco.");
+        if (pending || !card || !form.reportValidity()) return;
+        pending = true;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Salvando…";
+        errorEl.hidden = true;
+        form.setAttribute("aria-busy", "true");
+        try {
+            var response = await fetch(form.action, {
+                method: "PUT",
+                body: new FormData(form),
+            });
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            window.location.reload();
+        } catch (error) {
+            errorEl.textContent = "Não foi possível salvar as alterações. Verifique os dados e tente novamente.";
+            errorEl.hidden = false;
+        } finally {
+            pending = false;
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Salvar alterações";
+            form.removeAttribute("aria-busy");
+        }
     });
 }

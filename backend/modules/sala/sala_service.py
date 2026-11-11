@@ -12,7 +12,8 @@ class SalaService:
     def updt_sala_service(self, data: SalaDTO, id: int) -> None:
         self.serv.update(data, id)
 
-    def del_sala_service(self, id: int) -> None:
+    def del_sala_service(self, data: dict) -> None:
+        id = int(data['id'])
         self.serv.delete(id)
 
     def slct_sala_service(self) -> list | None:

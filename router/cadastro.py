@@ -9,6 +9,7 @@ from backend.modules.professor_especialidade.professor_especialidade_controller 
 from fastapi.responses import JSONResponse, RedirectResponse
 from http import HTTPStatus
 from backend.modules.sala.sala_controller import SalaController
+from backend.modules.sala.sala_dto import SalaDTO
 from backend.modules.tipo_sala.tipo_sala_controller import TipoSalaController
 
 router = APIRouter()
@@ -71,13 +72,11 @@ async def insert_professor(request: Request) -> RedirectResponse:
 @router.put("/cadastro/professor")
 async def update_professor(request: Request):
     data = await request.form()
-    try:
-        professor_id = int(data.get("id", ""))
-    except (TypeError, ValueError):
-        return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content="Professor inválido.")
+    professor_id = int(data.get("id", ""))
 
     nome = str(data.get("nome", "")).strip()
     cpf = str(data.get("cpf", "")).strip()
+
     if professor_id <= 0 or not nome or not cpf:
         return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content="Informe o nome e o CPF do professor.")
 
@@ -126,19 +125,63 @@ async def insert_especialidade_professor(request: Request):
 @router.get("/cadastro/sala")
 async def index_cadastro_sala(request: Request):
     salas = sala.slct_sala_controller()
-    if salas.status_code >= HTTPStatus.BAD_REQUEST:
+    if salas['status_code'] >= HTTPStatus.BAD_REQUEST:
         return salas
 
     tipos_sala = tipo_sala.slct_tipo_sala_controller()
-    if tipos_sala.status_code >= HTTPStatus.BAD_REQUEST:
+    if tipos_sala['status_code'] >= HTTPStatus.BAD_REQUEST:
         return tipos_sala
-
+    
     return templates.TemplateResponse(
         request,
         name="components/salas.html",
         context={
             "status": "Sucesso",
-            "salas": json.loads(salas.body),
-            "tipos_sala": json.loads(tipos_sala.body),
+            "salas": salas['content'],
+            "tipos_sala": tipos_sala['content'],
         }
     )
+
+@router.post("/cadastro/sala/")
+async def insrt_sala(request: Request):
+    data = await request.form()
+    format_data = {}
+
+    for key, value in data.items():
+        format_data.update({key: value})
+
+    sala.insrt_sala_controller(format_data)
+    return RedirectResponse(
+        url="/cadastro/sala", 
+        status_code=HTTPStatus.SEE_OTHER
+    )
+
+@router.delete("/cadastro/sala/")
+async def del_sala(request: Request):
+    data = await request.form()
+    format_data = {}
+
+    for key, value in data.items():
+        format_data.update({key: value})
+
+    sala.del_sala_controller(format_data)
+    return RedirectResponse(
+        url="/cadastro/sala", 
+        status_code=HTTPStatus.SEE_OTHER
+    )
+
+@router.put("/cadastro/sala")
+async def update_sala(request: Request):
+    data = await request.form()
+    try:
+        sala_id = int(data.get("id", ""))
+        fk_tipo_sala = int(data.get("fk_tipo_sala", ""))
+        limite_alunos = int(data.get("limite_alunos", ""))
+    except (TypeError, ValueError):
+        return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content="Informe uma sala, um tipo e uma capacidade válidos.")
+
+    nome = str(data.get("nome", "")).strip()
+    if sala_id <= 0 or not nome or fk_tipo_sala <= 0 or limite_alunos < 0:
+        return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content="Informe o nome, o tipo da sala e uma capacidade não negativa.")
+
+    return sala.updt_sala_controller({"nome": nome, "fk_tipo_sala": fk_tipo_sala, "limite_alunos": limite_alunos}, sala_id)
