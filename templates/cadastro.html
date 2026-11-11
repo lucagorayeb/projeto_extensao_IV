@@ -19,12 +19,12 @@
       {
         "label": "Salas",
         "description": "Salas de aula e laboratórios",
-        "link": ""
+        "link": url_for('index_cadastro_sala')
       },
       {
         "label": "Professores",
         "description": "Docentes e as disciplinas que cada um leciona",
-        "link": url_for('get_especialidades')
+        "link": url_for('index_cadastro_professor')
       },
       {
         "label": "Turmas",
@@ -48,6 +48,4 @@
       }}
     {% endfor %}
   </nav>
-</div>
-
 {% endblock %}

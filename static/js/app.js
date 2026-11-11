@@ -1,12 +1,21 @@
-/* ==========================================================================
-   Engetec — Painel de horários
-   Comportamentos da versão HTML + Bootstrap 5
-   ========================================================================== */
+import { initDeleteRequests } from "./professor/excluir.js";
+import { initAddSpecialty } from "./professor/adicionar-especialidade.js";
+import { initViewProfessor } from "./professor/visualizar.js";
+import { initEditProfessor } from "./professor/editar.js";
+import { initCreateSala } from "./sala/cadastrar.js";
+import { initViewSala } from "./sala/visualizar.js";
+import { initEditSala } from "./sala/editar.js";
+import { initDeleteSala } from "./sala/excluir.js";
+
+/*==========================================================================
+  Engetec — Painel de horários
+  Comportamentos da versão HTML + Bootstrap 5
+  ========================================================================== */
 (function () {
   "use strict";
 
   /* ------------------------------------------------------------------------
-     Tema claro/escuro
+    Tema claro/escuro
      ------------------------------------------------------------------------ */
   var THEME_KEY = "engetec-theme";
 
@@ -59,9 +68,9 @@
     });
   }
 
-  /* ------------------------------------------------------------------------
-     Toasts
-     ------------------------------------------------------------------------ */
+  /*------------------------------------------------------------------------
+    Toasts
+    ------------------------------------------------------------------------ */
   function ensureToastContainer() {
     var container = document.querySelector(".toast-container");
     if (!container) {
@@ -110,39 +119,25 @@
     }
   }
 
-  /* ------------------------------------------------------------------------
-    Requisições de exclusão
-      ------------------------------------------------------------------------ */
-  function initDeleteRequests() {
-    document.querySelectorAll('[data-action="delete"][data-delete-url]').forEach(function (btn) {
-      btn.addEventListener("click", async function () {
-        if (btn.disabled || !window.confirm("Enviar solicitação de exclusão deste registro?")) return;
 
-        btn.disabled = true;
-        var data = new FormData();
-        data.append("id", btn.getAttribute("data-id"));
-
-        try {
-          var response = await fetch(btn.getAttribute("data-delete-url"), {
-            method: "DELETE",
-            body: data,
-          });
-          if (!response.ok) throw new Error("HTTP " + response.status);
-          showToast("Solicitação de exclusão enviada.", "success");
-        } catch (error) {
-          showToast("Não foi possível enviar a solicitação de exclusão. Tente novamente.", "error");
-        } finally {
-          btn.disabled = false;
-        }
-      });
-    });
+  /*------------------------------------------------------------------------
+    Inicialização
+    ------------------------------------------------------------------------ */
+  function initApp() {
+    initTheme();
+    initDeleteRequests(showToast);
+    initAddSpecialty();
+    initViewProfessor();
+    initEditProfessor();
+    initCreateSala(showToast);
+    initViewSala();
+    initEditSala(showToast);
+    initDeleteSala(showToast);
   }
 
-  /* ------------------------------------------------------------------------
-    Inicialização
-     ------------------------------------------------------------------------ */
-  document.addEventListener("DOMContentLoaded", function () {
-    initTheme();
-    initDeleteRequests();
-  });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initApp, { once: true });
+  } else {
+    initApp();
+  }
 })();

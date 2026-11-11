@@ -22,7 +22,7 @@
                     {% call macro.render_form(
                             id="cadastrar-professor-form",
                             method="POST",
-                            action=url_for('get_especialidades'),
+                            action=url_for('index_cadastro_professor'),
                             class="form-stack"
                         )
                     %}
@@ -84,5 +84,90 @@
         </div>
     </div>
 
+</div>
+{% endblock %}
+
+{% block modals %}
+<div class="modal fade" id="edit-professor-modal" tabindex="-1" aria-labelledby="edit-professor-title" aria-describedby="edit-professor-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content" id="edit-professor-form" method="post" action="{{ url_for('update_professor') }}">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4" id="edit-professor-title">Editar professor</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted-foreground" id="edit-professor-description">Atualize os dados cadastrais do professor.</p>
+                <input type="hidden" name="id">
+                <div class="form-field mb-3">
+                    <label class="form-label" for="edit-professor-nome">Nome completo</label>
+                    <input class="form-control" id="edit-professor-nome" name="nome" type="text" autocomplete="name" required>
+                </div>
+                <div class="form-field">
+                    <label class="form-label" for="edit-professor-cpf">CPF</label>
+                    <input class="form-control" id="edit-professor-cpf" name="cpf" type="text" inputmode="numeric" placeholder="Somente números" required>
+                </div>
+                <p class="text-destructive small mt-3 mb-0" data-edit-error role="alert" hidden></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal fade" id="view-professor-modal" tabindex="-1" aria-labelledby="view-professor-title" aria-describedby="view-professor-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4" id="view-professor-title">Dados do professor</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted-foreground" id="view-professor-description">Confira os dados cadastrados do professor.</p>
+                <dl class="mb-0">
+                    <dt class="text-muted-foreground small mb-1">Nome completo</dt>
+                    <dd class="text-break mb-3" data-professor-name></dd>
+                    <dt class="text-muted-foreground small mb-1">CPF</dt>
+                    <dd class="text-break mb-3" data-professor-cpf></dd>
+                    <dt class="text-muted-foreground small mb-1">Especialidade</dt>
+                    <dd class="text-break mb-0" data-professor-specialty></dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-view-close>Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="add-specialty-modal" tabindex="-1" aria-labelledby="add-specialty-title" aria-describedby="add-specialty-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content" id="add-specialty-form" method="post" action="{{ url_for('insert_especialidade_professor') }}">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4" id="add-specialty-title">Adicionar especialidade</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted-foreground" id="add-specialty-description">Selecione a especialidade para <strong data-specialty-professor></strong>.</p>
+                <input type="hidden" name="fk_professor">
+                <label class="form-label" for="professor-especialidade">Especialidade</label>
+                <select class="form-select" id="professor-especialidade" name="fk_especialidade" required {% if not especialidades %}disabled{% endif %}>
+                    <option value="" disabled selected>Selecione uma especialidade</option>
+                    {% for especialidade in especialidades %}
+                    <option value="{{ especialidade.id }}">{{ especialidade.nome }}</option>
+                    {% endfor %}
+                </select>
+                {% if not especialidades %}
+                <p class="text-muted-foreground small mt-2 mb-0">Nenhuma especialidade disponível para adicionar.</p>
+                {% endif %}
+                <p class="text-destructive small mt-3 mb-0" data-specialty-error role="alert" hidden></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" {% if not especialidades %}disabled{% endif %}>
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i> Adicionar especialidade
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
