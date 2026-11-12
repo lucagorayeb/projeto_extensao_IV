@@ -1,5 +1,3 @@
-import { updateSalaEmptyState } from "./dados.js";
-
 export function initDeleteSala(showToast) {
     var modalEl = document.getElementById("delete-sala-modal");
     var list = document.querySelector("[data-sala-list]");
@@ -28,11 +26,23 @@ export function initDeleteSala(showToast) {
         card = null;
     });
 
-    modalEl.querySelector("[data-confirm-delete]").addEventListener("click", function () {
+    var confirmBtn = modalEl.querySelector("[data-confirm-delete]");
+    confirmBtn.addEventListener("click", async function () {
         if (!card) return;
-        card.remove();
-        updateSalaEmptyState(list);
-        modal.hide();
-        showToast("Sala removida apenas da prévia.");
+        var data = new FormData();
+        data.append("id", card.dataset.id);
+        confirmBtn.disabled = true;
+        try {
+            var response = await fetch(confirmBtn.dataset.deleteUrl, {
+                method: "DELETE",
+                body: data,
+            });
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            window.location.reload();
+        } catch (error) {
+            showToast("Não foi possível enviar a solicitação de exclusão. Tente novamente.", "error");
+        } finally {
+            confirmBtn.disabled = false;
+        }
     });
 }

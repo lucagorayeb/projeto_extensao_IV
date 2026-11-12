@@ -36,7 +36,7 @@
 <!-- Macro de Botão -->
 {% macro render_button(id, class, type, label, dataEntity) %}
 <button id="{{ id }}" class="{{ class }}" type="{{ type }}">
-    <i class="bi bi-plus-lg"></i>{{ label }}
+    {{ label }}
 </button>
 {% endmacro %}
 
@@ -77,13 +77,14 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
 
 {% macro data_list(items=none, fields=(), entity='registro', icon='bi-person',
     title_field='nome', id_field='id', empty_title='Nenhum registro cadastrado',
-    empty_description='Cadastre o primeiro registro no formulário ao lado.', delete_url=none) %}
+    empty_description='Cadastre o primeiro registro no formulário ao lado.', delete_url=none, especialidades=none) %}
 <div class="list-stack" data-entity="{{ entity }}" {% if entity == 'sala' %}data-sala-list{% endif %}>
     {% for item in items or [] %}
     <div class="panel" data-id="{{ item[id_field] }}"
         {% if entity == 'sala' %}
         data-sala-card data-nome="{{ item[title_field] | default('') }}"
         data-tipo="{{ item['tipo_sala'] | default('', true) }}"
+        data-tipo-id="{{ item['tipo_sala_id'] | default('') }}"
         data-capacidade="{{ item['quantidade_alunos'] | default('') }}"
         {% endif %}>
         <div class="panel-body list-item flex-wrap">
@@ -102,7 +103,7 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
                     {% if entity == 'professor' %}
                     data-view-name="{{ item[title_field] | default('Não informado', true) }}"
                     data-view-cpf="{{ item['cpf'] | default('Não informado', true) }}"
-                    data-view-specialty="{{ item['especialidade'] | default('Nenhuma especialidade vinculada', true) }}"
+                    data-view-specialty="{{ especialidades | default('Nenhuma especialidade vinculada', true) }}"
                     {% endif %}
                     aria-label="Visualizar dados de {{ item[title_field] }}">
                     <i class="bi bi-eye" aria-hidden="true"></i>

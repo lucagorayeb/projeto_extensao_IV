@@ -71,10 +71,6 @@ async def sala_by_id(id: int) -> JSONResponse:
     return sala.slct_by_id_sala_controller(id)
 
 
-@app.post("/sala/")
-def insrt_sala(data: SalaDTO) -> JSONResponse:
-    return sala.insrt_sala_controller(data)
-
 @app.put("/sala/{id}", )
 async def updt_sala(data: SalaDTO, id: int) -> JSONResponse:
     return sala.updt_sala_controller(data, id)
