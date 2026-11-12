@@ -57,3 +57,7 @@ class ProfessorEspecialidadeController:
 
     def slct_professor_especialidade_controller(self) -> list:
         return self.serv.slct_professor_especialidade_service()
+
+    def slct_by_id_professor_especialidade_controller(self, data: dict) -> list:
+        print(data)
+        return self.serv.slct_by_id_professor_especialidade_service(data)

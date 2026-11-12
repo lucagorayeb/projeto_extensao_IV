@@ -77,7 +77,7 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
 
 {% macro data_list(items=none, fields=(), entity='registro', icon='bi-person',
     title_field='nome', id_field='id', empty_title='Nenhum registro cadastrado',
-    empty_description='Cadastre o primeiro registro no formulário ao lado.', delete_url=none, especialidades=none) %}
+    empty_description='Cadastre o primeiro registro no formulário ao lado.', delete_url=none) %}
 <div class="list-stack" data-entity="{{ entity }}" {% if entity == 'sala' %}data-sala-list{% endif %}>
     {% for item in items or [] %}
     <div class="panel" data-id="{{ item[id_field] }}"
@@ -101,9 +101,10 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
                 <button type="button" class="btn btn-outline-primary btn-icon btn-sm" title="Visualizar dados"
                     data-action="view" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
                     {% if entity == 'professor' %}
+                    data-view-id="{{ item[id_field] }}"
                     data-view-name="{{ item[title_field] | default('Não informado', true) }}"
                     data-view-cpf="{{ item['cpf'] | default('Não informado', true) }}"
-                    data-view-specialty="{{ especialidades | default('Nenhuma especialidade vinculada', true) }}"
+                    data-view-specialty=""
                     {% endif %}
                     aria-label="Visualizar dados de {{ item[title_field] }}">
                     <i class="bi bi-eye" aria-hidden="true"></i>

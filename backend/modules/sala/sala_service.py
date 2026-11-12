@@ -1,30 +1,30 @@
 from backend.modules.sala.sala_repository import SalaRepository
-from backend.modules.sala.sala_dto import SalaDTO
 
 class SalaService:
 
     def __init__(self):
         self.serv = SalaRepository()
 
-    def insrt_sala_service(self, data: SalaDTO) -> None:
+    def insrt_sala_service(self, data: dict) -> None:
         self.serv.insert(data)
 
-    def updt_sala_service(self, data: SalaDTO, id: int) -> None:
+    def updt_sala_service(self, data: dict, id: int) -> None:
         self.serv.update(data, id)
 
     def del_sala_service(self, data: dict) -> None:
         id = int(data['id'])
         self.serv.delete(id)
 
-    def slct_sala_service(self) -> list | None:
+    def slct_sala_service(self) -> list:
         data = self.serv.select()
         return self.__data_treatment(data)
 
-    def slct_by_id_sala_service(self, id: int) -> None:
+    def slct_by_id_sala_service(self, data: dict) -> None:
+        id = int(data['id'])
         data = self.serv.select_by_id(id)
         return self.__data_treatment(data)
 
-    def __data_treatment(self, data: SalaDTO) -> list:
+    def __data_treatment(self, data: dict) -> list:
         normalized_data = []
         for d in data:
             normalized_data.append({

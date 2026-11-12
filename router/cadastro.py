@@ -1,5 +1,4 @@
 import json
-
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -9,8 +8,8 @@ from backend.modules.professor_especialidade.professor_especialidade_controller 
 from fastapi.responses import JSONResponse, RedirectResponse
 from http import HTTPStatus
 from backend.modules.sala.sala_controller import SalaController
-from backend.modules.sala.sala_dto import SalaDTO
 from backend.modules.tipo_sala.tipo_sala_controller import TipoSalaController
+from backend.modules.utils.requests_treatment import request_treatment
 
 router = APIRouter()
 router.mount("/static", StaticFiles(directory="static"), name="static")
@@ -43,7 +42,8 @@ async def index_cadastro_professor(request: Request):
     
     if professores["status_code"] >= HTTPStatus.BAD_REQUEST:
         return JSONResponse(status_code=professores["status_code"], content=professores["content"])
-    professores_especialidades = professor_especialidade.slct_professor_especialidade_controller()
+    # professores_especialidades = professor_especialidade.slct_by_id_professor_especialidade_controller()
+    # print(professores_especialidades)
 
     return templates.TemplateResponse(
         request,
@@ -52,17 +52,13 @@ async def index_cadastro_professor(request: Request):
             "status": "Sucesso",
             "especialidades": especialidades['content'],
             "professores": professores['content'],
-            "professores_especialidades": professores_especialidades
         }
     )
 
 @router.post("/cadastro/professor")
 async def insert_professor(request: Request) -> RedirectResponse:
     data = await request.form()
-    format_data = {}
-    for key, value in data.items():
-        format_data.update({key: value})
-
+    format_data = request_treatment(data)
     professor.insrt_professor_controller(format_data)
     return RedirectResponse(
         url="/cadastro/professor", 
@@ -86,11 +82,7 @@ async def update_professor(request: Request):
 @router.delete("/cadastro/professor/")
 async def delete_professor(request: Request):
     data = await request.form()
-    format_data = {}
-
-    for key, value in data.items():
-        format_data.update({key: value})
-
+    format_data = request_treatment(data)
     result = professor.del_professor_controller(format_data)
     if isinstance(result, JSONResponse):
         return result
@@ -100,14 +92,23 @@ async def delete_professor(request: Request):
         status_code=HTTPStatus.SEE_OTHER
     )
 
+@router.get("cadastro/professor/especialidade")
+async def get_especialidade_professor(request: Request):
+    pass
+
+@router.get("cadastro/professor/especialidade/{id}")
+async def get_by_id_especialidade_professor(id: int):
+    print(id)
+    # data = await request.form()
+    # format_data = request_treatment(data)
+    # print(format_data)
+    return professor_especialidade.slct_by_id_professor_especialidade_controller({"id": id})
+
+
 @router.post("/cadastro/professor/especialidade")
 async def insert_especialidade_professor(request: Request):
     data = await request.form()
-    format_data = {}
-
-    for key, value in data.items():
-        format_data.update({key: value})
-
+    format_data = request_treatment(data)
     result = professor_especialidade.insrt_professor_especialidade_controller(format_data)
 
     if isinstance(result, JSONResponse):
@@ -145,11 +146,7 @@ async def index_cadastro_sala(request: Request):
 @router.post("/cadastro/sala/")
 async def insrt_sala(request: Request):
     data = await request.form()
-    format_data = {}
-
-    for key, value in data.items():
-        format_data.update({key: value})
-
+    format_data = request_treatment(data)
     sala.insrt_sala_controller(format_data)
     return RedirectResponse(
         url="/cadastro/sala", 
@@ -159,11 +156,7 @@ async def insrt_sala(request: Request):
 @router.delete("/cadastro/sala/")
 async def del_sala(request: Request):
     data = await request.form()
-    format_data = {}
-
-    for key, value in data.items():
-        format_data.update({key: value})
-
+    format_data = request_treatment(data)
     sala.del_sala_controller(format_data)
     return RedirectResponse(
         url="/cadastro/sala", 

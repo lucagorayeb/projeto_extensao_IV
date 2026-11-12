@@ -81,8 +81,7 @@
                 entity='professor',
                 delete_url=url_for('delete_professor'),
                 empty_title='Nenhum professor cadastrado',
-                empty_description='Cadastre o primeiro professor no formulário ao lado.',
-                especialidades=especialidades
+                empty_description='Cadastre o primeiro professor no formulário ao lado.'
             ) }}
             </div>
         </div>
@@ -130,6 +129,7 @@
             <div class="modal-body">
                 <p class="text-muted-foreground" id="view-professor-description">Confira os dados cadastrados do professor.</p>
                 <dl class="mb-0">
+                    <input id="professor_id" type="hidden"  data-professor-id data-url=""/>
                     <dt class="text-muted-foreground small mb-1">Nome completo</dt>
                     <dd class="text-break mb-3" data-professor-name></dd>
                     <dt class="text-muted-foreground small mb-1">CPF</dt>
