@@ -37,3 +37,24 @@ class ProfessorEspecialidadeRepository(BaseRepository):
             ProfessorEspecialidade.id == id
         )
         self.execute_db_query(stmt, False)
+
+    def select_by_id(self, id: int) -> list:
+        stmt = select(
+            Especialidade.id,
+            Especialidade.nome
+        ).join(
+            ProfessorEspecialidade, ProfessorEspecialidade.fk_especialidade == Especialidade.id
+        ).join(
+            Professor,  ProfessorEspecialidade.fk_professor == Professor.id
+        ).where(
+            ProfessorEspecialidade.fk_professor == id
+        )
+        return self.execute_db_query(stmt, True)
+
+    def select_by_id(self, id: int) -> list:
+        stmt = select(
+            ProfessorEspecialidade.fk_especialidade,
+        ).where(
+            ProfessorEspecialidade.fk_professor == id
+        )
+        return self.execute_db_query(stmt, True)
