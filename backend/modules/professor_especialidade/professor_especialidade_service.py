@@ -9,7 +9,6 @@ class ProfessorEspecialidadeService:
 
     def insrt_professor_especialidade_service(self, data: dict) -> None:
         especialidades_existentes = self.__retorna_as_especialidades_do_professor(data['fk_professor'])
-        print(data)
         if int(data['fk_especialidade']) not in especialidades_existentes: 
             self.repo.insert(data)  
 
@@ -21,10 +20,9 @@ class ProfessorEspecialidadeService:
         data = self.repo.select()
         return self.__data_treatment(data)
 
-    def slct_by_id_professor_especialidade_service(self, data: dict) -> list:
-        id = int(data['id'])
+    def slct_by_id_professor_especialidade_service(self, id: int) -> list:
+        # id = int(data['id'])
         data = self.repo.select_by_id(id)
-        print(data)
         return self.__data_treatment(data)
 
     def __data_treatment(self, data: list) -> list:
@@ -37,7 +35,7 @@ class ProfessorEspecialidadeService:
         return normalized_data
 
     def __retorna_as_especialidades_do_professor(self, id: int) -> list:
-        data = self.repo.select_by_id(id)
+        data = self.repo.slct_especialidades_do_professor(id)
         array_especialidades = []
         for d in data:
             array_especialidades.append(d.fk_especialidade)

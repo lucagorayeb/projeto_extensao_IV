@@ -51,7 +51,7 @@ class ProfessorEspecialidadeRepository(BaseRepository):
         )
         return self.execute_db_query(stmt, True)
 
-    def select_by_id(self, id: int) -> list:
+    def slct_especialidades_professor(self, id: int) -> list:
         stmt = select(
             ProfessorEspecialidade.fk_especialidade,
         ).where(
