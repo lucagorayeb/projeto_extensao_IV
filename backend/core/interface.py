@@ -1,11 +1,10 @@
-from sqlalchemy import (
-    create_engine,
-    URL
-)
+from sqlalchemy import create_engine, URL, MetaData
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
+metadata = MetaData()
 
 # Conexão com o SQLITE
 engine_sqlite = create_engine(

@@ -10,6 +10,9 @@ from http import HTTPStatus
 from backend.modules.sala.sala_controller import SalaController
 from backend.modules.tipo_sala.tipo_sala_controller import TipoSalaController
 from backend.modules.utils.requests_treatment import request_treatment
+from backend.modules.turma.turma_controller import TurmaController
+from backend.modules.disciplina.disciplina_controller import DisciplinaController
+
 
 router = APIRouter()
 router.mount("/static", StaticFiles(directory="static"), name="static")
@@ -21,6 +24,8 @@ professor = ProfessorController()
 professor_especialidade = ProfessorEspecialidadeController()
 sala = SalaController()
 tipo_sala = TipoSalaController()
+turma = TurmaController()
+disciplina = DisciplinaController()
 
 @router.get("/cadastro", tags=["cadastro"])
 async def cadastro(request: Request):
@@ -174,3 +179,42 @@ async def update_sala(request: Request):
         return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content="Informe o nome, o tipo da sala e uma capacidade não negativa.")
 
     return sala.updt_sala_controller({"nome": nome, "fk_tipo_sala": fk_tipo_sala, "limite_alunos": limite_alunos}, sala_id)
+
+# TURMA 
+
+@router.get("/cadastro/turma")
+async def index_turma(request: Request):
+
+    turmas = turma.slct_turma_controller()
+    disciplinas = disciplina.slct_disciplina_controller()
+    professores = professor.slct_professor_controller()
+    salas = sala.slct_sala_controller()
+    dias_semana = turma.get_dias_semana_controller()
+    
+
+    return templates.TemplateResponse(
+        request,
+        name="components/turmas.html",
+        context={
+            "status": "Sucesso",
+            "turmas": turmas,
+            "disciplinas": disciplinas["content"],
+            "professores": professores['content'],
+            "salas": salas['content'],
+            "dias_semana": dias_semana
+        }
+    )
+
+@router.post("/cadastro/turma")
+async def cadastrar_turma(request: Request):
+    data = await request.form()
+    format_data = request_treatment(data)
+    print(format_data)
+    # turma.slct_turma_controller(format_data)
+    # return RedirectResponse(
+    #     url = "/cadastro/turma", 
+    #     status_code = HTTPStatus.SEE_OTHER
+    # )
+
+
+# DISCIPLINA

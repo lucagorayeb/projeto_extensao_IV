@@ -12,7 +12,6 @@ class Turma(DefaultModel):
     fk_sala: Mapped[int] = mapped_column(ForeignKey("sala.id"))
     fk_professor: Mapped[int] = mapped_column(ForeignKey('professor.id'))
     fk_dia_semana: Mapped[int] = mapped_column(ForeignKey('dia_semana.id'))
-    carga_horaria: Mapped[time] = mapped_column(Time, nullable=False)
     horario_inicio: Mapped[time] = mapped_column(Time, nullable=False)
     horario_fim: Mapped[time] = mapped_column(Time, nullable=False)
     created_at: Mapped[timestamp]

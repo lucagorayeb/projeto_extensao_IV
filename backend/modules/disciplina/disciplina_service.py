@@ -33,8 +33,6 @@ class DisciplinaService:
                 "formato_id": d.formato_id,
                 "formato": d.formato,
                 "carga_horaria": float(d.carga_horaria),
-                "horario_inicio": str(d.horario_inicio),
-                "horario_termino": str(d.horario_termino),
                 "pratica": d.pratica
             })
         return normalized_data

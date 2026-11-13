@@ -100,6 +100,7 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
             </div>
             <div class="list-item-actions flex-wrap" role="group" aria-label="Ações de {{ item[title_field] }}">
                 <button type="button" class="btn btn-outline-primary btn-icon btn-sm" title="Visualizar dados"
+                    {% if entity == 'turma' %}disabled{% endif %}
                     data-action="view" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
                     {% if entity == 'professor' %} data-view-id="{{ item[id_field] }}"
                     data-view-name="{{ item[title_field] | default('Não informado', true) }}"
@@ -108,13 +109,14 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
                     <i class="bi bi-eye" aria-hidden="true"></i>
                 </button>
                 <button type="button" class="btn btn-outline-secondary btn-icon btn-sm" title="Editar"
+                    {% if entity == 'turma' %}disabled{% endif %}
                     data-action="edit" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
                     {% if entity == 'professor' %} data-edit-name="{{ item[title_field] }}"
                     data-edit-cpf="{{ item['cpf'] | default('', true) }}" {% endif %}
                     aria-label="Editar {{ item[title_field] }}">
                     <i class="bi bi-pencil" aria-hidden="true"></i>
                 </button>
-                {% if entity != 'sala' %}
+                {% if entity != 'sala' and entity != 'turma' %}
                 <button type="button" class="btn btn-outline-success btn-icon btn-sm" title="Adicionar especialidade"
                     data-action="add-specialty" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
                     aria-label="Adicionar especialidade a {{ item[title_field] }}">
