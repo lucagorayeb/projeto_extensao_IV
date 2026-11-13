@@ -92,17 +92,13 @@ async def delete_professor(request: Request):
         status_code=HTTPStatus.SEE_OTHER
     )
 
-@router.get("cadastro/professor/especialidade")
+@router.get("/cadastro/professor/especialidade")
 async def get_especialidade_professor(request: Request):
     pass
 
-@router.get("cadastro/professor/especialidade/{id}")
+@router.get("/cadastro/professor/especialidade/{id}")
 async def get_by_id_especialidade_professor(id: int):
-    print(id)
-    # data = await request.form()
-    # format_data = request_treatment(data)
-    # print(format_data)
-    return professor_especialidade.slct_by_id_professor_especialidade_controller({"id": id})
+    return professor_especialidade.slct_by_id_professor_especialidade_controller(id)
 
 
 @router.post("/cadastro/professor/especialidade")
