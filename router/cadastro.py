@@ -1,4 +1,6 @@
 import json
+import logging
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -12,7 +14,11 @@ from backend.modules.tipo_sala.tipo_sala_controller import TipoSalaController
 from backend.modules.utils.requests_treatment import request_treatment
 from backend.modules.turma.turma_controller import TurmaController
 from backend.modules.disciplina.disciplina_controller import DisciplinaController
-
+from backend.modules.disciplina.disciplina_dto import DisciplinaDTO
+from backend.modules.formato.formato_controller import FormatoController
+from pydantic import ValidationError
+from backend.modules.turma.turma_exception import ScheduleConflict, ProfessorClassNumber, ProfessorScheduleConflict
+from fastapi import HTTPException
 
 router = APIRouter()
 router.mount("/static", StaticFiles(directory="static"), name="static")
@@ -26,6 +32,7 @@ sala = SalaController()
 tipo_sala = TipoSalaController()
 turma = TurmaController()
 disciplina = DisciplinaController()
+formato = FormatoController()
 
 @router.get("/cadastro", tags=["cadastro"])
 async def cadastro(request: Request):
@@ -209,12 +216,168 @@ async def index_turma(request: Request):
 async def cadastrar_turma(request: Request):
     data = await request.form()
     format_data = request_treatment(data)
-    print(format_data)
-    # turma.slct_turma_controller(format_data)
-    # return RedirectResponse(
-    #     url = "/cadastro/turma", 
-    #     status_code = HTTPStatus.SEE_OTHER
-    # )
+    
+    try:
+        turma.insrt_turma_controller(format_data)
+    except (ScheduleConflict, ProfessorClassNumber, ProfessorScheduleConflict) as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    except IntegrityError as error:
+        raise HTTPException(
+            status_code=422,
+            detail="Não foi possível cadastrar a turma. Verifique se a disciplina, o professor, a sala e o dia selecionados ainda estão disponíveis.",
+        ) from error
+    except SQLAlchemyError as error:
+        logging.getLogger(__name__).exception("Erro ao cadastrar turma")
+        raise HTTPException(status_code=500, detail="Não foi possível cadastrar a turma. Tente novamente mais tarde.") from error
+    
+    return RedirectResponse(
+        url = "/cadastro/turma", 
+        status_code = HTTPStatus.SEE_OTHER
+    )
 
+@router.put("/cadastro/turma")
+async def atualizar_turma(request: Request):
+    data = await request.form()
+    format_data = request_treatment(data)
+
+    try:
+        turma_id = int(format_data.pop("id", ""))
+        if turma_id <= 0:
+            raise ValueError
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=422, detail="Informe uma turma válida para atualizar.") from error
+
+    try:
+        turma.updt_turma_controller(format_data, turma_id)
+    except (ScheduleConflict, ProfessorClassNumber, ProfessorScheduleConflict) as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    except IntegrityError as error:
+        raise HTTPException(
+            status_code=422,
+            detail="Não foi possível atualizar a turma. Verifique se a disciplina, o professor, a sala e o dia selecionados ainda estão disponíveis.",
+        ) from error
+    except SQLAlchemyError as error:
+        logging.getLogger(__name__).exception("Erro ao cadastrar turma")
+        raise HTTPException(status_code=500, detail="Não foi possível atualizar a turma. Tente novamente mais tarde.") from error
+    
+    return RedirectResponse(
+        url = "/cadastro/turma", 
+        status_code = HTTPStatus.SEE_OTHER
+    )
+
+@router.delete("/cadastro/turma/{id}")
+async def delete_turma(id: int):
+    try:
+        turma.del_turma_controller(id)
+    except IntegrityError as error:
+        raise HTTPException(
+            status_code=422,
+            detail="Não foi possível remover a turma.",
+        ) from error
+    except SQLAlchemyError as error:
+        logging.getLogger(__name__).exception("Erro ao cadastrar turma")
+        raise HTTPException(status_code=500, detail="Não foi possível remover a turma. Tente novamente mais tarde.") from error
+    
+    return RedirectResponse(
+        url = "/cadastro/turma", 
+        status_code = HTTPStatus.SEE_OTHER
+    )
+    
 
 # DISCIPLINA
+@router.get("/cadastro/disciplina")
+async def index_disciplina(request: Request):
+    disciplinas = disciplina.slct_disciplina_controller()
+    if disciplinas["status_code"] >= HTTPStatus.BAD_REQUEST:
+        raise HTTPException(status_code=disciplinas["status_code"], detail="Não foi possível carregar as disciplinas.")
+    formatos = formato.slct_formato_controller()
+    if formatos.status_code >= HTTPStatus.BAD_REQUEST:
+        raise HTTPException(status_code=formatos.status_code, detail="Não foi possível carregar os formatos.")
+
+    return templates.TemplateResponse(
+        request,
+        name="components/disciplinas.html",
+        context={
+            "status": "Sucesso",
+            "disciplinas": disciplinas["content"],
+            "formatos": json.loads(formatos.body),
+        }
+    )
+
+def disciplina_form_data(data):
+    values = request_treatment(data)
+    values["nome"] = str(values.get("nome", "")).strip()
+    try:
+        result = DisciplinaDTO.model_validate(values)
+        if not result.nome or len(result.nome) > 50 or result.fk_formato <= 0 or not 0 <= result.carga_horaria <= 999.99 or result.pratica not in (0, 1):
+            raise ValueError
+        return result
+    except (ValidationError, ValueError) as error:
+        raise HTTPException(status_code=422, detail="Informe nome, formato, carga horária e indicação de prática válidos.") from error
+
+
+@router.post("/cadastro/disciplina")
+async def cadastrar_disciplina(request: Request):
+    data = await request.form()
+    format_data = disciplina_form_data(data)
+    
+    try:
+        result = disciplina.insrt_disciplina_controller(format_data)
+        if result["status_code"] >= HTTPStatus.BAD_REQUEST:
+            raise HTTPException(status_code=result["status_code"], detail="Não foi possível cadastrar a disciplina. Verifique os dados e tente novamente.")
+    except IntegrityError as error:
+        raise HTTPException(
+            status_code=422,
+            detail="Não foi possível cadastrar a disciplina.",
+        ) from error
+    except SQLAlchemyError as error:
+        logging.getLogger(__name__).exception("Erro ao cadastrar disciplina")
+        raise HTTPException(status_code=500, detail="Não foi possível cadastrar a disciplina. Tente novamente mais tarde.") from error
+    
+    return RedirectResponse(
+        url = "/cadastro/disciplina", 
+        status_code = HTTPStatus.SEE_OTHER
+    )
+
+@router.put("/cadastro/disciplina/{id}")
+async def atualizar_disciplina(request: Request, id: int):
+    data = await request.form()
+    format_data = disciplina_form_data(data)
+    
+    try:
+        result = disciplina.updt_disciplina_controller(format_data, id)
+        if result["status_code"] >= HTTPStatus.BAD_REQUEST:
+            raise HTTPException(status_code=result["status_code"], detail="Não foi possível atualizar a disciplina. Verifique os dados e tente novamente.")
+    except IntegrityError as error:
+        raise HTTPException(
+            status_code=422,
+            detail="Não foi possível atualizar a disciplina.",
+        ) from error
+    except SQLAlchemyError as error:
+        logging.getLogger(__name__).exception("Erro ao atualizar disciplina")
+        raise HTTPException(status_code=500, detail="Não foi possível atualizar a disciplina. Tente novamente mais tarde.") from error
+    
+    return RedirectResponse(
+        url = "/cadastro/disciplina", 
+        status_code = HTTPStatus.SEE_OTHER
+    )
+
+@router.delete("/cadastro/disciplina/{id}")
+async def delete_disciplina(id: int):
+    try:
+        result = disciplina.del_disciplina_controller(id)
+        if result["status_code"] >= HTTPStatus.BAD_REQUEST:
+            raise HTTPException(status_code=result["status_code"], detail="Não foi possível remover a disciplina. Verifique se ela está vinculada a turmas ou especialidades.")
+    except IntegrityError as error:
+        raise HTTPException(
+            status_code=422,
+            detail="Não foi possível remover a disciplina.",
+        ) from error
+    except SQLAlchemyError as error:
+        logging.getLogger(__name__).exception("Erro ao remover disciplina")
+        raise HTTPException(status_code=500, detail="Não foi possível remover a disciplina. Tente novamente mais tarde.") from error
+    
+    return RedirectResponse(
+        url = "/cadastro/disciplina",
+        status_code = HTTPStatus.SEE_OTHER
+    )

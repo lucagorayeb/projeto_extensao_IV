@@ -7,10 +7,10 @@ class TurmaController:
     def __init__(self):
         self.serv = TurmaService()
 
-    def insrt_turma_controller(self, data: dict) -> None:
+    def insrt_turma_controller(self, data: dict):
         self.serv.insrt_turma_service(data)
 
-    def updt_turma_controller(self, data: dict, id: int) -> None:
+    def updt_turma_controller(self, data: dict, id: int):
         self.serv.updt_turma_service(data, id)
 
     def del_turma_controller(self, id: int) -> None:
@@ -21,3 +21,7 @@ class TurmaController:
 
     def get_dias_semana_controller(self) -> list:
         return self.serv.get_dias_semana_service()
+
+    def slct_by_id_turma_controller(self, id: int) -> list:
+        return self.serv.slct_by_id_turma_service(id)
+

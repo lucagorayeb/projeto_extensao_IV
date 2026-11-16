@@ -1,6 +1,6 @@
 <!-- Macro de Formulário -->
-{% macro render_form(id, method, action, class) %}
-<form id="{{ id }}" method="{{ method }}" action="{{ action }}" class="{{ class }}">
+{% macro render_form(id, method, action, class, error_modal=false) %}
+<form id="{{ id }}" method="{{ method }}" action="{{ action }}" class="{{ class }}" {% if error_modal %}data-error-modal{% endif %}>
 
     {% if method == "PUT" %}
     <input type="hidden" name="_method" value="PUT">
@@ -78,13 +78,17 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
 
 {% macro data_list(items=none, fields=(), entity='registro', icon='bi-person',
     title_field='nome', id_field='id', empty_title='Nenhum registro cadastrado',
-    empty_description='Cadastre o primeiro registro no formulário ao lado.', delete_url=none) %}
-<div class="list-stack" data-entity="{{ entity }}" {% if entity == 'sala' %}data-sala-list{% endif %}>
+    empty_description='Cadastre o primeiro registro no formulário ao lado.', delete_url=none, edit_url=none) %}
+<div class="list-stack" data-entity="{{ entity }}" {% if entity == 'sala' %}data-sala-list{% elif entity == 'disciplina' %}data-disciplina-list{% endif %}>
     {% for item in items or [] %}
     <div class="panel" data-id="{{ item[id_field] }}" {% if entity == 'sala' %} data-sala-card
         data-nome="{{ item[title_field] | default('') }}" data-tipo="{{ item['tipo_sala'] | default('', true) }}"
         data-tipo-id="{{ item['tipo_sala_id'] | default('') }}"
-        data-capacidade="{{ item['quantidade_alunos'] | default('') }}" {% endif %}>
+        data-capacidade="{{ item['quantidade_alunos'] | default('') }}" {% endif %}
+        {% if entity == 'disciplina' %}data-disciplina-card
+        data-nome="{{ item['nome'] }}" data-formato-id="{{ item['formato_id'] }}"
+        data-formato="{{ item['formato'] }}" data-carga-horaria="{{ item['carga_horaria'] }}"
+        data-pratica="{{ item['pratica'] | int }}"{% endif %}>
         <div class="panel-body list-item flex-wrap">
             <div class="list-item-icon bg-primary-soft text-primary">
                 <i class="bi {{ icon }}" aria-hidden="true"></i>
@@ -94,13 +98,17 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
                 </h3>
                 {% for field, label in fields %}
                 <p class="list-item-sub">{{ label }}: {% if entity == 'sala' %}<span
-                        data-sala-{{ 'tipo' if field == 'tipo_sala' else 'capacidade' }}>{{ item[field] if item[field] is defined and item[field] is not none and item[field] != '' else 'Não informada' }}</span>{% else %}{{ item[field] | default('Não informado', true) }}{% endif %}
+                        data-sala-{{ 'tipo' if field == 'tipo_sala' else 'capacidade' }}>{{ item[field] if item[field] is defined and item[field] is not none and item[field] != '' else 'Não informada' }}</span>{% elif entity == 'disciplina' and field == 'pratica' %}{{ 'Sim' if item[field] | int == 1 else 'Não' }}{% elif entity == 'disciplina' and field == 'carga_horaria' %}{{ item[field] }}{% else %}{{ item[field] | default('Não informado', true) }}{% endif %}
                 </p>
                 {% endfor %}
             </div>
             <div class="list-item-actions flex-wrap" role="group" aria-label="Ações de {{ item[title_field] }}">
                 <button type="button" class="btn btn-outline-primary btn-icon btn-sm" title="Visualizar dados"
-                    {% if entity == 'turma' %}disabled{% endif %}
+                    {% if entity == 'turma' %}
+                    {% for field in ['fk_disciplina_nome', 'fk_professor_nome', 'fk_sala_nome', 'fk_dia_semana_nome', 'horario_inicio', 'horario_fim', 'carga_horaria'] %}
+                    data-view-{{ field | replace('_', '-') }}="{{ item[field] if item[field] is defined and item[field] is not none else '' }}"
+                    {% endfor %}
+                    {% endif %}
                     data-action="view" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
                     {% if entity == 'professor' %} data-view-id="{{ item[id_field] }}"
                     data-view-name="{{ item[title_field] | default('Não informado', true) }}"
@@ -109,14 +117,19 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
                     <i class="bi bi-eye" aria-hidden="true"></i>
                 </button>
                 <button type="button" class="btn btn-outline-secondary btn-icon btn-sm" title="Editar"
-                    {% if entity == 'turma' %}disabled{% endif %}
+                    {% if edit_url %}data-edit-url="{{ edit_url | replace('__id__', item[id_field] | string) }}"{% endif %}
+                    {% if entity == 'turma' %}
+                    {% for field in ['fk_disciplina', 'fk_professor', 'fk_sala', 'fk_dia_semana', 'horario_inicio', 'horario_fim'] %}
+                    data-edit-{{ field | replace('_', '-') }}="{{ item[field] }}"
+                    {% endfor %}
+                    {% endif %}
                     data-action="edit" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
                     {% if entity == 'professor' %} data-edit-name="{{ item[title_field] }}"
                     data-edit-cpf="{{ item['cpf'] | default('', true) }}" {% endif %}
                     aria-label="Editar {{ item[title_field] }}">
                     <i class="bi bi-pencil" aria-hidden="true"></i>
                 </button>
-                {% if entity != 'sala' and entity != 'turma' %}
+                {% if entity not in ['sala', 'turma', 'disciplina'] %}
                 <button type="button" class="btn btn-outline-success btn-icon btn-sm" title="Adicionar especialidade"
                     data-action="add-specialty" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
                     aria-label="Adicionar especialidade a {{ item[title_field] }}">
@@ -124,7 +137,10 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
                 </button>
                 {% endif %}
                 <button type="button" class="btn btn-outline-danger btn-icon btn-sm delete-{{ entity }}" title="Deletar"
-                    {% if delete_url %} data-delete-url="{{ delete_url }}" {% elif entity != 'sala' %}disabled{% endif %}
+                    {% if delete_url %}
+                    {% if entity in ['turma', 'disciplina'] %}data-{{ entity }}-delete-url="{{ delete_url | replace('__id__', item[id_field] | string) }}"
+                    {% else %}data-delete-url="{{ delete_url }}"{% endif %}
+                    {% elif entity != 'sala' %}disabled{% endif %}
                     data-action="delete" data-entity="{{ entity }}" data-id="{{ item[id_field] }}"
                     aria-label="Deletar {{ item[title_field] }}">
                     <i class="bi bi-trash" aria-hidden="true"></i>

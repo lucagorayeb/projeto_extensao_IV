@@ -6,6 +6,13 @@ import { initCreateSala } from "./sala/cadastrar.js";
 import { initViewSala } from "./sala/visualizar.js";
 import { initEditSala } from "./sala/editar.js";
 import { initDeleteSala } from "./sala/excluir.js";
+import { initFormErrors } from "./shared/form-errors.js";
+import { initEditTurma } from "./turma/editar.js?v=20261115-edit-turma";
+import { initDeleteTurma } from "./turma/excluir.js?v=20261115-delete-turma";
+import { initViewTurma } from "./turma/visualizar.js?v=20261115-view-turma";
+import { initViewDisciplina } from "./disciplina/visualizar.js?v=20261115-disciplinas";
+import { initEditDisciplina } from "./disciplina/editar.js?v=20261115-disciplinas";
+import { initDeleteDisciplina } from "./disciplina/excluir.js?v=20261115-disciplinas";
 
 /*==========================================================================
   Engetec — Painel de horários
@@ -125,6 +132,13 @@ import { initDeleteSala } from "./sala/excluir.js";
     ------------------------------------------------------------------------ */
   function initApp() {
     initTheme();
+    initFormErrors();
+    initEditTurma();
+    initDeleteTurma();
+    initViewTurma();
+    initViewDisciplina();
+    initEditDisciplina();
+    initDeleteDisciplina();
     initDeleteRequests(showToast);
     initAddSpecialty();
     initViewProfessor();

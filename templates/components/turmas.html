@@ -21,7 +21,8 @@
                         id="cadastrar-turma-form",
                         method="POST",
                         action=url_for('cadastrar_turma'),
-                        class="form-stack"
+                        class="form-stack",
+                        error_modal=true
                     ) %}
                     {% for field, label, options, text_field in [
                         ('fk_disciplina', 'Disciplina', disciplinas | default([], true), 'nome'),
@@ -84,11 +85,111 @@
                     entity='turma',
                     icon='bi-mortarboard',
                     title_field='fk_disciplina_nome',
+                    delete_url=url_for('delete_turma', id='__id__'),
                     empty_title='Nenhuma turma cadastrada',
                     empty_description='Cadastre a primeira turma no formulário ao lado.'
                 ) }}
             </div>
         </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block modals %}
+<div class="modal fade" id="view-turma-modal" tabindex="-1" aria-labelledby="view-turma-title" aria-describedby="view-turma-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4" id="view-turma-title">Dados da turma</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted-foreground" id="view-turma-description">Confira os dados cadastrados da turma.</p>
+                <dl class="mb-0">
+                    {% for field, label in [
+                        ('fk_disciplina_nome', 'Disciplina'),
+                        ('fk_professor_nome', 'Professor responsável'),
+                        ('fk_sala_nome', 'Sala ou laboratório'),
+                        ('fk_dia_semana_nome', 'Dia da semana'),
+                        ('horario_inicio', 'Horário de início'),
+                        ('horario_fim', 'Horário de término'),
+                        ('carga_horaria', 'Carga horária da disciplina (h)')
+                    ] %}
+                    <dt class="text-muted-foreground small mb-1">{{ label }}</dt>
+                    <dd class="text-break {{ 'mb-0' if loop.last else 'mb-3' }}" data-turma-{{ field | replace('_', '-') }}></dd>
+                    {% endfor %}
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-view-close>Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade delete-modal" id="delete-turma-modal" tabindex="-1" aria-labelledby="delete-turma-title" aria-describedby="delete-turma-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header align-items-start border-0 pb-0">
+                <span class="delete-modal-icon" aria-hidden="true"><i class="bi bi-trash"></i></span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title fs-4 mb-2" id="delete-turma-title">Excluir turma?</h2>
+                <p class="text-muted-foreground mb-0" id="delete-turma-description">Deseja remover a turma de <strong class="delete-modal-record" data-delete-name></strong>?</p>
+                <div class="alert alert-danger mt-3 mb-0" role="alert" data-delete-error hidden></div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-delete-cancel>Cancelar</button>
+                <button type="button" class="btn btn-danger" data-confirm-delete><i class="bi bi-trash" aria-hidden="true"></i> Excluir turma</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-turma-modal" tabindex="-1" aria-labelledby="edit-turma-title" aria-describedby="edit-turma-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form class="modal-content" id="edit-turma-form" action="{{ url_for('atualizar_turma') }}" method="post">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4" id="edit-turma-title">Editar turma</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted-foreground" id="edit-turma-description">Atualize os dados da turma e salve as alterações.</p>
+                <div class="alert alert-danger" role="alert" data-edit-error hidden></div>
+                <input type="hidden" name="id">
+                <div class="form-stack">
+                    {% for field, label, options, text_field in [
+                        ('fk_disciplina', 'Disciplina', disciplinas | default([], true), 'nome'),
+                        ('fk_professor', 'Professor responsável', professores | default([], true), 'nome'),
+                        ('fk_sala', 'Sala ou laboratório', salas | default([], true), 'nome_sala'),
+                        ('fk_dia_semana', 'Dia da semana', dias_semana | default([], true), 'nome')
+                    ] %}
+                    <div class="form-field">
+                        <label for="edit-turma-{{ field }}">{{ label }}</label>
+                        <select id="edit-turma-{{ field }}" name="{{ field }}" class="form-select" required>
+                            <option value="" disabled>Selecione uma opção</option>
+                            {% for option in options %}
+                            {{ macro.option_select(value=option['id'], content=option[text_field]) }}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endfor %}
+                    <div class="row g-3">
+                        <div class="col-12 col-sm-6 form-field">
+                            <label for="edit-turma-inicio">Horário de início</label>
+                            <input id="edit-turma-inicio" name="horario_inicio" type="time" step="1" class="form-control" required>
+                        </div>
+                        <div class="col-12 col-sm-6 form-field">
+                            <label for="edit-turma-fim">Horário de término</label>
+                            <input id="edit-turma-fim" name="horario_fim" type="time" step="1" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar alterações</button>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

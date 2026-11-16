@@ -8,7 +8,7 @@
       <div class="border border-2 rounded-4 bg-primary-soft text-center px-4 py-4">
         <span class="brand-mark mx-auto mb-3"><i class="bi bi-mortarboard"></i></span>
         <h1 class="page-title fs-2 mb-2 text-primary-ink" style="overflow: visible; white-space: normal;">Cadastro</h1>
-        <p class="page-desc mb-0">Gerencie salas, professores e turmas em um só lugar</p>
+        <p class="page-desc mb-0">Gerencie salas, professores, turmas e disciplinas em um só lugar</p>
       </div>
     </div>
   </header>
@@ -30,6 +30,11 @@
         "label": "Turmas",
         "description": "Turmas, horários e a sala de cada aula",
         "link": url_for('index_turma')
+      },
+      {
+        "label": "Disciplinas",
+        "description": "Disciplinas, formatos e cargas horárias",
+        "link": url_for('index_disciplina')
       }
     ]
   %}

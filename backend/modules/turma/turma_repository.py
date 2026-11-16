@@ -1,5 +1,5 @@
 from backend.modules.base_repository import BaseRepository
-from sqlalchemy import insert, update, delete, select
+from sqlalchemy import insert, update, delete, select, func
 from backend.modules.turma.turma_model import Turma
 from backend.modules.professor.professor_model import Professor
 from backend.modules.disciplina.disciplina_model import Disciplina
@@ -70,9 +70,83 @@ class TurmaRepository(BaseRepository):
         )
         return self.execute_db_query(stmt, True)
 
+    def select_by_id(self, id: int) -> list:
+        stmt = select(
+            Turma.id,
+            Disciplina.id.label('fk_disciplina'),
+            Disciplina.nome.label('fk_disciplina_nome'),
+            Sala.id.label('fk_sala'),
+            Sala.nome.label('fk_sala_nome'),
+            Professor.id.label('fk_professor'),
+            Professor.nome.label('fk_professor_nome'),
+            dia_semana.c.id.label('fk_dia_semana'),
+            dia_semana.c.nome.label('fk_dia_semana_nome'),
+            Disciplina.carga_horaria,
+            Turma.horario_inicio,
+            Turma.horario_fim
+        ).join(
+            Disciplina, Disciplina.id == Turma.fk_disciplina
+        ).join(
+            Sala, Sala.id == Turma.fk_sala
+        ).join(
+            Professor, Professor.id == Turma.fk_professor
+        ).join(
+            dia_semana, dia_semana.c.id == Turma.fk_dia_semana
+        ).where(
+            Turma.id == id
+        )
+        return self.execute_db_query(stmt, True)
+
     def get_dias_semana(self) -> list:
         stmt = select(
             dia_semana.c.id,
             dia_semana.c.nome
         )
         return self.execute_db_query(stmt, True)
+
+    def verifica_sala_dia_semana(self, sala_id: int, dia_semana_id: int, turma_id: int | None = None) -> int:
+        stmt = select(
+            func.count()
+        ).select_from(
+            Turma
+        ).join(
+            Sala, Sala.id == Turma.fk_sala
+        ).join(
+            dia_semana, dia_semana.c.id == Turma.fk_dia_semana
+        ).where(
+            Sala.id == sala_id, dia_semana.c.id == dia_semana_id
+        )
+        if turma_id is not None:
+            stmt = stmt.where(Turma.id != turma_id)
+        return self.execute_db_query(stmt, True).scalar_one()
+
+    def verifica_quantidade_turmas_professor(self, professor_id: int, turma_id: int | None = None) -> int:
+        stmt = select(
+            func.count()
+        ).select_from(
+            Turma
+        ).join(
+            Professor, Professor.id == Turma.fk_professor
+        ).where(
+            Turma.fk_professor == professor_id
+        )
+        if turma_id is not None:
+            stmt = stmt.where(Turma.id != turma_id)
+        return self.execute_db_query(stmt, True).scalar_one()
+
+    def verifica_professor_dia_semana(self, professor_id: int, dia_semana_id: int, turma_id: int | None = None) -> int:
+        stmt = select(
+            func.count()
+        ).select_from(
+            Turma
+        ).join(
+            Professor, Professor.id == Turma.fk_sala
+        ).join(
+            dia_semana, dia_semana.c.id == Turma.fk_dia_semana
+        ).where(
+            Professor.id == professor_id, dia_semana.c.id == dia_semana_id
+        )
+        if turma_id is not None:
+            stmt = stmt.where(Turma.id != turma_id)
+        return self.execute_db_query(stmt, True).scalar_one()
+

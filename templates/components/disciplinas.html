@@ -1,0 +1,116 @@
+{% extends "components/layout.html" %}
+{% import "components/_macro.html" as macro %}
+
+{% macro disciplina_fields(prefix) %}
+<div class="form-stack">
+    <div class="form-field">
+        {{ macro.input_field(id=prefix ~ '-nome', label='Nome da disciplina', type='text', name='nome', value='', labelClass='form-label', inputClass='form-control', placeholder='Ex: Programação de sistemas', required=true) }}
+    </div>
+    <div class="form-field">
+        <label class="form-label" for="{{ prefix }}-formato">Formato</label>
+        <select id="{{ prefix }}-formato" name="fk_formato" class="form-select" required>
+            <option value="" disabled selected>Selecione um formato</option>
+            {% for formato in formatos | default([], true) %}
+            {{ macro.option_select(value=formato['id'], content=formato['nome_formato']) }}
+            {% endfor %}
+        </select>
+        {% if not formatos %}<p class="form-hint mb-0">Nenhum formato disponível para cadastro.</p>{% endif %}
+    </div>
+    <div class="form-field">
+        {{ macro.input_field(id=prefix ~ '-carga-horaria', label='Carga horária (h)', type='number', name='carga_horaria', value='', labelClass='form-label', inputClass='form-control', placeholder='Ex: 60', required=true, min=0, step='0.01') }}
+    </div>
+    <div class="form-field">
+        <label class="form-label" for="{{ prefix }}-pratica">Disciplina prática?</label>
+        <select id="{{ prefix }}-pratica" name="pratica" class="form-select" required>
+            {{ macro.option_select(value=0, content='Não') }}
+            {{ macro.option_select(value=1, content='Sim') }}
+        </select>
+    </div>
+</div>
+{% endmacro %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">Disciplinas</h1>
+        <p class="page-desc">Cadastre e gerencie as disciplinas, seus formatos e cargas horárias</p>
+    </div>
+</header>
+<div class="row g-3 g-lg-4">
+    <div class="col-12 col-lg-5">
+        <div class="h-100 border border-2 rounded-4 bg-primary-soft p-3 p-md-4">
+            <div class="panel"><div class="panel-body">
+                <h2 class="panel-title">Nova disciplina</h2>
+                {% call macro.render_form(id='cadastrar-disciplina-form', method='POST', action=url_for('cadastrar_disciplina'), class='form-stack', error_modal=true) %}
+                    {{ disciplina_fields('disciplina') }}
+                    <div class="form-actions">
+                        {{ macro.render_button(id='btnCadastrarDisciplina', class='btn btn-primary', type='submit', label='Cadastrar disciplina') }}
+                    </div>
+                {% endcall %}
+            </div></div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-7">
+        <div class="h-100 border border-2 rounded-4 bg-primary-soft p-3 p-md-4">
+            <div class="overflow-auto pe-2" style="max-height: 65vh;" tabindex="0" role="region" aria-label="Lista de disciplinas">
+                {{ macro.data_list(items=disciplinas | default([], true), fields=[('formato', 'Formato'), ('carga_horaria', 'Carga horária (h)'), ('pratica', 'Prática')], entity='disciplina', icon='bi-book', title_field='nome', edit_url=url_for('atualizar_disciplina', id='__id__'), delete_url=url_for('delete_disciplina', id='__id__'), empty_title='Nenhuma disciplina cadastrada', empty_description='Cadastre a primeira disciplina no formulário ao lado.') }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block modals %}
+<div class="modal fade" id="view-disciplina-modal" tabindex="-1" aria-labelledby="view-disciplina-title" aria-describedby="view-disciplina-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title fs-4" id="view-disciplina-title">Dados da disciplina</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+            <p class="text-muted-foreground" id="view-disciplina-description">Confira os dados cadastrados da disciplina.</p>
+            <dl class="mb-0">
+                {% for field, label in [('nome', 'Nome'), ('formato', 'Formato'), ('carga-horaria', 'Carga horária (h)'), ('pratica', 'Prática')] %}
+                <dt class="text-muted-foreground small mb-1">{{ label }}</dt>
+                <dd class="text-break {{ 'mb-0' if loop.last else 'mb-3' }}" data-disciplina-{{ field }}></dd>
+                {% endfor %}
+            </dl>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-view-close>Fechar</button></div>
+    </div></div>
+</div>
+<div class="modal fade" id="edit-disciplina-modal" tabindex="-1" aria-labelledby="edit-disciplina-title" aria-describedby="edit-disciplina-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><form class="modal-content" id="edit-disciplina-form" method="post">
+        <div class="modal-header">
+            <h2 class="modal-title fs-4" id="edit-disciplina-title">Editar disciplina</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+            <p class="text-muted-foreground" id="edit-disciplina-description">Atualize os dados da disciplina e salve as alterações.</p>
+            <div class="alert alert-danger" role="alert" data-edit-error hidden></div>
+            {{ disciplina_fields('edit-disciplina') }}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar alterações</button>
+        </div>
+    </form></div>
+</div>
+<div class="modal fade delete-modal" id="delete-disciplina-modal" tabindex="-1" aria-labelledby="delete-disciplina-title" aria-describedby="delete-disciplina-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+        <div class="modal-header align-items-start border-0 pb-0">
+            <span class="delete-modal-icon" aria-hidden="true"><i class="bi bi-trash"></i></span>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+            <h2 class="modal-title fs-4 mb-2" id="delete-disciplina-title">Excluir disciplina?</h2>
+            <p class="text-muted-foreground mb-0" id="delete-disciplina-description">Deseja remover <strong class="delete-modal-record" data-delete-name></strong>?</p>
+            <div class="alert alert-danger mt-3 mb-0" role="alert" data-delete-error hidden></div>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-delete-cancel>Cancelar</button>
+            <button type="button" class="btn btn-danger" data-confirm-delete><i class="bi bi-trash" aria-hidden="true"></i> Excluir disciplina</button>
+        </div>
+    </div></div>
+</div>
+{% endblock %}
