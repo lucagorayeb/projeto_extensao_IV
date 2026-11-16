@@ -13,28 +13,21 @@
           <div class="panel stat-card">
             <div class="panel-body">
               <div class="stat-icon tone-primary"><i class="bi bi-clock"></i></div>
-              <p class="stat-value"></p>
+              <p class="stat-value" data-total-turmas-hoje>{{ total_turmas_hoje }}</p>
               <p class="stat-label">Turmas hoje</p>
             </div>
           </div>
           <div class="panel stat-card">
             <div class="panel-body">
               <div class="stat-icon tone-teal"><i class="bi bi-buildings"></i></div>
-              <p class="stat-value"></p>
+              <p class="stat-value" data-total-salas-hoje>{{ total_salas_hoje }}</p>
               <p class="stat-label">Salas em uso hoje</p>
             </div>
           </div>
           <div class="panel stat-card">
             <div class="panel-body">
-              <div class="stat-icon tone-danger"><i class="bi bi-exclamation-triangle"></i></div>
-              <p class="stat-value"></p>
-              <p class="stat-label">Turmas em conflito</p>
-            </div>
-          </div>
-          <div class="panel stat-card">
-            <div class="panel-body">
               <div class="stat-icon tone-violet"><i class="bi bi-people"></i></div>
-              <p class="stat-value"></p>
+              <p class="stat-value" data-total-professores-ativos>{{ total_professores_ativos }}</p>
               <p class="stat-label">Professores ativos</p>
             </div>
           </div>
@@ -43,25 +36,29 @@
         {% include "components/calendario.html" %}
         
         <div class="row g-3 align-items-start">
-          <div class="col-12 col-lg-7">
+          <div class="col-12">
             <div class="panel">
               <div class="panel-body panel-body-tight">
                 <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
                   <h2 class="panel-title mb-0">Próximas aulas de hoje</h2>
-                  <a class="btn btn-link btn-sm" href="hoje.html">Ver agenda <i class="bi bi-chevron-right"></i></a>
+                  <a class="btn btn-link btn-sm" href="/hoje">Ver agenda <i class="bi bi-chevron-right"></i></a>
                 </div>
                 <div class="d-flex flex-column gap-2">
+                  {% for aula in proximas_aulas %}
+                  <div class="class-card" data-proxima-turma-id="{{ aula.id }}">
+                    <div class="class-body">
+                      <p class="class-title">{{ aula.fk_disciplina_nome }}</p>
+                      <p class="class-meta">{{ aula.hi }} - {{ aula.hf }}</p>
+                      <div class="class-badges">
+                        <span class="chip"><i class="bi bi-person" aria-hidden="true"></i>{{ aula.fk_professor_nome }}</span>
+                        <span class="chip"><i class="bi bi-door-open" aria-hidden="true"></i>{{ aula.fk_sala_nome }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  {% else %}
+                  <p class="text-muted-foreground mb-0">Nenhuma próxima aula para hoje.</p>
+                  {% endfor %}
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-lg-5">
-            <div class="panel">
-              <div class="panel-body panel-body-tight">
-                <h2 class="panel-title">Conflitos para revisar</h2>
-                <a class="btn btn-outline-secondary btn-sm w-100 mt-3" href="cadastro.html#turmas">
-                  <i class="bi bi-plus-lg"></i> Cadastrar nova turma
-                </a>
               </div>
             </div>
           </div>

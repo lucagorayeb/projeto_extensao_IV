@@ -4,16 +4,16 @@
             <p class="brand-sub">Painel de horários</p>
         </span></a>
     <nav class="side-nav" aria-label="Navegação principal">
-        <a class="nav-link active" href="{{ url_for('index') }}" aria-current="page">
+        <a class="nav-link{% if aba_ativa == 'index' %} active{% endif %}" href="{{ url_for('index') }}"{% if aba_ativa == 'index' %} aria-current="page"{% endif %}>
             <i class="bi bi-grid-1x2"></i>Painel
         </a>
-        <a class="nav-link" href="{{ url_for('semana') }}">
+        <a class="nav-link{% if aba_ativa == 'semana' %} active{% endif %}" href="{{ url_for('semana') }}"{% if aba_ativa == 'semana' %} aria-current="page"{% endif %}>
             <i class="bi bi-calendar3"></i>Semana
         </a>
-        <a class="nav-link" href="{{ url_for('hoje') }}">
+        <a class="nav-link{% if aba_ativa == 'hoje' %} active{% endif %}" href="{{ url_for('hoje') }}"{% if aba_ativa == 'hoje' %} aria-current="page"{% endif %}>
             <i class="bi bi-clock"></i>Hoje
         </a>
-        <a class="nav-link" href="{{ url_for('cadastro') }}">
+        <a class="nav-link{% if aba_ativa == 'cadastro' %} active{% endif %}" href="{{ url_for('cadastro') }}"{% if aba_ativa == 'cadastro' %} aria-current="page"{% endif %}>
             <i class="bi bi-clipboard-data"></i>Cadastro
         </a>
     </nav>

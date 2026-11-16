@@ -22,7 +22,11 @@
         </div>
 
         <div class="calendar-card p-3 pt-0">
+            <div class="alert alert-danger" role="alert" id="calendar-error" hidden>Não foi possível carregar as turmas do calendário. Tente novamente.</div>
             <div id="calendar"></div>
+            {% if eventos_calendario is defined %}
+            <script id="calendar-events" type="application/json">{{ eventos_calendario | tojson }}</script>
+            {% endif %}
         </div>
     </div>
 </div>

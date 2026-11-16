@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const nextBtn = document.querySelector('.cal-next-btn');
     const todayBtn = document.querySelector('.cal-today-btn');
     const viewButtons = document.querySelectorAll('.cal-view-btn');
+    const errorEl = document.getElementById('calendar-error');
+    const initialEventsEl = document.getElementById('calendar-events');
 
     function updateTitle(calendar) {
         if (!titleLabel) return;
@@ -18,9 +20,8 @@ document.addEventListener('DOMContentLoaded', function () {
         initialView: 'timeGridWeek',
         headerToolbar: false,
         firstDay: 1, // Segunda-feira
-        hiddenDays: [0], // Oculta Domingo (seg a sáb)
-        slotMinTime: '07:00:00',
-        slotMaxTime: '23:00:00',
+        slotMinTime: '00:00:00',
+        slotMaxTime: '24:00:00',
         slotDuration: '01:00:00',
         snapDuration: '00:15:00',
         allDaySlot: false,
@@ -32,32 +33,37 @@ document.addEventListener('DOMContentLoaded', function () {
             minute: '2-digit',
             hour12: false
         },
+        eventTimeFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        },
         dayHeaderFormat: {
             weekday: 'short',
             day: 'numeric'
         },
         events: function (fetchInfo, successCallback, failureCallback) {
-            // Busca os eventos da API / banco de dados quando houver rota,
-            // ou pode receber os eventos via chamada fetch/endpoint
-            fetch('/disciplina/')
-                .then(response => {
-                    if (!response.ok) return [];
-                    return response.json();
-                })
-                .then(data => {
-                    if (Array.isArray(data)) {
-                        successCallback(data);
-                    } else {
-                        successCallback([]);
-                    }
-                })
-                .catch(() => {
-                    successCallback([]);
-                });
+            if (errorEl) errorEl.hidden = true;
+            if (initialEventsEl) {
+                try {
+                    const data = JSON.parse(initialEventsEl.textContent);
+                    if (!Array.isArray(data)) throw new Error('Resposta inválida do calendário');
+                    successCallback(data);
+                } catch (error) {
+                    if (errorEl) errorEl.hidden = false;
+                    failureCallback(error);
+                }
+                return;
+            }
+            successCallback([]);
         },
         eventClassNames: function (arg) {
             const extended = arg.event.extendedProps || {};
             const classes = ['cal-fc-event'];
+            const disciplina = arg.event.title || '';
+            let cor = 0;
+            for (const letra of disciplina) cor = (cor * 31 + letra.codePointAt(0)) >>> 0;
+            classes.push('cal-color-' + (cor % 5));
             if (extended.isConflict) {
                 classes.push('is-conflict');
             } else if (extended.predio) {
@@ -68,25 +74,27 @@ document.addEventListener('DOMContentLoaded', function () {
         eventContent: function (arg) {
             const event = arg.event;
             const props = event.extendedProps || {};
-            const start = event.start ? event.start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
-            const end = event.end ? event.end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+            const start = event.start ? event.start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', hour12: false }) : '';
+            const end = event.end ? event.end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', hour12: false }) : '';
             const timeText = start && end ? `${start} – ${end}` : (arg.timeText || '');
 
-            let conflictHtml = '';
+            const card = document.createElement('div');
+            card.className = 'cal-fc-card';
+            function addText(className, text) {
+                const span = document.createElement('span');
+                span.className = className;
+                span.textContent = text;
+                span.title = text;
+                card.appendChild(span);
+            }
+            addText('cal-fc-title', event.title);
+            addText('cal-fc-sub', [props.sala, props.professor].filter(Boolean).join(' · '));
+            addText('cal-fc-time', timeText);
             if (props.isConflict) {
-                conflictHtml = '<span class="cal-fc-conflict"><i class="bi bi-exclamation-triangle"></i> Conflito de horário</span>';
+                addText('cal-fc-conflict', 'Conflito de horário');
             }
 
-            return {
-                html: `
-                    <div class="cal-fc-card">
-                        <span class="cal-fc-title" title="${event.title}">${event.title}</span>
-                        <span class="cal-fc-sub" title="${props.sala || ''} · ${props.professor || ''}">${props.sala || ''}${props.professor ? ' · ' + props.professor : ''}</span>
-                        <span class="cal-fc-time">${timeText}</span>
-                        ${conflictHtml}
-                    </div>
-                `
-            };
+            return { domNodes: [card] };
         },
         datesSet: function () {
             updateTitle(calendar);
