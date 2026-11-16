@@ -1,43 +1,37 @@
 {% extends "components/layout.html" %}
 
 {% block content %}
-
-<body data-page="hoje">
-<div class="app-shell">
-  <div class="app-main">
-    <header class="mobile-header"><a class="brand brand-sm" href="index.html"><span
-          class="brand-mark brand-mark-sm"><i class="bi bi-mortarboard"></i></span><span class="min-w-0">
-          <p class="brand-name">Engetec</p>
-          <p class="brand-sub">Painel de horários</p>
-        </span></a><button type="button" class="theme-toggle" aria-label="Alternar tema"><i
-          class="bi bi-moon-stars"></i></button></header>
-    <main class="app-content">
-
-      <div>
-        <div class="page-header">
-          <div>
-            <h1 class="page-title">Hoje</h1>
-            <p class="page-desc">Quinta-feira, 05 de novembro</p>
-          </div>
-        </div>
-        <div class="d-flex flex-column gap-2" style="max-width:42rem">
-          <div class="mt-0">
-            <div class="class-card">
-              <div class="class-time"><span class="start">19:00</span><span class="end">21:45</span></div>
-              <div class="class-body">
-                <p class="class-title">Materiais de Construção</p>
-                <p class="class-meta">Eng. Civil · 4º</p>
-                <div class="class-badges"><span class="chip "><i class="bi bi-person"></i>Cláudio Roberto</span><span
-                    class="chip predio-central"><i class="bi bi-door-open"></i>Sala 03</span><span
-                    class="chip ">Presencial</span></div>
-              </div>
-            </div>
-          </div>
+<div>
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Hoje</h1>
+      <p class="page-desc">{{ data_descricao }}</p>
+    </div>
+  </div>
+  <div class="d-flex flex-column gap-2" style="max-width:42rem">
+    {% for aula in turmas %}
+    <div class="class-card" data-turma-id="{{ aula.id }}">
+      <div class="class-time">
+        <span class="start">{{ aula.hi or 'Sem horário' }}</span>
+        <span class="end">{{ aula.hf }}</span>
+      </div>
+      <div class="class-body">
+        <p class="class-title">{{ aula.fk_disciplina_nome }}</p>
+        <div class="class-badges">
+          <span class="chip"><i class="bi bi-person" aria-hidden="true"></i>{{ aula.fk_professor_nome }}</span>
+          <span class="chip"><i class="bi bi-door-open" aria-hidden="true"></i>{{ aula.fk_sala_nome }}</span>
         </div>
       </div>
-
-    </main>
+    </div>
+    {% else %}
+    <div class="panel">
+      <div class="panel-body empty-state">
+        <div class="empty-icon"><i class="bi bi-calendar3" aria-hidden="true"></i></div>
+        <p class="empty-title">Nenhuma turma para hoje</p>
+        <p class="empty-desc">Não há aulas cadastradas para este dia da semana.</p>
+      </div>
+    </div>
+    {% endfor %}
   </div>
 </div>
-
 {% endblock %}

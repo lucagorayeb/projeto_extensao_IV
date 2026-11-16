@@ -15,8 +15,9 @@
 <!-- Macro de Input -->
 {% macro input_field(id, label, type, name, value, labelClass, inputClass, placeholder, required=false, min=none, step=none)%}
 <label class="{{ labelClass }}" for="{{ id }}">{{ label }}</label>
-<input id="{{ id }}" type="{{ type }}" name="{{ name }}" value="{{ value }}" class="{{ inputClass }}"
-    placeholder="{{ placeholder }}" {% if required %}required{% endif %}{% if min is not none %} min="{{ min }}"
+<input id="{{ id }}" type="{{ 'text' if type == 'time' else type }}" name="{{ name }}" value="{{ value }}" class="{{ inputClass }}"
+    {% if type == 'time' %}inputmode="text" pattern="([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?" title="Use o formato de 24 horas: HH:mm (ex.: 14:30). Segundos são opcionais." maxlength="8"{% endif %}
+    placeholder="{{ 'HH:mm' if type == 'time' else placeholder }}" {% if required %}required{% endif %}{% if min is not none %} min="{{ min }}"
     {% endif %}{% if step is not none %} step="{{ step }}" {% endif %}>
 {% endmacro %}
 
@@ -97,9 +98,13 @@ data-id para integração no frontend, sem depender de rotas específicas. #}
                 <h3 class="list-item-title" {% if entity == 'sala' %}data-sala-nome{% endif %}>{{ item[title_field] }}
                 </h3>
                 {% for field, label in fields %}
+                {% if entity == 'turma' and field == 'horario' %}
+                <p class="list-item-sub">{{ label }}: {{ item['horario_inicio'] | default('Não informado', true) }} - {{ item['horario_fim'] | default('Não informado', true) }}</p>
+                {% else %}
                 <p class="list-item-sub">{{ label }}: {% if entity == 'sala' %}<span
                         data-sala-{{ 'tipo' if field == 'tipo_sala' else 'capacidade' }}>{{ item[field] if item[field] is defined and item[field] is not none and item[field] != '' else 'Não informada' }}</span>{% elif entity == 'disciplina' and field == 'pratica' %}{{ 'Sim' if item[field] | int == 1 else 'Não' }}{% elif entity == 'disciplina' and field == 'carga_horaria' %}{{ item[field] }}{% else %}{{ item[field] | default('Não informado', true) }}{% endif %}
                 </p>
+                {% endif %}
                 {% endfor %}
             </div>
             <div class="list-item-actions flex-wrap" role="group" aria-label="Ações de {{ item[title_field] }}">

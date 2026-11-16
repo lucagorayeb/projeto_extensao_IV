@@ -1,7 +1,19 @@
 {% extends "components/layout.html" %}
 
-{% block content %}
+{% macro turma_card(aula) %}
+<div class="class-card" data-turma-id="{{ aula.id }}">
+  <div class="class-body">
+    <p class="class-title">{{ aula.fk_disciplina_nome }}</p>
+    <p class="class-meta">{{ aula.hi ~ ' - ' ~ aula.hf if aula.hi and aula.hf else 'Sem horário fixo' }}</p>
+    <div class="class-badges">
+      <span class="chip"><i class="bi bi-person" aria-hidden="true"></i>{{ aula.fk_professor_nome }}</span>
+      <span class="chip"><i class="bi bi-door-open" aria-hidden="true"></i>{{ aula.fk_sala_nome }}</span>
+    </div>
+  </div>
+</div>
+{% endmacro %}
 
+{% block content %}
 <div>
   <div class="page-header">
     <div>
@@ -13,154 +25,68 @@
   <!-- Mobile: Seletor de dia + lista de cards -->
   <div class="d-md-none">
     <ul class="nav day-tabs mb-3" role="tablist">
+      {% for dia in dias %}
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="tab-dia-0" data-bs-toggle="pill" data-bs-target="#pane-dia-0" type="button" role="tab" aria-controls="pane-dia-0" aria-selected="true" aria-label="Segunda-feira">Seg</button>
+        <button class="nav-link {{ 'active' if loop.first else '' }}" id="tab-dia-{{ dia.id }}" data-bs-toggle="pill" data-bs-target="#pane-dia-{{ dia.id }}" type="button" role="tab" aria-controls="pane-dia-{{ dia.id }}" aria-selected="{{ 'true' if loop.first else 'false' }}" aria-label="{{ dia.nome }}">{{ dia.nome[:3] }}</button>
       </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-dia-1" data-bs-toggle="pill" data-bs-target="#pane-dia-1" type="button" role="tab" aria-controls="pane-dia-1" aria-selected="false" aria-label="Terça-feira">Ter</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-dia-2" data-bs-toggle="pill" data-bs-target="#pane-dia-2" type="button" role="tab" aria-controls="pane-dia-2" aria-selected="false" aria-label="Quarta-feira">Qua</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-dia-3" data-bs-toggle="pill" data-bs-target="#pane-dia-3" type="button" role="tab" aria-controls="pane-dia-3" aria-selected="false" aria-label="Quinta-feira">Qui</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-dia-4" data-bs-toggle="pill" data-bs-target="#pane-dia-4" type="button" role="tab" aria-controls="pane-dia-4" aria-selected="false" aria-label="Sexta-feira">Sex</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-dia-5" data-bs-toggle="pill" data-bs-target="#pane-dia-5" type="button" role="tab" aria-controls="pane-dia-5" aria-selected="false" aria-label="Sábado">Sáb</button>
-      </li>
+      {% endfor %}
     </ul>
-
     <div class="tab-content">
-      <div class="tab-pane fade show active" id="pane-dia-0" role="tabpanel" aria-labelledby="tab-dia-0" tabindex="0">
-        <div class="panel">
-          <div class="panel-body empty-state">
-            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
-            <p class="empty-title">Nenhuma turma em Segunda-feira</p>
-            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
+      {% for dia in dias %}
+      <div class="tab-pane fade {{ 'show active' if loop.first else '' }}" id="pane-dia-{{ dia.id }}" role="tabpanel" aria-labelledby="tab-dia-{{ dia.id }}" tabindex="0">
+        <div class="d-flex flex-column gap-2">
+          {% for aula in dia.turmas %}
+          {{ turma_card(aula) }}
+          {% else %}
+          <div class="panel">
+            <div class="panel-body empty-state">
+              <div class="empty-icon"><i class="bi bi-calendar3" aria-hidden="true"></i></div>
+              <p class="empty-title">Nenhuma turma em {{ dia.nome }}</p>
+              <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
+            </div>
           </div>
+          {% endfor %}
         </div>
       </div>
-      <div class="tab-pane fade" id="pane-dia-1" role="tabpanel" aria-labelledby="tab-dia-1" tabindex="0">
-        <div class="panel">
-          <div class="panel-body empty-state">
-            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
-            <p class="empty-title">Nenhuma turma em Terça-feira</p>
-            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="pane-dia-2" role="tabpanel" aria-labelledby="tab-dia-2" tabindex="0">
-        <div class="panel">
-          <div class="panel-body empty-state">
-            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
-            <p class="empty-title">Nenhuma turma em Quarta-feira</p>
-            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="pane-dia-3" role="tabpanel" aria-labelledby="tab-dia-3" tabindex="0">
-        <div class="panel">
-          <div class="panel-body empty-state">
-            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
-            <p class="empty-title">Nenhuma turma em Quinta-feira</p>
-            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="pane-dia-4" role="tabpanel" aria-labelledby="tab-dia-4" tabindex="0">
-        <div class="panel">
-          <div class="panel-body empty-state">
-            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
-            <p class="empty-title">Nenhuma turma em Sexta-feira</p>
-            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="pane-dia-5" role="tabpanel" aria-labelledby="tab-dia-5" tabindex="0">
-        <div class="panel">
-          <div class="panel-body empty-state">
-            <div class="empty-icon"><i class="bi bi-calendar3"></i></div>
-            <p class="empty-title">Nenhuma turma em Sábado</p>
-            <p class="empty-desc">Cadastre uma turma para preencher esse dia da semana.</p>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 
-  <!-- Desktop: Matriz de grade semanal por faixa de horário -->
+  <!-- Desktop: Matriz de grade semanal por faixa de horário de início -->
   <div class="d-none d-md-block">
     <div class="panel">
       <div class="week-table-wrap">
         <table class="week-table">
           <thead>
             <tr>
-              <th>Faixa</th>
-              <th>Segunda-feira</th>
-              <th>Terça-feira</th>
-              <th>Quarta-feira</th>
-              <th>Quinta-feira</th>
-              <th>Sexta-feira</th>
-              <th>Sábado</th>
+              <th scope="col">Faixa</th>
+              {% for dia in dias %}<th scope="col">{{ dia.nome }}</th>{% endfor %}
             </tr>
           </thead>
           <tbody>
+            {% for chave, titulo, descricao in [
+              ('matutino', 'Matutino', 'até 11:59'),
+              ('vespertino', 'Vespertino', '12:00 – 17:59'),
+              ('noturno', 'Noturno', 'a partir das 18:00'),
+              ('sem_horario', 'Sem horário fixo', 'aulas sem horário definido')
+            ] %}
             <tr>
-              <td class="faixa-cell">
-                <p>Matutino</p>
-                <small>até 11:59</small>
+              <th scope="row" class="faixa-cell"><p>{{ titulo }}</p><small>{{ descricao }}</small></th>
+              {% for dia in dias %}
+              <td class="day-cell">
+                <div class="cell-stack">
+                  {% for aula in dia.faixas[chave] %}
+                  {{ turma_card(aula) }}
+                  {% endfor %}
+                </div>
               </td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
+              {% endfor %}
             </tr>
-            <tr>
-              <td class="faixa-cell">
-                <p>Vespertino</p>
-                <small>12:00 – 17:59</small>
-              </td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-            </tr>
-            <tr>
-              <td class="faixa-cell">
-                <p>Noturno</p>
-                <small>a partir das 18:00</small>
-              </td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-            </tr>
-            <tr>
-              <td class="faixa-cell">
-                <p>Sem horário fixo</p>
-                <small>aulas assíncronas</small>
-              </td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-              <td class="day-cell"><div class="cell-stack"></div></td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
-
 {% endblock %}
