@@ -59,14 +59,14 @@ class ProfessorController:
         try:
             data = self.serv.slct_professor_service()
         except SQLAlchemyError:
-            return JSONResponse(
-                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-                content="Internal Error"
-            )
+            return {
+                "status_code": HTTPStatus.INTERNAL_SERVER_ERROR,
+                "content": "Internal Error"
+            }
         except Exception:
             return {
-                "status_code":HTTPStatus.NOT_FOUND,
-                "content":"Not Found"
+                "status_code": HTTPStatus.NOT_FOUND,
+                "content": "Not Found"
             }
         return {
             "status_code": HTTPStatus.OK,
@@ -76,21 +76,16 @@ class ProfessorController:
     def del_professor_controller(self, data: dict):
         try:
             self.serv.del_professor_service(data)
-        except IntegrityError:
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST,
-                content="Bad Request"
-            )
-        except NoResultFound:
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST,
-                content="Bad Request"
-            )
+        except (IntegrityError, NoResultFound):
+            return {
+                "status_code": HTTPStatus.BAD_REQUEST,
+                "content": "Bad Request"
+            }
         except SQLAlchemyError:
-            return JSONResponse(
-                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-                content="Internal Error"
-            )
+            return {
+                "status_code": HTTPStatus.INTERNAL_SERVER_ERROR,
+                "content": "Internal Error"
+            }
         return {
             "status_code": HTTPStatus.OK,
             "content": "Especialidade Objected Deleted"

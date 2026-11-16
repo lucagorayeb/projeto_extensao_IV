@@ -14,8 +14,6 @@ class DisciplinaRepository(BaseRepository):
             nome=data.nome,
             fk_formato=data.fk_formato,
             carga_horaria=data.carga_horaria,
-            horario_inicio=data.horario_inicio,
-            horario_termino=data.horario_termino,
             pratica=data.pratica
         )
         self.execute_db_query(stmt, False)
@@ -25,8 +23,6 @@ class DisciplinaRepository(BaseRepository):
             Disciplina.id,
             Disciplina.nome,
             Disciplina.carga_horaria,
-            Disciplina.horario_inicio,
-            Disciplina.horario_termino,
             Disciplina.pratica,
             Disciplina.fk_formato.label('formato_id'),
             Formato.nome.label('formato')
@@ -48,8 +44,6 @@ class DisciplinaRepository(BaseRepository):
             nome=data.nome,
             fk_formato=data.fk_formato,
             carga_horaria=data.carga_horaria,
-            horario_inicio=data.horario_inicio,
-            horario_termino=data.horario_termino,
             pratica=data.pratica
         )
         self.execute_db_query(stmt, False)
@@ -67,8 +61,6 @@ class DisciplinaRepository(BaseRepository):
             Disciplina.id,
             Disciplina.nome,
             Disciplina.carga_horaria,
-            Disciplina.horario_inicio,
-            Disciplina.horario_termino,
             Disciplina.pratica,
             Disciplina.fk_formato.label('formato_id'),
             Formato.nome.label('formato')

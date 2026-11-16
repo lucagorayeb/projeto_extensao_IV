@@ -1,84 +1,195 @@
-<div class="cadastro-layout">
-    <div class="cadastro-form-col">
-        <div class="panel">
-        <div class="panel-body">
-            <h2 class="panel-title">Nova turma</h2>
-            <form class="form-stack" data-demo-form data-success="Turma cadastrada.">
-            <div class="form-grid-2">
-                <div class="form-field">
-                <label for="turma-curso">Curso</label>
-                <input id="turma-curso" class="form-control" type="text" placeholder="Ex.: Eng. Software" required>
+{% extends "components/layout.html" %}
+{% import "components/_macro.html" as macro %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">Turmas</h1>
+        <p class="page-desc">Cadastre e gerencie as turmas, seus professores, salas e horários</p>
+    </div>
+</header>
+
+<div class="row g-3 g-lg-4">
+    <!-- Coluna do formulário -->
+    <div class="col-12 col-lg-5">
+        <div class="h-100 border border-2 rounded-4 bg-primary-soft p-3 p-md-4">
+            <div class="panel">
+                <div class="panel-body">
+                    <h2 class="panel-title">Nova turma</h2>
+
+                    {% call macro.render_form(
+                        id="cadastrar-turma-form",
+                        method="POST",
+                        action=url_for('cadastrar_turma'),
+                        class="form-stack",
+                        error_modal=true
+                    ) %}
+                    {% for field, label, options, text_field in [
+                        ('fk_disciplina', 'Disciplina', disciplinas | default([], true), 'nome'),
+                        ('fk_professor', 'Professor responsável', professores | default([], true), 'nome'),
+                        ('fk_sala', 'Sala ou laboratório', salas | default([], true), 'nome_sala'),
+                        ('fk_dia_semana', 'Dia da semana', dias_semana | default([], true), 'nome')
+                    ] %}
+                    <div class="form-field">
+                        <label for="turma-{{ field }}">{{ label }}</label>
+                        <select id="turma-{{ field }}" name="{{ field }}" class="form-select" required>
+                            <option value="" disabled selected>Selecione uma opção</option>
+                            {% for option in options %}
+                            {{ macro.option_select(value=option['id'], content=option[text_field]) }}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endfor %}
+
+                    <div class="row g-3">
+                        <div class="col-12 col-sm-6 form-field">
+                            {{ macro.input_field(
+                                id='turma-inicio', label='Horário de início', type='time',
+                                name='horario_inicio', value='', labelClass='',
+                                inputClass='form-control', placeholder='', required=true
+                            ) }}
+                        </div>
+                        <div class="col-12 col-sm-6 form-field">
+                            {{ macro.input_field(
+                                id='turma-fim', label='Horário de término', type='time',
+                                name='horario_fim', value='', labelClass='',
+                                inputClass='form-control', placeholder='', required=true
+                            ) }}
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button id="btnCadastrarTurma" class="btn btn-primary" type="submit">
+                            Cadastrar turma
+                        </button>
+                    </div>
+                    {% endcall %}
                 </div>
-                <div class="form-field">
-                <label for="turma-periodo">Período / turma</label>
-                <input id="turma-periodo" class="form-control" type="text" placeholder="Ex.: 4º ou 2º B">
-                </div>
             </div>
-            <div class="form-field">
-                <label for="turma-disciplina">Disciplina</label>
-                <input id="turma-disciplina" class="form-control" type="text"
-                placeholder="Ex.: Algoritmos e Estrutura de Dados II" required>
-            </div>
-            <div class="form-field">
-                <label for="turma-professor">Professor responsável</label>
-                <select id="turma-professor" class="form-select" required>
-                <option value="" selected disabled>Selecione…</option>
-                </select>
-            </div>
-            <div class="form-grid-2">
-                <div class="form-field">
-                <label for="turma-dia">Dia da semana</label>
-                <select id="turma-dia" class="form-select">
-                    <option>Segunda-feira</option>
-                    <option>Terça-feira</option>
-                    <option>Quarta-feira</option>
-                    <option>Quinta-feira</option>
-                    <option>Sexta-feira</option>
-                    <option>Sábado</option>
-                </select>
-                </div>
-                <div class="form-field">
-                <label for="turma-formato">Formato</label>
-                <select id="turma-formato" class="form-select">
-                    <option>Presencial</option>
-                    <option>Híbrida</option>
-                    <option>Síncrona</option>
-                    <option>Assíncrona</option>
-                </select>
-                </div>
-            </div>
-            <div class="form-grid-2">
-                <div class="form-field">
-                <label for="turma-inicio">Início</label>
-                <input id="turma-inicio" class="form-control" type="time" value="19:00">
-                </div>
-                <div class="form-field">
-                <label for="turma-fim">Término</label>
-                <input id="turma-fim" class="form-control" type="time" value="21:45">
-                </div>
-            </div>
-            <div class="form-field">
-                <label for="turma-sala">Sala ou laboratório</label>
-                <select id="turma-sala" class="form-select" required>
-                <option value="" selected disabled>Selecione…</option>
-                </select>
-            </div>
-            <div class="form-actions">
-                <button class="btn btn-primary" type="submit"><i class="bi bi-plus-lg"></i>Cadastrar turma</button>
-            </div>
-            </form>
-        </div>
         </div>
     </div>
-    <div class="cadastro-list-col">
-        <div class="d-flex flex-column gap-3">
-        <div class="panel">
-            <div class="panel-body empty-state">
-            <div class="empty-icon"><i class="bi bi-mortarboard"></i></div>
-            <p class="empty-title">Nenhuma turma cadastrada</p>
-            <p class="empty-desc">Cadastre a primeira turma no formulário ao lado.</p>
+
+    <!-- Coluna da lista -->
+    <div class="col-12 col-lg-7">
+        <div class="h-100 border border-2 rounded-4 bg-primary-soft p-3 p-md-4">
+            <div class="overflow-auto pe-2" style="max-height: 65vh;" tabindex="0" role="region" aria-label="Lista de turmas">
+                {{ macro.data_list(
+                    items=turmas | default([], true),
+                    fields=[
+                        ('fk_professor_nome', 'Professor'),
+                        ('fk_sala_nome', 'Sala'),
+                        ('fk_dia_semana_nome', 'Dia da semana'),
+                        ('horario_inicio', 'Início'),
+                        ('horario_fim', 'Término'),
+                        ('carga_horaria', 'Carga horária da disciplina (h)')
+                    ],
+                    entity='turma',
+                    icon='bi-mortarboard',
+                    title_field='fk_disciplina_nome',
+                    delete_url=url_for('delete_turma', id='__id__'),
+                    empty_title='Nenhuma turma cadastrada',
+                    empty_description='Cadastre a primeira turma no formulário ao lado.'
+                ) }}
             </div>
         </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block modals %}
+<div class="modal fade" id="view-turma-modal" tabindex="-1" aria-labelledby="view-turma-title" aria-describedby="view-turma-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4" id="view-turma-title">Dados da turma</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted-foreground" id="view-turma-description">Confira os dados cadastrados da turma.</p>
+                <dl class="mb-0">
+                    {% for field, label in [
+                        ('fk_disciplina_nome', 'Disciplina'),
+                        ('fk_professor_nome', 'Professor responsável'),
+                        ('fk_sala_nome', 'Sala ou laboratório'),
+                        ('fk_dia_semana_nome', 'Dia da semana'),
+                        ('horario_inicio', 'Horário de início'),
+                        ('horario_fim', 'Horário de término'),
+                        ('carga_horaria', 'Carga horária da disciplina (h)')
+                    ] %}
+                    <dt class="text-muted-foreground small mb-1">{{ label }}</dt>
+                    <dd class="text-break {{ 'mb-0' if loop.last else 'mb-3' }}" data-turma-{{ field | replace('_', '-') }}></dd>
+                    {% endfor %}
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-view-close>Fechar</button>
+            </div>
         </div>
     </div>
+</div>
+<div class="modal fade delete-modal" id="delete-turma-modal" tabindex="-1" aria-labelledby="delete-turma-title" aria-describedby="delete-turma-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header align-items-start border-0 pb-0">
+                <span class="delete-modal-icon" aria-hidden="true"><i class="bi bi-trash"></i></span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title fs-4 mb-2" id="delete-turma-title">Excluir turma?</h2>
+                <p class="text-muted-foreground mb-0" id="delete-turma-description">Deseja remover a turma de <strong class="delete-modal-record" data-delete-name></strong>?</p>
+                <div class="alert alert-danger mt-3 mb-0" role="alert" data-delete-error hidden></div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-delete-cancel>Cancelar</button>
+                <button type="button" class="btn btn-danger" data-confirm-delete><i class="bi bi-trash" aria-hidden="true"></i> Excluir turma</button>
+            </div>
+        </div>
     </div>
+</div>
+<div class="modal fade" id="edit-turma-modal" tabindex="-1" aria-labelledby="edit-turma-title" aria-describedby="edit-turma-description" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form class="modal-content" id="edit-turma-form" action="{{ url_for('atualizar_turma') }}" method="post">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4" id="edit-turma-title">Editar turma</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted-foreground" id="edit-turma-description">Atualize os dados da turma e salve as alterações.</p>
+                <div class="alert alert-danger" role="alert" data-edit-error hidden></div>
+                <input type="hidden" name="id">
+                <div class="form-stack">
+                    {% for field, label, options, text_field in [
+                        ('fk_disciplina', 'Disciplina', disciplinas | default([], true), 'nome'),
+                        ('fk_professor', 'Professor responsável', professores | default([], true), 'nome'),
+                        ('fk_sala', 'Sala ou laboratório', salas | default([], true), 'nome_sala'),
+                        ('fk_dia_semana', 'Dia da semana', dias_semana | default([], true), 'nome')
+                    ] %}
+                    <div class="form-field">
+                        <label for="edit-turma-{{ field }}">{{ label }}</label>
+                        <select id="edit-turma-{{ field }}" name="{{ field }}" class="form-select" required>
+                            <option value="" disabled>Selecione uma opção</option>
+                            {% for option in options %}
+                            {{ macro.option_select(value=option['id'], content=option[text_field]) }}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endfor %}
+                    <div class="row g-3">
+                        <div class="col-12 col-sm-6 form-field">
+                            <label for="edit-turma-inicio">Horário de início</label>
+                            <input id="edit-turma-inicio" name="horario_inicio" type="time" step="1" class="form-control" required>
+                        </div>
+                        <div class="col-12 col-sm-6 form-field">
+                            <label for="edit-turma-fim">Horário de término</label>
+                            <input id="edit-turma-fim" name="horario_fim" type="time" step="1" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

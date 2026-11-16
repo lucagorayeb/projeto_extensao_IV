@@ -9,8 +9,6 @@ class Disciplina(DefaultModel):
     nome: Mapped[str_50]
     fk_formato: Mapped[int]
     carga_horaria: Mapped[num_5_2]
-    horario_inicio: Mapped[str]
-    horario_termino: Mapped[str]
     pratica: Mapped[int]
     created_at: Mapped[timestamp]
     updated_at: Mapped[timestamp]
