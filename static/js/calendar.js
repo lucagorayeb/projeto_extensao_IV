@@ -20,8 +20,9 @@ document.addEventListener('DOMContentLoaded', function () {
         initialView: 'timeGridWeek',
         headerToolbar: false,
         firstDay: 1, // Segunda-feira
-        slotMinTime: '00:00:00',
-        slotMaxTime: '24:00:00',
+        slotMinTime: '13:00:00',
+        slotMaxTime: '23:00:00',
+        height: 520,
         slotDuration: '01:00:00',
         snapDuration: '00:15:00',
         allDaySlot: false,
