@@ -118,6 +118,8 @@ async def semana(request: Request):
         inicio = aula.get('horario_inicio')
         fim = aula.get('horario_fim')
         hi, hf = horario(inicio), horario(fim)
+        if hi and hi < '13:00':
+            continue
         faixa = 'sem_horario' if not hi else 'matutino' if hi < '12:00' else 'vespertino' if hi < '18:00' else 'noturno'
         card = {**aula, 'hi': hi, 'hf': hf}
         dia['turmas'].append(card)
