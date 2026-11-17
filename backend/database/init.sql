@@ -3,6 +3,8 @@
 -- Limite de cinco turmas por professor e conflito de professor no mesmo dia
 -- são validados pelo serviço de turmas.
 
+SET NAMES utf8mb4;
+
 CREATE TABLE formato (
     id int primary key auto_increment,
     nome varchar(30) not null,
@@ -10,12 +12,10 @@ CREATE TABLE formato (
 	updated_at timestamp not null default current_timestamp on update current_timestamp
 );
 
-CREATE TABLE especialidade (
-	id int primary key auto_increment,
-	nome varchar(30) not null,
-	created_at timestamp not null default current_timestamp,
-	updated_at timestamp not null default current_timestamp on update current_timestamp
-);
+INSERT INTO formato (nome) VALUES
+	('PRESENCIAL'),
+	('SÍNCRONO'),
+	('ASSÍNCRONO');
 
 CREATE TABLE tipo_sala (
 	id int primary key auto_increment,
@@ -24,6 +24,29 @@ CREATE TABLE tipo_sala (
 	updated_at timestamp not null default current_timestamp on update current_timestamp
 );
 
+INSERT INTO tipo_sala (nome) VALUES
+	('LABORATÓRIO DE QUÍMICA'),
+	('LABORATÓRIO DE ENGENHARIA ELÉTRICA'),
+	('LABORATÓRIO DE ENGENHARIA CIVIL'),
+	('LABORATÓRIO DE INFORMÁTICA'),
+	('SALA DE AULA');
+
+CREATE TABLE especialidade (
+	id int primary key auto_increment,
+	nome varchar(30) not null,
+	created_at timestamp not null default current_timestamp,
+	updated_at timestamp not null default current_timestamp on update current_timestamp
+);
+
+INSERT INTO especialidade (nome) VALUES
+	('QUÍMICA INORGÂNICA'),
+	('ANÁLISE DE CIRCUITOS'),
+	('INSTALAÇÕES ELÉTRICAS PREDIAIS'),
+	('MECÂNICA DOS SÓLIDOS'),
+	('TECNOLOGIA DO CONCRETO'),
+	('PROGRAMAÇÃO ESTRUTURADA'),
+	('MODELAGEM DE DADOS'),
+	('REDES DE COMPUTADORES');
 
 CREATE TABLE disciplina (
 	id int primary key auto_increment,
@@ -36,6 +59,21 @@ CREATE TABLE disciplina (
 	updated_at timestamp not null default current_timestamp on update current_timestamp
 );
 
+-- Disciplinas de exemplo: formato presencial e carga horária em horas.
+INSERT INTO disciplina (nome, fk_formato, carga_horaria, pratica)
+SELECT dados.nome, formato.id, dados.carga_horaria, dados.pratica
+FROM (
+	SELECT 'QUÍMICA GERAL' AS nome, 60.00 AS carga_horaria, 1 AS pratica
+	UNION ALL SELECT 'CIRCUITOS ELÉTRICOS', 60.00, 1
+	UNION ALL SELECT 'INSTALAÇÕES ELÉTRICAS', 60.00, 1
+	UNION ALL SELECT 'RESISTÊNCIA DOS MATERIAIS', 60.00, 0
+	UNION ALL SELECT 'MATERIAIS DE CONSTRUÇÃO', 60.00, 1
+	UNION ALL SELECT 'ALGORITMOS E PROGRAMAÇÃO', 60.00, 1
+	UNION ALL SELECT 'BANCO DE DADOS', 60.00, 1
+	UNION ALL SELECT 'REDES DE COMPUTADORES', 40.00, 1
+) AS dados
+JOIN formato ON formato.nome = 'PRESENCIAL';
+
 CREATE TABLE disciplina_especialidade (
 	id int primary key auto_increment,
 	fk_disciplina int not null,
@@ -45,6 +83,21 @@ CREATE TABLE disciplina_especialidade (
 	created_at timestamp not null default current_timestamp,
 	updated_at timestamp not null default current_timestamp on update current_timestamp
 );
+
+INSERT INTO disciplina_especialidade (fk_disciplina, fk_especialidade)
+SELECT disciplina.id, especialidade.id
+FROM (
+	SELECT 'QUÍMICA GERAL' AS disciplina_nome, 'QUÍMICA INORGÂNICA' AS especialidade_nome
+	UNION ALL SELECT 'CIRCUITOS ELÉTRICOS', 'ANÁLISE DE CIRCUITOS'
+	UNION ALL SELECT 'INSTALAÇÕES ELÉTRICAS', 'INSTALAÇÕES ELÉTRICAS PREDIAIS'
+	UNION ALL SELECT 'RESISTÊNCIA DOS MATERIAIS', 'MECÂNICA DOS SÓLIDOS'
+	UNION ALL SELECT 'MATERIAIS DE CONSTRUÇÃO', 'TECNOLOGIA DO CONCRETO'
+	UNION ALL SELECT 'ALGORITMOS E PROGRAMAÇÃO', 'PROGRAMAÇÃO ESTRUTURADA'
+	UNION ALL SELECT 'BANCO DE DADOS', 'MODELAGEM DE DADOS'
+	UNION ALL SELECT 'REDES DE COMPUTADORES', 'REDES DE COMPUTADORES'
+) AS vinculos
+JOIN disciplina ON disciplina.nome = vinculos.disciplina_nome
+JOIN especialidade ON especialidade.nome = vinculos.especialidade_nome;
 
 CREATE TABLE professor (
 	id int primary key auto_increment,
@@ -124,6 +177,11 @@ CREATE TABLE log_action (
 );
 
 CREATE TABLE log (
+	id int primary key auto_increment,
+);
+
+
+CREATE TABLE disciplina (
 	id int primary key auto_increment,
 	fk_usuario int not null,
 	fk_log_action int not null,

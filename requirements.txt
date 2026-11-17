@@ -1,12 +1,11 @@
 sqlalchemy
-dotenv
+python-dotenv
 pymysql
-argparse
-pytest
 typing_extensions
-datetime
-fastapi
 uv
 fastapi[standard]
 pydantic
 jinja2
+starlette
+python-multipart
+httpx
