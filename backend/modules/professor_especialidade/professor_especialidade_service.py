@@ -1,4 +1,3 @@
-from backend.modules.professor_especialidade.professor_especialidade_dto import ProfessorEspecialidadeDTO
 from backend.modules.professor_especialidade.professor_especialidade_repository import ProfessorEspecialidadeRepository
 
 
@@ -21,7 +20,6 @@ class ProfessorEspecialidadeService:
         return self.__data_treatment(data)
 
     def slct_by_id_professor_especialidade_service(self, id: int) -> list:
-        # id = int(data['id'])
         data = self.repo.select_by_id(id)
         return self.__data_treatment(data)
 
@@ -35,7 +33,7 @@ class ProfessorEspecialidadeService:
         return normalized_data
 
     def __retorna_as_especialidades_do_professor(self, id: int) -> list:
-        data = self.repo.slct_especialidades_do_professor(id)
+        data = self.repo.slct_especialidades_professor(id)
         array_especialidades = []
         for d in data:
             array_especialidades.append(d.fk_especialidade)
