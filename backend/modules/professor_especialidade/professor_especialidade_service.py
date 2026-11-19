@@ -7,7 +7,7 @@ class ProfessorEspecialidadeService:
         self.repo = ProfessorEspecialidadeRepository()
 
     def insrt_professor_especialidade_service(self, data: dict) -> None:
-        especialidades_existentes = self.__retorna_as_especialidades_professor(data['fk_professor'])
+        especialidades_existentes = self.__retorna_as_especialidades_do_professor(data['fk_professor'])
         if int(data['fk_especialidade']) not in especialidades_existentes: 
             self.repo.insert(data)  
 
