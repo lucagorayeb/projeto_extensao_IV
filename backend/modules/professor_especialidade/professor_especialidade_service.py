@@ -11,6 +11,7 @@ class ProfessorEspecialidadeService:
         if int(data['fk_especialidade']) not in especialidades_existentes: 
             self.repo.insert(data)  
 
+
     def del_professor_especialidade_service(self, data: dict) -> None:
         id = int(data['id'])
         self.repo.delete(id)
